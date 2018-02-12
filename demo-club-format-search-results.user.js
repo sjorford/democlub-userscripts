@@ -7,6 +7,10 @@
 // @grant          none
 // ==/UserScript==
 
+$(`<style>
+	.sjo-search-exact {border: 2px solid gold; padding: 5px; margin-left: -7px; border-radius: 4px; background-color: #fff3b1;}
+</style>`).appendTo('head');
+
 $(function() {
 	
 	// Get search string from input box
