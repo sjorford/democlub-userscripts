@@ -46,7 +46,7 @@ function onready() {
 			if (!listitem.attr('id')) listitem.attr('id', 'sjo-addperson-listitem-' + electionID.replace(/\./g, '_'));
 			
 			// Flag elections by country
-			listitem.addClass('sjo-addperson-listitem-' + Utils.getCountryForElection(electionID));
+			listitem.addClass('sjo-addperson-listitem-' + Utils.countryForElection(electionID));
 			
 		});
 		
