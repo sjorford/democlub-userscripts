@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
 // @version     2018.02.05
 // @grant       none
-// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors

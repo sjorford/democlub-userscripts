@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/posts
 // @version     2018.02.02
 // @grant       none
-// @require     https://raw.githubusercontent.com/sjorford/userscripts/master/democracyclub/democlub-utils.js
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
