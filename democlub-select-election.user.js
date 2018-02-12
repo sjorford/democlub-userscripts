@@ -2,9 +2,10 @@
 // @name           Demo Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.12a
+// @version        2018.02.12b
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
@@ -37,8 +38,10 @@ function onready() {
 			var button = $('a', listitem).addClass('sjo-addperson-button');
 			
 			// Move the election name out of the button
-			var electionName = button.text().trim().match(/^Add .+? to the (\d{4} )?(The |Mayor of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Metropolitan Borough| City)? Council| Combined Authority)?( (local|mayoral) election)?$/)[3];
-			electionName = electionName == 'London Corporation' ? 'City of London' : electionName;
+			//var electionName = button.text().trim().match(/^Add .+? to the (\d{4} )?(The |Mayor of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Metropolitan Borough| City)? Council| Combined Authority)?( (local|mayoral) election)?$/)[3];
+			//electionName = electionName == 'London Corporation' ? 'City of London' : electionName;
+			var electionName = button.text().trim().match(/^Add .+? to the (.*?)( (local|mayoral) election)?$/)[1];
+			electionName = Utils.shortOrgName(electionName);
 			button.text('Add').after(` <a class="sjo-addperson-text" href="${button.attr('href')}">${electionName}</a>`);
 			
 			// Add an ID to the button
@@ -46,7 +49,7 @@ function onready() {
 			if (!listitem.attr('id')) listitem.attr('id', 'sjo-addperson-listitem-' + electionID.replace(/\./g, '_'));
 			
 			// Flag elections by country
-			listitem.addClass('sjo-addperson-listitem-' + Utils.countryForElection(electionID));
+			//listitem.addClass('sjo-addperson-listitem-' + Utils.countryForElection(electionID));
 			
 		});
 		
@@ -57,9 +60,11 @@ function onready() {
 	// Remove headings
 	var headings = lists.prev('h3');
 	lists.add(headings).wrapAll('<div class="sjo-addperson-listcolumns"></div>');
-	var localHeading = headings.filter(':contains("Local Elections")');
-	headings.not(localHeading).hide();
+	//var localHeading = headings.filter(':contains("Local Elections")');
+	//headings.not(localHeading).hide();
+	headings.hide();
 	
+	/*
 	// Sort local elections by country
 	var localList = localHeading.next('div');
 	$.each({'EN': 'England', 'SC': 'Scotland', 'WA': 'Wales', 'NI': 'Northern Ireland'}, (key, country) => {
@@ -69,6 +74,32 @@ function onready() {
 		}
 	});
 	if (localList.find('p').length === 0) localList.add(localHeading).hide();
+	*/
+	
+	// Sort all elections by date and type
+	var electionSets = [];
+	var listitems = $('.sjo-addperson-listitem').each((index, element) => {
+		var date = $(element).attr('id').substr(-10);
+		var set = {date: date, type: 
+		if (dates.indexOf(date) < 0) dates.push(date);
+	});
+	dates = dates.sort();
+	console.log(dates);
+	$.each(dates, (index, date) => {
+		var listitems = $(`[id\$="${date}"]`).toArray().sort((a, b) => {
+			
+		});
+		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems).before(`<h4>${moment(date, "YYYY-MM-DD").format("D MMM YYYY")}</h4>`);
+		
+		
+		
+		
+	});
+	
+	
+	
+	
+	
 	
 	// Store button ID when clicked
 	$('body').on('click', '.sjo-addperson-listitem', event => localStorage.setItem('sjo-addperson-button', $(event.target).closest('.sjo-addperson-listitem').attr('id')));
