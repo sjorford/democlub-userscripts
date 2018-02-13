@@ -9,6 +9,8 @@
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
+var maxUrlLength = 40;
+
 $(`<style>
 	.sjo-nowrap {white-space: nowrap;}
 	.sjo-number {text-align: right;}
