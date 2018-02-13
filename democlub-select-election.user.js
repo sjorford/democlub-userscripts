@@ -5,7 +5,7 @@
 // @version        2018.02.13
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
-// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
+// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
