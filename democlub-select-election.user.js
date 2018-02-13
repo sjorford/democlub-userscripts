@@ -2,7 +2,7 @@
 // @name           Demo Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.12b
+// @version        2018.02.13
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -62,7 +62,7 @@ function onready() {
 	lists.add(headings).wrapAll('<div class="sjo-addperson-listcolumns"></div>');
 	//var localHeading = headings.filter(':contains("Local Elections")');
 	//headings.not(localHeading).hide();
-	headings.hide();
+	headings.remove();
 	
 	/*
 	// Sort local elections by country
@@ -76,30 +76,23 @@ function onready() {
 	if (localList.find('p').length === 0) localList.add(localHeading).hide();
 	*/
 	
+	// Get all unique election groups
+	var groups = [];
+	$('.sjo-addperson-listitem').each((index, element) => {
+		var match = $(element).attr('id').match(/^sjo-addperson-listitem-(.*?)_(.*_)?(\d{4}-\d{2}-\d{2})$/);
+		var group = match[3] + '_' + match[1];
+		if (groups.indexOf(group) < 0) groups.push(group);
+	});
+	groups = groups.sort();
+	console.log(groups);
+	
 	// Sort all elections by date and type
-	var electionSets = [];
-	var listitems = $('.sjo-addperson-listitem').each((index, element) => {
-		var date = $(element).attr('id').substr(-10);
-		var set = {date: date, type: 
-		if (dates.indexOf(date) < 0) dates.push(date);
+	// TODO: display local/mayor/etc. subheadings, but not always?
+	$.each(groups, (index, group) => {
+		var parts = group.split('_');
+		var listitems = $(`[id^="sjo-addperson-listitem-${parts[1]}"][id\$="${parts[0]}"]`);
+		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems).before(`<h4>${moment(parts[0], "YYYY-MM-DD").format("D MMM YYYY")}</h4>`);
 	});
-	dates = dates.sort();
-	console.log(dates);
-	$.each(dates, (index, date) => {
-		var listitems = $(`[id\$="${date}"]`).toArray().sort((a, b) => {
-			
-		});
-		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems).before(`<h4>${moment(date, "YYYY-MM-DD").format("D MMM YYYY")}</h4>`);
-		
-		
-		
-		
-	});
-	
-	
-	
-	
-	
 	
 	// Store button ID when clicked
 	$('body').on('click', '.sjo-addperson-listitem', event => localStorage.setItem('sjo-addperson-button', $(event.target).closest('.sjo-addperson-listitem').attr('id')));
