@@ -26,7 +26,7 @@ function onready() {
 	// Get table and headings
 	var table = $('.container table').addClass('sjo-lesspadding');
 	table.find('th').addClass('sjo-nowrap');
-	var headings = getTableHeadings(table);
+	var headings = Utils.tableHeadings(table);
 	
 	table.find('tr').each(function(index, element) {
 		var row = $(element);
