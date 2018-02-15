@@ -2,7 +2,7 @@
 // @name        Democracy Club version tree
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.02.15
+// @version     2018.02.15.1
 // @grant       none
 // ==/UserScript==
 
@@ -71,7 +71,7 @@ function onready() {
 		num == 1 ? `<th></th><th>${year}</th>` : 
 		num ? `<th></th><th class="sjo-tree-year" colspan="${num * 2 - 1}"><span class="sjo-tree-year-inner">${year}</span></th>` : '');
 	var treeTable = $('<table class="sjo-tree"></table>')
-		.insertAfter('#sjo-section-versions')
+		.insertAfter('.person__versions h2')
 		.append('<thead><tr>' + headerCellsHtml.join('') + '</tr></thead>');
 	
 	// Build version tree
