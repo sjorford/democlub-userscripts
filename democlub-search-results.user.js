@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name           Demo Club format search results
+// @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
 // @version        2018.02.12
