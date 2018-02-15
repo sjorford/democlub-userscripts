@@ -2,7 +2,7 @@
 // @name        Democracy Club version tree
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.02.15.1
+// @version     2018.02.15.2
 // @grant       none
 // ==/UserScript==
 
@@ -64,7 +64,6 @@ function onready() {
 	// Sort versions
 	if (versionData.length === 0) return;
 	versionData.sort((a, b) => a._timestamp > b._timestamp);
-	console.log('reparseVersions', versionData, editsPerYear);
 	
 	// Create version tree table
 	var headerCellsHtml = editsPerYear.map((num, year) => 
