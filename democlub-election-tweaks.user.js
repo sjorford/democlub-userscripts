@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.02.15.1
+// @version     2018.02.15.2
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -10,22 +10,26 @@
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
-$(`<style>
-	
-	.sjo-election-sublist {font-size: 10pt;}
-	.sjo-date-picker {clear: both; margin-bottom: 1em;}
-	.sjo-date-normal a {background-color: #7eeab5 !important;}
-	.sjo-date-normal a.ui-state-active {background-color: #007fff !important;}
-	
-	.block-label {background: inherit; border: none; margin: 0; padding: 0 0 0 30px; float: none;}
-	.block-label input {top: -2px; left: 0;}
-	.sjo-columns {column-width: 15em;}
-	.sjo-hidden, .sjo-hidden-nir {color: #bbb; display: none;}
-	.sjo-election-sublist a {color: #333}
-	
-</style>`).appendTo('head');
+// temporary fix due to c.dc script errors
+// $(onready);
+window.setTimeout(onready, 0);
 
-$(function() {
+function onready() {
+	
+	$(`<style>
+		
+		.sjo-election-sublist {font-size: 10pt;}
+		.sjo-date-picker {clear: both; margin-bottom: 1em;}
+		.sjo-date-normal a {background-color: #7eeab5 !important;}
+		.sjo-date-normal a.ui-state-active {background-color: #007fff !important;}
+		
+		.block-label {background: inherit; border: none; margin: 0; padding: 0 0 0 30px; float: none;}
+		.block-label input {top: -2px; left: 0;}
+		.sjo-columns {column-width: 15em;}
+		.sjo-hidden, .sjo-hidden-nir {color: #bbb; display: none;}
+		.sjo-election-sublist a {color: #333}
+		
+	</style>`).appendTo('head');
 	
 	// Add link to radar
 	$('.menu').append('<li><a href="/election_radar/?status=new">Radar</a></li>');
@@ -42,7 +46,7 @@ $(function() {
 		trimCouncilNames();
 	}
 	
-});
+}
 
 function displaySubIDs() {
 	
