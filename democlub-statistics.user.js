@@ -18,7 +18,7 @@ function onready() {
 	$(`<style>
 		.sjo-stats {font-size: 9pt;}
 		.sjo-stats tr {background-color: inherit !important;}
-		.sjo-stats td, .sjo-stats th, .sjo-lesspadding td, .sjo-lesspadding th {padding: 4px;}
+		.sjo-stats td, .sjo-stats th {padding: 4px;}
 		.sjo-stats-break {border-top: solid 1px #ddd;}
 		.sjo-number {text-align: center;}
 		.sjo-number-zero {background-color: rgb(255, 230, 153);}

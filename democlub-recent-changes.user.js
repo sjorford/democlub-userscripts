@@ -18,6 +18,7 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style>
+		.sjo-changes td, .sjo-changes th {padding: 4px;}
 		.sjo-nowrap {white-space: nowrap;}
 		.sjo-number {text-align: right;}
 		.sjo-mychanges {background-color: #ffeb99 !important;}
@@ -29,7 +30,7 @@ function onready() {
 	var now = moment();
 	
 	// Get table and headings
-	var table = $('.container table').addClass('sjo-lesspadding');
+	var table = $('.container table').addClass('sjo-changes');
 	table.find('th').addClass('sjo-nowrap');
 	var headings = Utils.tableHeadings(table);
 	
