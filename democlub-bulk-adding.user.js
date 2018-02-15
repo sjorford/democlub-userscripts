@@ -1,9 +1,9 @@
 // ==UserScript==
-// @name        Demo Club bulk adding
+// @name        Democracy Club bulk adding
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.02.05
+// @version     2018.02.15
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==

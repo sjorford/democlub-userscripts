@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Demo Club elections tweaks
+// @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.02.06
+// @version     2018.02.15
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js

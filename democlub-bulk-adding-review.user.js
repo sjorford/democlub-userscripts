@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Demo Club bulk adding review
+// @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.02.02
+// @version     2018.02.15
 // @grant       none
 // ==/UserScript==
 
