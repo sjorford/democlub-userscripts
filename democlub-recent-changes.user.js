@@ -11,16 +11,19 @@
 
 var maxUrlLength = 40;
 
-$(`<style>
-	.sjo-nowrap {white-space: nowrap;}
-	.sjo-number {text-align: right;}
-</style>`).appendTo('head');
-
 // temporary fix due to c.dc script errors
 // $(onready);
 window.setTimeout(onready, 0);
 
 function onready() {
+	
+	$(`<style>
+		.sjo-nowrap {white-space: nowrap;}
+		.sjo-number {text-align: right;}
+		.sjo-mychanges {background-color: #ffeb99 !important;}
+		.sjo-changes-candidacy-delete {background-color: pink !important;}
+		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject * {color: #ccc !important;}
+	</style>`).appendTo('head');
 	
 	var username = 'sjorford'; // TODO: get this from top of page?
 	var now = moment();
