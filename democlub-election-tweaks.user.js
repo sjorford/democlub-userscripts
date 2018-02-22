@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.02.15.2
+// @version     2018.02.22
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -38,12 +38,16 @@ function onready() {
 		displaySubIDs();
 	}
 	
-	if (location.href.indexOf('id_creator/date/') >= 0) {
+	if (location.href.indexOf('/id_creator/date/') >= 0) {
 		displayDatePicker();
 	}
 	
-	if (location.href.indexOf('id_creator/election_organisation/') >= 0) {
+	if (location.href.indexOf('/id_creator/election_organisation/') >= 0) {
 		trimCouncilNames();
+	}
+	
+	if (location.href.indexOf('/id_creator/election_organisation_division/') >= 0) {
+		formatDivisions();
 	}
 	
 }
@@ -152,6 +156,25 @@ function trimCouncilNames() {
 			var label = $(element);
 			label.toggleClass('sjo-hidden', !label.text().trim().toLowerCase().match(filterText));
 		});
+	});
+	
+}
+
+function formatDivisions() {
+	
+	$(`<style>
+		.sjo-group {margin-top: 0.5em !important;}
+		.sjo-group:hover, .sjo-group:hover label {background-color: #ffc359;}
+		.sjo-group fieldset {width: auto; display: inline-block;}
+		.sjo-division {width: 15em; display: inline-block;}
+	</style>`).appendTo('head');
+	
+	// Move fieldset legend out of the fieldset
+	$('.inline_radios .form-group legend').each((index, element) => {
+		var legend = $(element);
+		var group = legend.closest('.form-group').addClass('sjo-group');
+		$('<span class="sjo-division"></span>').text(legend.text()).prependTo(group);
+		legend.remove();
 	});
 	
 }
