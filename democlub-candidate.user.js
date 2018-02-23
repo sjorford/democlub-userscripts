@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.02.15
+// @version     2018.02.23
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -18,10 +18,10 @@ function onready() {
 	$(`<style>
 		.person__actions__action {padding: 1em; margin-bottom: 1em;}
 		.person__details dl {margin-bottom: 1em;}
-		.sjo-list-dt {float: left; width: 125px;}
+		.sjo-list-dt {float: left; width: 8rem;}
 		.sjo-list-dt, .sjo-list-dd {margin-bottom: 0px !important;}
 		.sjo-list-dd::after {content: "\\a"; white-space: pre-line;}
-		.sjo-list-dd {overflow: hidden; margin-left: 125px;}
+		.sjo-list-dd {overflow: hidden; margin-left: 8rem;}
 		.sjo-list-dd:first-of-type {margin-left: 0;}
 		.sjo-heading-note {font-weight: normal; font-size: small;}
 	</style>`).appendTo('head');
@@ -39,7 +39,7 @@ function onready() {
 	labelMappings[`Favourite biscuit ${Unicode.COOKIE}`] = `Biscuit ${Unicode.COOKIE}`;
 	
 	// Candidate details
-	$('.person__details dt').each((index, element) => {
+	$('dt', '.person__details, .person__versions').each((index, element) => {
 		
 		var dt = $(element);
 		var dd = dt.next('dd');
@@ -67,16 +67,22 @@ function onready() {
 				}
 			});
 			
-		} else {
+		} else if (!dt.text().match('Changes made')) {
 			
 			// Format fields
 			dt.addClass('sjo-list-dt');
 			dd.addClass('sjo-list-dd');
-			dd.nextUntil('dt', 'dd').addClass('sjo-list-dd');
+			//dd.nextUntil('dt', 'dd').addClass('sjo-list-dd');
 			if (dd.text().trim() == 'Unknown') dd.text('');
 			
 			// Trim labels
 			if (labelMappings[dt.text()]) dt.text(labelMappings[dt.text()]);
+			
+			// Hide reversion button to prevent accidental clicking
+			if (dt.text() == 'Revert to this') {
+				dt.hide();
+				dd.hide();
+			}
 			
 		}
 		
