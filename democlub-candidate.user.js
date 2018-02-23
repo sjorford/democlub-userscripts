@@ -24,6 +24,7 @@ function onready() {
 		.sjo-list-dd {overflow: hidden; margin-left: 8rem;}
 		.sjo-list-dd:first-of-type {margin-left: 0;}
 		.sjo-heading-note {font-weight: normal; font-size: small;}
+		.person__versions {padding-top: 0;}
 	</style>`).appendTo('head');
 	
 	var labelMappings = {
