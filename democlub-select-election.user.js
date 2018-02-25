@@ -9,6 +9,14 @@
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
+// TODO:
+// colour-code elections
+// separate May elections from by-elections
+// indicate mayoral elections
+// put org name in button
+// remove . from St. Helens
+// that'll do for now
+
 $(`<style>
 	.sjo-addperson-listcolumns {column-width: 200px; -moz-column-width: 200px;}
 	.sjo-addperson-listcolumns p {font-size: 0.8rem}
