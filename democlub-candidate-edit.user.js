@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.02.26
+// @version     2018.02.26.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -39,6 +39,14 @@ function onready() {
 		.sjo-prefix {display: inline-block; width: 30px; position: relative; top: 1px; height: 2rem; line-height: 2rem;}
 		
 	</style>`).appendTo('head');
+	
+	if (location.href.indexOf('/person/create/') >= 0) {
+		$('.person__versions').hide();
+	}
+	
+	// ================================================================
+	// Format fields and labels
+	// ================================================================
 	
 	var candidateFields = {
 		'id_honorific_prefix':				'Title',
@@ -76,7 +84,7 @@ function onready() {
 		$.each(electionFields, (key, value) => formatField(key, value, element.id.replace('id_standing_', ''))));
 	
 	// Detect new election
-	var refreshTimer;
+	var refreshTimerChange;
 	$('body').on('change', '#add_more_elections', electionChanged);
 	
 	function electionChanged(event) {
@@ -87,16 +95,16 @@ function onready() {
 		localStorage.setItem('sjo-addperson-button', 'sjo-addperson-listitem-' + slug.replace(/\./g, '_'));
 		
 		// Wait for form to load
-		if (!refreshTimer) {
-			refreshTimer = setInterval(checkFieldsLoaded, 0);
+		if (!refreshTimerChange) {
+			refreshTimerChange = setInterval(checkFieldsLoaded, 0);
 		}
 		
 		// Check if fields have loaded
 		function checkFieldsLoaded() {
 			console.log('checkFieldsLoaded', slug);
 			if ($(`[id="id_standing_${slug}"]`).length > 0) {
-				clearInterval(refreshTimer);
-				refreshTimer = null;
+				clearInterval(refreshTimerChange);
+				refreshTimerChange = null;
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
 			}
 		}
@@ -135,8 +143,65 @@ function onready() {
 		
 	}
 	
-	if (location.href.indexOf('/person/create/') >= 0) {
-		$('.person__versions').hide();
+	// ================================================================
+	// Format list of elections
+	// ================================================================
+	
+	var refreshTimerAdd;
+	$('body').on('click', '#add_election_button', getElectionsList);
+	
+	function getElectionsList(event) {
+		console.log('getElectionsList');
+		
+		// Wait for form to load
+		if (!refreshTimerAdd) {
+			refreshTimerAdd = setInterval(checkElectionsLoaded, 0);
+		}
+		
+		// Check if fields have loaded
+		function checkElectionsLoaded() {
+			console.log('checkElectionsLoaded');
+			if ($(`#s2id_add_more_elections`).length > 0) {
+				clearInterval(refreshTimerAdd);
+				refreshTimerAdd = null;
+				$.getJSON('/api/current-elections/', formatElectionsList);
+			}
+		}
+		
+	}
+	
+	function formatElectionsList(data) {
+		console.log('formatElectionsList');
+		//console.log(data);
+		
+		var elections = $.map(data, (value, key) => {
+			return {
+				id: key,
+				name: Utils.shortOrgName(value.name.replace(/ local election$/, '')),
+				election_date: value.election_date
+			};
+		});
+		//console.log(elections);
+		
+		elections = elections.sort((a, b) => 
+			a.election_date < b.election_date ? -1 : 
+			a.election_date > b.election_date ? +1 : 
+			a.name < b.name ? -1 : 
+			a.name > b.name ? +1 : 
+			0
+		);
+		//console.log(elections);
+		
+		elections = $.map(elections, function(value, index) {
+			return {
+				id: value.id,
+				text: (value.id.split('.')[0] == 'mayor' ? 'Mayor of ' : '') + value.name + ' (' + value.election_date + ')'
+			};
+		});
+		//console.log(elections);
+		
+		$("#add_more_elections").select2({data: elections});
+		
 	}
 	
 }
