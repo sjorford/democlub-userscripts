@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.02.26.1
+// @version     2018.02.26.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -146,6 +146,12 @@ function onready() {
 	// ================================================================
 	// Format list of elections
 	// ================================================================
+	
+	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
+	
+	// Add a checkbox to show all parties
+	$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
+		.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
 	
 	var refreshTimerAdd;
 	$('body').on('click', '#add_election_button', getElectionsList);
