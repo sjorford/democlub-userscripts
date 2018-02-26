@@ -2,7 +2,7 @@
 // @name        Democracy Club version tree
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.02.15.2
+// @version     2018.02.26
 // @grant       none
 // ==/UserScript==
 
@@ -27,6 +27,8 @@ function onready() {
 		.sjo-tree-turnup {background: no-repeat url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAABOSURBVDhPY/wPBAx4ACMjI5QFAQSUMzBBaaqBUQMpB/Q1ED3JEANAOvAnLDQwuNMhIdeBANEGEmMYCBDMy6SCgQ1DYsCogZQDKhvIwAAApcUVF6f1O7gAAAAASUVORK5CYII=');}
 		.sjo-tree-vert {background: repeat-y url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAAySURBVDhPY/wPBAx4ACMjI5QFAQSUMzBBaaqBUQMpB6MGUg5GDaQcjBpIORjsBjIwAAAaYgckACvF4gAAAABJRU5ErkJggg==');}
 		.sjo-tree-mergein {background: no-repeat  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAoCAYAAAD+MdrbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAABOSURBVEhLY/wPBAxUBExQmmpg1EDKweA3kBGIR9MhZYBgXmZkBAUzKsCnhWQXEipLRmCkjBpIORg1kHIwaiDlYNRAysGogZSDEWcgAwMAmLEPQjc8JtAAAAAASUVORK5CYII=');}
+		
+		.sjo-tree-version {font-size: 12pt; color: gold;}
 		
 	</style>`).appendTo('head');
 	
@@ -77,31 +79,36 @@ function onready() {
 	var stack = [];
 	stack.push({'id': versionData[versionData.length - 1].id});
 	while (stack.length > 0) {
+		var currentId = stack.pop();
+		var sequenceNo;
+		
+		// Join the versions
+		var nextVersion = null;
+		for (sequenceNo = versionData.length - 1; sequenceNo >= 0; sequenceNo--) {
+			if (versionData[sequenceNo].id == currentId.id) {
+				if (nextVersion) nextVersion._prev_version = versionData[sequenceNo];
+				nextVersion = versionData[sequenceNo];
+			}
+		}
 		
 		// Write a new table row
-		var currentId = stack.pop();
 		var treeRow = $(`<tr><th>${currentId.id}</th>` + '<td></td>'.repeat(versionData.length * 2 - 1) + '</tr>').appendTo(treeTable);
 		var treeRowCells = treeRow.find('td');
 		
+		// Render table cells
 		var minColNo = null, maxColNo = null, colNo = null;
-		var versionWritten = null;
-		for (var sequenceNo = versionData.length - 1; sequenceNo >= 0; sequenceNo--) {
+		for (sequenceNo = versionData.length - 1; sequenceNo >= 0; sequenceNo--) {
 			if (versionData[sequenceNo].id == currentId.id) {
 				
 				// Write this version to the tree
-				// TODO: display different icons for different actions, e.g. add/remove candidacy
 				colNo = sequenceNo * 2;
-				$(`<a class="sjo-tree-version">${versionData[sequenceNo]._version_id.substr(0, 4)}</a>`)
+				$(`<a class="sjo-tree-version">${versionIcon(versionData[sequenceNo])}</a>`)
 					.data('sjo-tree-version', versionData[sequenceNo]._version_id)
 					.appendTo(treeRowCells.eq(sequenceNo * 2));
 				
 				// Keep track of first and last versions for this ID
 				if (!minColNo || colNo < minColNo) minColNo = colNo;
 				if (!maxColNo || colNo > maxColNo) maxColNo = colNo;
-				
-				// Join to next version
-				if (versionWritten) versionWritten._prev_version = versionData[sequenceNo];
-				versionWritten = versionData[sequenceNo];
 				
 				// If this is a merge, add the merged ID to the stack
 				var sourceMatch = versionData[sequenceNo]._source.match(/^After merging person (\d+)$/);
@@ -129,6 +136,69 @@ function onready() {
 			}
 		}
 		
+	}
+	
+	function versionIcon(version) {
+		
+		var symbols = {
+			HEAVY_PLUS_SIGN:      '\u2795',
+			HEAVY_MINUS_SIGN:     '\u2796',
+			QUESTION:             '\u2753',
+			EXCLAMATION:          '\u2757',
+			MALE_AND_FEMALE_SIGN: '\u26A5',
+			PAGE_WITH_CURL:       '\u{1F4C3}',
+			COOKIE:               '\u{1F36A}',
+			STAR:                 '\u2B50',
+			BLACK_STAR:           '\u2605',
+			PENCIL:               '\u270F'
+		};
+		
+		console.log(version);
+		
+		var icons = [];
+		
+		if (!version._prev_version) {
+			icons.push(symbols.BLACK_STAR);
+		} else {
+			
+			$.each(version.standing_in, (key, value) => {
+				if (!version._prev_version.standing_in[key]) {
+					icons.push(symbols.HEAVY_PLUS_SIGN);
+					return false;
+				} else {
+					return true;
+				}
+			});
+			
+			$.each(version._prev_version.standing_in, (key, value) => {
+				if (!version.standing_in[key]) {
+					icons.push(symbols.HEAVY_MINUS_SIGN);
+					return false;
+				} else {
+					return true;
+				}
+			});
+			
+			// TODO: display different icons for different actions:
+			// change post name		U+2753	question
+			// change party name	U+2757	exclamation
+			// change name/details	U+270F	pencil
+			// Updated by the automated Twitter account checker (candidates_update_twitter_usernames)
+			// [Quick update from the constituency page]
+			
+			if (version.gender != version._prev_version.gender && version._prev_version.gender != '')
+				icons.push(symbols.MALE_AND_FEMALE_SIGN);
+			
+			if (version.biography != version._prev_version.biography)
+				icons.push(symbols.PAGE_WITH_CURL);
+			
+			if (version.extra_fields && version.extra_fields.favourite_biscuits && (!version._prev_version.extra_fields || !version._prev_version.extra_fields.favourite_biscuits || version.extra_fields.favourite_biscuits != version._prev_version.extra_fields.favourite_biscuits))
+				icons.push(symbols.COOKIE);
+			
+		}
+		
+		if (icons.length == 0) icons.push(version._version_id.substr(0, 4));
+		return icons.join('');
 	}
 	
 	// Button to show all versions
