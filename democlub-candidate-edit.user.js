@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.02.20
+// @version     2018.02.26
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -106,7 +106,7 @@ function onready() {
 	// Format an input field
 	function formatField(id, labelText, slug) {
 		if (slug) id = id.replace('{slug}', slug);
-		console.log('formatField', id, labelText, slug);
+		//console.log('formatField', id, labelText, slug);
 		
 		var input = $(`[id="${id}"]`);
 		var formItem = input.closest('.form-item');
@@ -133,6 +133,10 @@ function onready() {
 			Utils.formatPartySelects(input);
 		}
 		
+	}
+	
+	if (location.href.indexOf('/person/create/') >= 0) {
+		$('.person__versions').hide();
 	}
 	
 }
