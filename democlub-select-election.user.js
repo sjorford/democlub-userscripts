@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.26.1
+// @version        2018.02.26.2
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -16,7 +16,6 @@
 // put org name in button
 // remove . from St. Helens
 // that'll do for now
-// add filter
 
 // temporary fix due to c.dc script errors
 // $(onready);
@@ -25,6 +24,7 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style>
+		
 		.sjo-addperson-listcolumns {column-width: 200px; -moz-column-width: 200px;}
 		.sjo-addperson-listcolumns p {font-size: 0.8rem}
 		.sjo-addperson-listitem {margin: 0; padding-left: 3.05em; text-indent: -3.05em;}
@@ -32,6 +32,10 @@ function onready() {
 		.sjo-addperson-text {color: inherit;}
 		.sjo-addperson-latest .sjo-addperson-button {background-color: #fc0 !important;}
 		.sjo-addperson-latest .sjo-addperson-text {font-weight: bold;}
+		
+		.sjo-filter {display: inline-block !important; width: 15em !important; padding: 0.1rem !important; height: 1.5rem !important;}
+		.sjo-hidden {display: none;}
+		
 	</style>`).appendTo('head');
 	
 	var lists = $('[role=list]');
@@ -93,5 +97,25 @@ function onready() {
 	// Retrieve button ID on load
 	var lastButtonID = localStorage.getItem('sjo-addperson-button');
 	if (lastButtonID) $(`[id="${lastButtonID}"]`).addClass('sjo-addperson-latest');
+	
+	// Add filter
+	$('.container h2')
+		.after('<label for="sjo-filter">Filter: <input class="sjo-filter" id="sjo-filter"></label>');
+	
+	var filter = $('.sjo-filter').focus().on('change keyup', event => {
+		var filterText = filter.val().trim().toLowerCase();
+		console.log(filterText);
+		
+		$('.sjo-addperson-listitem').each((index, element) => {
+			var label = $(element);
+			label.toggleClass('sjo-hidden', !label.find('.sjo-addperson-text').text().trim().toLowerCase().match(filterText));
+		});
+		
+		$('.sjo-addperson-listcolumns h4').each((index, element) => {
+			var heading = $(element);
+			heading.toggleClass('sjo-hidden', heading.next('div[role="list"]').has('.sjo-addperson-listitem:not(.sjo-hidden)').length == 0);
+		});
+		
+	});
 	
 }
