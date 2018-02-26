@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.15
+// @version        2018.02.26.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -16,6 +16,7 @@
 // put org name in button
 // remove . from St. Helens
 // that'll do for now
+// add filter
 
 $(`<style>
 	.sjo-addperson-listcolumns {column-width: 200px; -moz-column-width: 200px;}
@@ -46,8 +47,6 @@ function onready() {
 			var button = $('a', listitem).addClass('sjo-addperson-button');
 			
 			// Move the election name out of the button
-			//var electionName = button.text().trim().match(/^Add .+? to the (\d{4} )?(The |Mayor of |City of |City and County of |Council of the |Comhairle nan )?(.+?)(( County| County Borough| Metropolitan Borough| City)? Council| Combined Authority)?( (local|mayoral) election)?$/)[3];
-			//electionName = electionName == 'London Corporation' ? 'City of London' : electionName;
 			var electionName = button.text().trim().match(/^Add .+? to the (.*?)( (local|mayoral) election)?$/)[1];
 			electionName = Utils.shortOrgName(electionName);
 			button.text('Add').after(` <a class="sjo-addperson-text" href="${button.attr('href')}">${electionName}</a>`);
@@ -68,21 +67,7 @@ function onready() {
 	// Remove headings
 	var headings = lists.prev('h3');
 	lists.add(headings).wrapAll('<div class="sjo-addperson-listcolumns"></div>');
-	//var localHeading = headings.filter(':contains("Local Elections")');
-	//headings.not(localHeading).hide();
 	headings.remove();
-	
-	/*
-	// Sort local elections by country
-	var localList = localHeading.next('div');
-	$.each({'EN': 'England', 'SC': 'Scotland', 'WA': 'Wales', 'NI': 'Northern Ireland'}, (key, country) => {
-		var listitems = $('.sjo-addperson-listitem-' + key, localList);
-		if (listitems.length > 0) {
-			$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems).before(`<h3>${country}</h3>`);
-		}
-	});
-	if (localList.find('p').length === 0) localList.add(localHeading).hide();
-	*/
 	
 	// Get all unique election groups
 	var groups = [];
