@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.26.0
+// @version        2018.02.26.1
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -18,21 +18,21 @@
 // that'll do for now
 // add filter
 
-$(`<style>
-	.sjo-addperson-listcolumns {column-width: 200px; -moz-column-width: 200px;}
-	.sjo-addperson-listcolumns p {font-size: 0.8rem}
-	.sjo-addperson-listitem {margin: 0; padding-left: 3.05em; text-indent: -3.05em;}
-	.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem}
-	.sjo-addperson-text {color: inherit;}
-	.sjo-addperson-latest .sjo-addperson-button {background-color: #fc0 !important;}
-	.sjo-addperson-latest .sjo-addperson-text {font-weight: bold;}
-</style>`).appendTo('head');
-
 // temporary fix due to c.dc script errors
 // $(onready);
 window.setTimeout(onready, 0);
 
 function onready() {
+	
+	$(`<style>
+		.sjo-addperson-listcolumns {column-width: 200px; -moz-column-width: 200px;}
+		.sjo-addperson-listcolumns p {font-size: 0.8rem}
+		.sjo-addperson-listitem {margin: 0; padding-left: 3.05em; text-indent: -3.05em;}
+		.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem}
+		.sjo-addperson-text {color: inherit;}
+		.sjo-addperson-latest .sjo-addperson-button {background-color: #fc0 !important;}
+		.sjo-addperson-latest .sjo-addperson-text {font-weight: bold;}
+	</style>`).appendTo('head');
 	
 	var lists = $('[role=list]');
 	lists.each(function(index, element) {
