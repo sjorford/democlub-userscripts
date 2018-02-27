@@ -17,7 +17,7 @@ function onready() {
 		table.sjo-tree tr {background-color: inherit;}
 		.sjo-tree td, .sjo-tree th {font-size: 8pt; padding: 2px; min-width: 20px;}
 		#sjo-versions-showall {display: block; font-size: 8pt; margin-bottom: 1em;}
-		.sjo-tree-current {background-color: gold;}
+		.sjo-tree-current {xxxbackground-color: gold; border: 1px solid black; border-radius: 0.25em;}
 		
 		.sjo-tree thead {background-color: inherit;}
 		.sjo-tree-year-inner {background: white;}
@@ -28,7 +28,7 @@ function onready() {
 		.sjo-tree-vert {background: repeat-y url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsIAAA7CARUoSoAAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAAAySURBVDhPY/wPBAx4ACMjI5QFAQSUMzBBaaqBUQMpB6MGUg5GDaQcjBpIORjsBjIwAAAaYgckACvF4gAAAABJRU5ErkJggg==');}
 		.sjo-tree-mergein {background: no-repeat  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAoCAYAAAD+MdrbAAAAAXNSR0IArs4c6QAAAARnQU1BAACxjwv8YQUAAAAJcEhZcwAADsQAAA7EAZUrDhsAAAASdEVYdFNvZnR3YXJlAEdyZWVuc2hvdF5VCAUAAABOSURBVEhLY/wPBAxUBExQmmpg1EDKweA3kBGIR9MhZYBgXmZkBAUzKsCnhWQXEipLRmCkjBpIORg1kHIwaiDlYNRAysGogZSDEWcgAwMAmLEPQjc8JtAAAAAASUVORK5CYII=');}
 		
-		.sjo-tree-version {font-size: 12pt; color: gold;}
+		.sjo-tree-version {font-size: 12pt; xxxcolor: gold;}
 		
 	</style>`).appendTo('head');
 	
@@ -63,7 +63,7 @@ function onready() {
 		
 	});
 	
-	// Sort versions
+	// Sort versions in ascending date order
 	if (versionData.length === 0) return;
 	versionData.sort((a, b) => a._timestamp > b._timestamp);
 	
@@ -75,18 +75,22 @@ function onready() {
 		.insertAfter('.person__versions h2')
 		.append('<thead><tr>' + headerCellsHtml.join('') + '</tr></thead>');
 	
-	// Build version tree
+	// Push the ID of the last version onto the stack
 	var stack = [];
 	stack.push({'id': versionData[versionData.length - 1].id});
 	while (stack.length > 0) {
+		
+		// Pop an ID off the stack
 		var currentId = stack.pop();
 		var sequenceNo;
 		
-		// Join the versions
+		// Join versions with this ID
 		var nextVersion = null;
 		for (sequenceNo = versionData.length - 1; sequenceNo >= 0; sequenceNo--) {
 			if (versionData[sequenceNo].id == currentId.id) {
-				if (nextVersion) nextVersion._prev_version = versionData[sequenceNo];
+				if (nextVersion) {
+					nextVersion._prev_version = versionData[sequenceNo];
+				}
 				nextVersion = versionData[sequenceNo];
 			}
 		}
@@ -95,26 +99,28 @@ function onready() {
 		var treeRow = $(`<tr><th>${currentId.id}</th>` + '<td></td>'.repeat(versionData.length * 2 - 1) + '</tr>').appendTo(treeTable);
 		var treeRowCells = treeRow.find('td');
 		
-		// Render table cells
+		// Render versions with this ID
 		var minColNo = null, maxColNo = null, colNo = null;
 		for (sequenceNo = versionData.length - 1; sequenceNo >= 0; sequenceNo--) {
 			if (versionData[sequenceNo].id == currentId.id) {
+				colNo = sequenceNo * 2;
+				
+				// If this is a merge, add the merged ID to the stack
+				var sourceMatch = versionData[sequenceNo]._source.match(/^After merging person (\d+)$/);
+				if (sourceMatch) {
+					versionData[sequenceNo]._merge = true;
+					stack.push({'id': sourceMatch[1], 'mergeColNo': colNo - 1});
+				}
 				
 				// Write this version to the tree
-				colNo = sequenceNo * 2;
-				$(`<a class="sjo-tree-version">${versionIcon(versionData[sequenceNo])}</a>`)
+				$('<a class="sjo-tree-version"></a>')
+					.html(versionIcon(versionData[sequenceNo]))
 					.data('sjo-tree-version', versionData[sequenceNo]._version_id)
 					.appendTo(treeRowCells.eq(sequenceNo * 2));
 				
 				// Keep track of first and last versions for this ID
 				if (!minColNo || colNo < minColNo) minColNo = colNo;
 				if (!maxColNo || colNo > maxColNo) maxColNo = colNo;
-				
-				// If this is a merge, add the merged ID to the stack
-				var sourceMatch = versionData[sequenceNo]._source.match(/^After merging person (\d+)$/);
-				if (sourceMatch) {
-					stack.push({'id': sourceMatch[1], 'mergeColNo': colNo - 1});
-				}
 				
 			}
 		}
@@ -140,44 +146,65 @@ function onready() {
 	
 	function versionIcon(version) {
 		
-		var symbols = {
-			HEAVY_PLUS_SIGN:      '\u2795',
-			HEAVY_MINUS_SIGN:     '\u2796',
-			QUESTION:             '\u2753',
-			EXCLAMATION:          '\u2757',
-			MALE_AND_FEMALE_SIGN: '\u26A5',
-			PAGE_WITH_CURL:       '\u{1F4C3}',
-			COOKIE:               '\u{1F36A}',
-			STAR:                 '\u2B50',
-			BLACK_STAR:           '\u2605',
-			PENCIL:               '\u270F'
+		var Unicode = {
+			BLACK_DIAMOND:					'\u25C6',
+			WHITE_DIAMOND:					'\u25C7',
+			BLACK_STAR:						'\u2605',
+			WHITE_STAR:						'\u2606',
+			FEMALE_SIGN:					'\u2640',
+			MALE_SIGN:						'\u2642',
+			MALE_AND_FEMALE_SIGN:			'\u26A5',
+			MEDIUM_WHITE_CIRCLE:			'\u26AA',
+			MEDIUM_BLACK_CIRCLE:			'\u26AB',
+			PENCIL:							'\u270F',
+			BLACK_QUESTION_MARK_ORNAMENT:	'\u2753',
+			WHITE_QUESTION_MARK_ORNAMENT:	'\u2757',
+			HEAVY_PLUS_SIGN:				'\u2795',
+			HEAVY_MINUS_SIGN:				'\u2796',
+			WHITE_MEDIUM_STAR:				'\u2B50',
+			COOKIE:							'\u{1F36A}',
+			SPEECH_BALLOON:					'\u{1F4AC}',
+			PAGE_WITH_CURL:					'\u{1F4C3}',
+			CALENDAR:						'\u{1F4C5}',
+			AUTOMOBILE:						'\u{1F697}',
 		};
-		
+
 		console.log(version);
+		
+		var prev_version = version._prev_version || {};
 		
 		var icons = [];
 		
-		if (!version._prev_version) {
-			icons.push(symbols.BLACK_STAR);
+		// Merge
+		if (version._merge) {
+			icons.push(Unicode.WHITE_DIAMOND);
 		} else {
 			
+			// New person
+			if (!version._prev_version)
+				icons.push(`<span style="color: gold;">${Unicode.BLACK_STAR}</span>`);
+
+			// New candidacy
 			$.each(version.standing_in, (key, value) => {
-				if (!version._prev_version.standing_in[key]) {
-					icons.push(symbols.HEAVY_PLUS_SIGN);
+				if (!prev_version.standing_in || !prev_version.standing_in[key]) {
+					icons.push(Unicode.HEAVY_PLUS_SIGN);
 					return false;
 				} else {
 					return true;
 				}
 			});
 			
-			$.each(version._prev_version.standing_in, (key, value) => {
-				if (!version.standing_in[key]) {
-					icons.push(symbols.HEAVY_MINUS_SIGN);
-					return false;
-				} else {
-					return true;
-				}
-			});
+			// Deleted candidacy
+			if (prev_version.standing_in) {
+				$.each(prev_version.standing_in, (key, value) => {
+					if (!version.standing_in[key]) {
+						icons.push(Unicode.HEAVY_MINUS_SIGN);
+						return false;
+					} else {
+						return true;
+					}
+				});
+			}
 			
 			// TODO: display different icons for different actions:
 			// change post name		U+2753	question
@@ -186,14 +213,22 @@ function onready() {
 			// Updated by the automated Twitter account checker (candidates_update_twitter_usernames)
 			// [Quick update from the constituency page]
 			
-			if (version.gender != version._prev_version.gender && version._prev_version.gender != '')
-				icons.push(symbols.MALE_AND_FEMALE_SIGN);
+			// Changed gender
+			if (version.gender != prev_version.gender) {
+				if (!version.gender) {
+					icons.push(iconColor(Unicode.MALE_AND_FEMALE_SIGN, 'red'));
+				} else if (!prev_version.gender) {
+					icons.push(iconColor(Unicode.MALE_AND_FEMALE_SIGN, 'black'));
+				} else {
+					icons.push(iconColor(Unicode.MALE_AND_FEMALE_SIGN, 'blue'));
+				}
+			}
 			
-			if (version.biography != version._prev_version.biography)
-				icons.push(symbols.PAGE_WITH_CURL);
+			if (version.biography != prev_version.biography)
+				icons.push(Unicode.SPEECH_BALLOON);
 			
-			if (version.extra_fields && version.extra_fields.favourite_biscuits && (!version._prev_version.extra_fields || !version._prev_version.extra_fields.favourite_biscuits || version.extra_fields.favourite_biscuits != version._prev_version.extra_fields.favourite_biscuits))
-				icons.push(symbols.COOKIE);
+			if (version.extra_fields && version.extra_fields.favourite_biscuits && (!versionprev_version.extra_fields || !prev_version.extra_fields.favourite_biscuits || version.extra_fields.favourite_biscuits != prev_version.extra_fields.favourite_biscuits))
+				icons.push(Unicode.COOKIE);
 			
 		}
 		
@@ -220,5 +255,9 @@ function onready() {
 		$('.sjo-tree-current').removeClass('sjo-tree-current');
 		button.addClass('sjo-tree-current');
 	});
-		
+	
+	function iconColor(icon, color) {
+		return `<span style="color: ${color};">${icon}</span>`;
+	}
+	
 }
