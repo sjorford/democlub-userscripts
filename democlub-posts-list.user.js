@@ -2,7 +2,7 @@
 // @name        Democracy Club posts list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/posts
-// @version     2018.03.02
+// @version     2018.03.02.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -59,6 +59,8 @@ function onready() {
 				var post = listItem.find('a').text();
 				var postUrl = listItem.find('a').attr('href');
 				var lock = listItem.find('abbr').text();
+				
+				if (postUrl.match(/\/election\/mayor\./)) post = Utils.shortOrgName(post);
 				
 				$('<tr></tr>')
 					.addCell(lock)
