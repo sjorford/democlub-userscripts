@@ -2,7 +2,7 @@
 // @name        Democracy Club posts list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/posts
-// @version     2018.02.15
+// @version     2018.03.02
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -18,7 +18,6 @@ $(`<style>
 	.sjo-post-complete {background-color: #ffb !important;}
 	.sjo-post-verified {background-color: #bbf7bb !important;}
 	.content h2 {border-bottom: 1px solid #aaa;}
-	.sjo-posts-may {display: none;}
 	.sjo-posts-may-button {font-size: 0.875rem; margin-left: 1rem;}
 </style>`).appendTo('head');
 
@@ -80,9 +79,10 @@ function onready() {
 	
 	// Hide May elections
 	var h2 = $('.content h2').filter((index, element) => element.innerText.trim() == '3rd May 2018');
-	$(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections);
-	$(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections).hide();
+	$(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections).hide();
+	$(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections);
 	h2.nextUntil('h2').wrapAll('<div class="sjo-posts-may"></div>');
+	//toggleMayElections();
 	
 	function toggleMayElections() {
 		$('.sjo-posts-may, .sjo-posts-may-button').toggle();
