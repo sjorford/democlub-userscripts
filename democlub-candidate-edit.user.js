@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.03.04.0
+// @version     2018.03.07.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -106,7 +106,7 @@ function onready() {
 			if (select.length > 0) {
 				clearInterval(refreshTimerChange);
 				refreshTimerChange = null;
-				select.val('standing').change();
+				select.val('standing').change().closest('p').hide();
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
 			}
 		}
