@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.09.3
+// @version        2018.03.09.4
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -35,7 +35,8 @@ function onready() {
 		xxx.sjo-addperson-button-CTY {background-color: #6fd16f;}
 		xxx.sjo-addperson-button-DIS {background-color: #95f095;}
 		
-		.sjo-addperson-button-mayor::before {content: "👤"; right: 0; position: absolute; padding-right: 0.5em;}
+		.sjo-addperson-button-mayor::before {content: "\u{1F464}"; right: 0; position: absolute; padding-right: 0.5em;}
+		.sjo-addperson-latest {background-color: gold;}
 		
 		.sjo-filter {display: inline-block !important; width: 15em !important; padding: 0.1rem !important; height: 1.5rem !important;}
 		.sjo-hidden {display: none;}
