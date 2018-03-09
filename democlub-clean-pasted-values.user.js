@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.02.15
+// @version     2018.03.09
 // @grant       none
 // ==/UserScript==
 
@@ -28,6 +28,11 @@ function cleanInputValue(input) {
 	if (input.name == 'q' || input.id == 'id_name' || input.id == 'alt-name' || input.id.match(/^id_form-\d+-name$/)) {
 		var reverse = $('#sjo-reverse').is(':checked');
 		value = cleanInputName(value, reverse);
+	}
+	
+	// Remove @ from Twitter handle
+	if (input.name == 'twitter_username') {
+		value = value.replace(/^@/, '');
 	}
 	
 	return value;
