@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.03.09
+// @version     2018.03.09.1
 // @grant       none
 // ==/UserScript==
 
@@ -16,6 +16,7 @@ function onready() {
 	
 	// Clean pasted values
 	$('body').on('paste', 'input', event => setTimeout(() => event.target.value = cleanInputValue(event.target), 0));
+	$('body').on('paste', '#id_biography', event => setTimeout(() => event.target.value = event.target.value.trim(), 0));
 	
 }
 
