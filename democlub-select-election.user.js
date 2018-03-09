@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.28
+// @version        2018.03.09.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -11,10 +11,8 @@
 // ==/UserScript==
 
 // TODO:
-// colour-code elections
 // separate May elections from by-elections
 // indicate mayoral elections
-// put org name in button
 // remove . from St. Helens
 // that'll do for now
 
