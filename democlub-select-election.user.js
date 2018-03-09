@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.09.0
+// @version        2018.03.09.1
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -29,11 +29,11 @@ function onready() {
 		.sjo-addperson-listitem {margin: 0; padding-left: 3.05em; text-indent: -3.05em;}
 		
 		.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem; text-align: left; width: 100%; background-color: #e7e7e7; color: black;}
-		.sjo-addperson-button-LBO {background-color: #c4d1ff;}
-		.sjo-addperson-button-MBO {background-color: #ffbaba;}
-		.sjo-addperson-button-UTA {background-color: #ffe766;}
-		.sjo-addperson-button-CTY {background-color: #6fd16f;}
-		.sjo-addperson-button-DIS {background-color: #95f095;}
+		xxx.sjo-addperson-button-LBO {background-color: #c4d1ff;}
+		xxx.sjo-addperson-button-MBO {background-color: #ffbaba;}
+		xxx.sjo-addperson-button-UTA {background-color: #ffe766;}
+		xxx.sjo-addperson-button-CTY {background-color: #6fd16f;}
+		xxx.sjo-addperson-button-DIS {background-color: #95f095;}
 		
 		.sjo-filter {display: inline-block !important; width: 15em !important; padding: 0.1rem !important; height: 1.5rem !important;}
 		.sjo-hidden {display: none;}
