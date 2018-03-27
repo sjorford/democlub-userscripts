@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.03.07.0
+// @version     2018.03.27.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -37,6 +37,8 @@ function onready() {
 		
 		.sjo-input#id_twitter_username {width: 360px; margin-left: -4px; display: inline-block;}
 		.sjo-prefix {display: inline-block; width: 30px; position: relative; top: 1px; height: 2rem; line-height: 2rem;}
+		
+		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
 	</style>`).appendTo('head');
 	
@@ -106,8 +108,11 @@ function onready() {
 			if (select.length > 0) {
 				clearInterval(refreshTimerChange);
 				refreshTimerChange = null;
+				
 				select.val('standing').change().closest('p').hide();
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
+				updateElectionsWarning();
+				
 			}
 		}
 		
@@ -143,6 +148,15 @@ function onready() {
 			Utils.formatPartySelects(input);
 		}
 		
+	}
+	
+	// Display a warning message if this person has no current elections
+	$('<span class="sjo-noelections-warning">WARNING: no current elections</span>')
+		.insertAfter('input.button[value="Save changes"]');
+	updateElectionsWarning();
+	
+	function updateElectionsWarning() {
+		$('.sjo-noelections-warning').toggle($('.post-select').length == 0);
 	}
 	
 	// ================================================================
