@@ -22,6 +22,7 @@ Compact candidate pages:
 Improvements to the candidate edit form:
 * Line up labels and fields in tabular format
 * Clean up and sort dropdown list of elections
+* Display a warning if a candidate has no current elections
 
 ### democlub-show-other-candidates.user.js
 Addition to the candidate edit form:
@@ -36,11 +37,10 @@ Automatically clean data pasted into any input field:
 
 ### democlub-select-election.user.js
 Compact the list of election buttons when adding a new candidate:
-* Show list in columns
-* Trim text in each button
+* Shorten text in buttons and show list in columns
 * Sort by date and separate out mayoral elections
 * Highlight the most recently selected election
-* Search box to filter the list of elections
+* Add a search box to filter the list of elections
 
 
 
@@ -48,7 +48,7 @@ Compact the list of election buttons when adding a new candidate:
 Speed up bulk add page:
 * Line up labels and fields in tabular format
 * Show one row at a time
-* Option to include only active parties (with at least one candidate in a current election) in the dropdown list
+* Option to include only active parties in the dropdown list (those with at least one candidate in a current election)
 * Hide instructions
 
 ### democlub-bulk-adding-review.user.js
