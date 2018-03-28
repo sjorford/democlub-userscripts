@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.03.28.0
+// @version     2018.03.28.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -82,8 +82,10 @@ function onready() {
 	$.each(candidateFields, (key, value) => formatField(key, value, null));
 	
 	// Format election fields on page load
-	$('[id^="id_standing_"]').each((index, element) => 
-		$.each(electionFields, (key, value) => formatField(key, value, element.id.replace('id_standing_', ''))));
+	$('[id^="id_standing_"]')
+		.each((index, element) => 
+			$.each(electionFields, (key, value) => formatField(key, value, element.id.replace('id_standing_', ''))))
+		.closest('p').hide();
 	
 	// Detect new election
 	var refreshTimerChange;
