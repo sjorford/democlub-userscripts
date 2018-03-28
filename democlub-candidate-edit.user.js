@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.03.27.0
+// @version     2018.03.28.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -22,7 +22,7 @@ function onready() {
 		.sjo-formitem {margin-bottom: 6px;}
 		
 		.sjo-formitem select.standing-select {width: 120px; display: inline-block; height: 1.75rem; padding: 0px 8px; margin-bottom: 0;}
-		.sjo-formitem div.select2-container {width: 390px !important; display: inline-block;}
+		.sjo-formitem div.select2-container {width: 390px !important; display: inline-block !important;}
 		
 		.sjo-label {float: left; width: 125px; margin-top: 4px; margin-bottom: 0px; font-weight: bold;}
 		.sjo-label[for="id_biography"] {float: none;}
