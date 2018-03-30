@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.03.29.0
+// @version     2018.03.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -15,9 +15,8 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style>
-		.sjo-table td {padding: 0.25rem; vertical-align: middle;}
+		.sjo-table td, .sjo-table th {padding: 0.25rem; vertical-align: middle;}
 		.sjo-table h4 {font-size: 1rem; font-weight: bold; margin: 0;}
-		.sjo-table p {font-size: 0.75rem; margin: 0;}
 		.sjo-table input {margin: 0; padding: 0.25rem; height: auto;}
 	</style>`).appendTo('head');
 	
@@ -27,11 +26,13 @@ function onready() {
 	form.find('div').each((index, element) => {
 		var div = $(element);
 		var row = $('<tr></tr>').appendTo(table);
-		$('<td></td>').appendTo(row).append(div.find('h4'));
-		$('<td></td>').appendTo(row).append(div.find('input[type="text"]'));
-		$('<td></td>').appendTo(row).append(div.find('p').first());
-		$('<td></td>').appendTo(row).append(div.find('p'));
-		div.find('label').hide();
+		$('<th></th>').appendTo(row).append(div.find('h4').text());
+		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
+		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
+		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a'));
+		$('<td></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
+		//$('<td></td>').appendTo(row).append(div.find('p'));
+		div.hide();
 	});
 	
 	// Add a checkbox for reversed names
