@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.03.30.0
+// @version     2018.04.01.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -38,5 +38,15 @@ function onready() {
 	// Add a checkbox for reversed names
 	$('<input type="checkbox" id="sjo-reverse" value="reverse"><label for="sjo-reverse">Surname first</label>')
 		.insertAfter('#id_source').wrapAll('<div></div>');
+	
+	// Check source is entered before submitting
+	$('.content button[type="submit"]').click(() => {
+		var input = $('#id_source');
+		if (input.val() == '') {
+			$('<ul class="errorlist"><li>This field is required.</li></ul>').insertBefore(input);
+			$('html, body').scrollTop(0);
+			return false;
+		}
+	});
 	
 }
