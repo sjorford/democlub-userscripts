@@ -2,8 +2,9 @@
 // @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.03.29.0
+// @version     2018.04.03.0
 // @grant       none
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -49,9 +50,13 @@ function onready() {
 	});
 	
 	function renderBulkAddData(input, data) {
+		console.log(data);
 		input.closest('label')
-			.append('<ul class="sjo-bulkadd-data">' + data.memberships.map(member => 
-				`<li>${member.election.name} (${trimPost(member.post.label)}) - ${member.on_behalf_of.name}</li>`).join('') + '</ul>');
+			.append('<ul class="sjo-bulkadd-data">' + data.memberships.map(member => {
+				var election = Utils.shortOrgName(member.election.name.replace(/^\d{4} | local election$/g, ''));
+				var year = member.election.id.match(/\d{4}/)[0];
+				return `<li>${year} - ${election} (${trimPost(member.post.label)}) - ${member.on_behalf_of.name}</li>`;
+			}).join('') + '</ul>');
 	}
 	
 	function trimPost(postName) {
