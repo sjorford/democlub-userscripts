@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.03.09.1
+// @version     2018.04.03.0
 // @grant       none
 // ==/UserScript==
 
@@ -26,7 +26,9 @@ function cleanInputValue(input) {
 	var value = input.value.trim().replace(/\s+/g, ' ');
 	
 	// Reformat names
-	if (input.name == 'q' || input.id == 'id_name' || input.id == 'alt-name' || input.id.match(/^id_form-\d+-name$/)) {
+	if (input.name == 'q' || input.id == 'id_name' || input.id == 'alt-name' 
+		|| input.id.match(/^id_form-\d+-name$/)
+		|| input.id.match(/^id_\d+-\d+-name$/)) {
 		var reverse = $('#sjo-reverse').is(':checked');
 		value = cleanInputName(value, reverse);
 	}
