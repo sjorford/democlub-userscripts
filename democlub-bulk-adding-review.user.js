@@ -2,7 +2,7 @@
 // @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.04.03.0
+// @version     2018.04.03.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -41,6 +41,8 @@ function onready() {
 		var input = $(element);
 		var link = input.closest('label').addClass('sjo-bulkadd-listitem').find('a').addClass('sjo-bulkadd-link');
 		if (link.length > 0) link.html(link.html().replace(/\(previously stood in [\s\S]*? candidate\)/, ''));
+		link.closest('div').contents().filter((index, element) => element.nodeType == Node.TEXT_NODE && element.textContent.match(/^\s*(Mark|as standing in .*)\s*$/)).remove();
+		
 		var personID = input.val();
 		if (personID == '_new') return;
 		
