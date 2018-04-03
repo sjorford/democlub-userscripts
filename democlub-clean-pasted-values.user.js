@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.04.03.0
+// @version     2018.04.03.1
 // @grant       none
 // ==/UserScript==
 
@@ -57,7 +57,7 @@ function cleanInputName(value, reverse) {
 	}
 	
 	// Check for SURNAME Forenames
-	match = value.match(/^([-'A-Z ]{2,})\s+(.*[a-z].*)$/);
+	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})\s+(.*[a-z].*)$/);
 	if (match) {
 		return properCaseName(match[2]) + ' ' + properCaseName(match[1]);
 	}
@@ -77,14 +77,21 @@ function cleanInputName(value, reverse) {
 function properCaseName(name) {
 	if (debug) console.log('properCaseName', name, name.codePointAt(0));
 	
+	// Split names at spaces and hyphens
 	if (name.indexOf(' ') >= 0) return name.split(' ').map(value => properCaseName(value)).join(' ');
 	if (name.indexOf('-') >= 0) return name.split('-').map(value => properCaseName(value)).join('-');
 	
+	// Convert McNAME format
+	if (name.match(/^Mc[A-Z]+$/)) return name.substr(0, 3) + name.substr(3).toLowerCase();
+	
+	// Otherwise, if the name has any lower case letters, return it unchanged
 	if (name.match(/[a-z]/)) return name;
 	
+	// Convert upper case prefixes separately from the remainder
 	if (name.substr(0, 2) == "O'") return "O'" + properCaseName(name.substr(2));
 	if (name.substr(0, 2) == "MC") return "Mc" + properCaseName(name.substr(2));
 	
+	// Proper case upper case names
 	return name.substr(0, 1) + name.substr(1).toLowerCase();
 	
 }
