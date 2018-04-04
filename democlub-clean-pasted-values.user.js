@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.04.03.1
+// @version     2018.04.03.2
 // @grant       none
 // ==/UserScript==
 
@@ -46,7 +46,7 @@ function cleanInputValue(input) {
 function cleanInputName(value, reverse) {
 	if (debug) console.log('cleanInputName', value, reverse);
 	
-	value = value.replace(/\u200B/g, ' ').replace(/`/g, "'").trim();
+	value = value.replace(/\u200B/g, ' ').replace(/[`\u2019]/g, "'").trim();
 	
 	var match;
 	

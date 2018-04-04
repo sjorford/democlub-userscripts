@@ -2,7 +2,7 @@
 // @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.04.03.1
+// @version     2018.04.03.2
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -52,13 +52,23 @@ function onready() {
 	});
 	
 	function renderBulkAddData(input, data) {
-		console.log(data);
+		
+		// Parse returned data
+		var candidacies = data.memberships.map(member => {
+			var election = Utils.shortOrgName(member.election.name.replace(/^\d{4} | local election$/g, ''));
+			var year = member.election.id.match(/\d{4}/)[0];
+			return {year: year, election: election, post: trimPost(member.post.label), party: member.on_behalf_of.name};
+		});
+		
+		// Sort by year
+		candidacies = candidacies.sort((a, b) => b.year - a.year);
+		
+		// Insert after radio buton
 		input.closest('label')
-			.append('<ul class="sjo-bulkadd-data">' + data.memberships.map(member => {
-				var election = Utils.shortOrgName(member.election.name.replace(/^\d{4} | local election$/g, ''));
-				var year = member.election.id.match(/\d{4}/)[0];
-				return `<li>${year} - ${election} (${trimPost(member.post.label)}) - ${member.on_behalf_of.name}</li>`;
-			}).join('') + '</ul>');
+			.append('<ul class="sjo-bulkadd-data">' 
+				+ candidacies.map(c => `<li>${c.year} - ${c.election} (${c.post}) - ${c.party}</li>`).join('') 
+				+ '</ul>');
+		
 	}
 	
 	function trimPost(postName) {
