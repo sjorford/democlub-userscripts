@@ -2,7 +2,7 @@
 // @name           Democracy Club document viewer
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.04.21.0
+// @version        2018.04.21.1
 // @match          https://candidates.democracyclub.org.uk/upload_document/*
 // @grant          none
 // ==/UserScript==
@@ -20,8 +20,9 @@ $(function() {
 	// Find target document
 	var iframe = $('.document_viewer');
 	var viewerUrl = iframe.attr('src');
-	var match = viewerUrl.match(/^https:\/\/docs\.google\.com\/viewer\?url=(.*)&embedded=true$/);
+	var match = viewerUrl.match(/^https:\/\/docs\.google\.com\/viewer\?url=(.*?(\.docx)?)&embedded=true$/);
 	if (!match) return;
+	if (match[2]) return;
 	
 	// Insert native object
 	var url = decodeURIComponent(match[1]);
