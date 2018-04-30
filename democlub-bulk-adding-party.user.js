@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.04.01.0
+// @version     2018.04.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -18,6 +18,7 @@ function onready() {
 		.sjo-table td, .sjo-table th {padding: 0.25rem; vertical-align: middle;}
 		.sjo-table h4 {font-size: 1rem; font-weight: bold; margin: 0;}
 		.sjo-table input {margin: 0; padding: 0.25rem; height: auto;}
+		.sjo-nowrap {white-space: nowrap;}
 	</style>`).appendTo('head');
 	
 	// Format rows into a table
@@ -30,8 +31,7 @@ function onready() {
 		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
 		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
 		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a'));
-		$('<td></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
-		//$('<td></td>').appendTo(row).append(div.find('p'));
+		$('<td class="sjo-nowrap"></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
 		div.hide();
 	});
 	
