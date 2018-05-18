@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.03.07.1
+// @version     2018.05.18.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -57,10 +57,10 @@ function onready() {
 			}
 			dt.html(council + ' <span class="sjo-heading-note">(' + (date.length > 4 ? moment(date).format("D MMM YYYY") : date) + ')</span>');
 			
+			/*
 			// Remove duplicate votes
 			var result = {'votes': null, 'elected': null};
 			$('.candidate-result-confirmed, .vote-count, br', dd).hide();
-			/*
 			$('.vote-count', dd).each((index, element) => {
 				var votesSpan = $(element);
 				votesSpan.next('br').hide();
