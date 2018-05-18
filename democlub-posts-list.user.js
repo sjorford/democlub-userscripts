@@ -2,7 +2,7 @@
 // @name        Democracy Club posts list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/posts
-// @version     2018.03.02.1
+// @version     2018.05.18.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -84,7 +84,7 @@ function onready() {
 	$(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections).hide();
 	$(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections);
 	h2.nextUntil('h2').wrapAll('<div class="sjo-posts-may"></div>');
-	//toggleMayElections();
+	toggleMayElections();
 	
 	function toggleMayElections() {
 		$('.sjo-posts-may, .sjo-posts-may-button').toggle();
