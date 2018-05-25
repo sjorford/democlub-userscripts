@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.04.03.2
+// @version     2018.05.25.0
 // @grant       none
 // ==/UserScript==
 
@@ -48,30 +48,42 @@ function cleanInputName(value, reverse) {
 	
 	value = value.replace(/\u200B/g, ' ').replace(/[`\u2019]/g, "'").trim();
 	
-	var match;
+	var match, cleanedName;
 	
 	// Check for Surname, Forenames
-	match = value.match(/^([^,]+),(.+)$/);
+	match = value.match(/^([^,]+?)\s*,\s*(.+?)$/);
 	if (match) {
-		return properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+		if (debug) console.log('cleanInputName route 1');
+		cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+		if (debug) console.log('cleanInputName', cleanedName);
+		return cleanedName;
 	}
 	
 	// Check for SURNAME Forenames
 	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})\s+(.*[a-z].*)$/);
 	if (match) {
-		return properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+		if (debug) console.log('cleanInputName route 2');
+		cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+		if (debug) console.log('cleanInputName', cleanedName);
+		return cleanedName;
 	}
 	
 	// Check for reverse flag
 	if (reverse) {
 		match = value.match(/^(\S+)\s+(.*)$/);
 		if (match) {
-			return properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+			if (debug) console.log('cleanInputName route 3');
+			cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+			if (debug) console.log('cleanInputName', cleanedName);
+			return cleanedName;
 		}
 	}
 	
-	return properCaseName(value);
-
+	if (debug) console.log('cleanInputName default route');
+	cleanedName = properCaseName(value);
+	if (debug) console.log('cleanInputName', cleanedName);
+	return cleanedName;
+	
 }
 
 function properCaseName(name) {
