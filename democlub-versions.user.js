@@ -2,7 +2,7 @@
 // @name        Democracy Club versions
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.02.23
+// @version     2018.07.02.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -62,8 +62,18 @@ function onready() {
 				
 			}
 			
+			oldText = oldText.trim();
+			newText = newText.trim();
+			
+			if (fieldName == 'extra_fields') {
+				if (oldText == '"favourite_biscuits": ""') oldText = '';
+				if (newText == '"favourite_biscuits": ""') newText = '';
+			}
+			
 			// Add to table
-			if (fieldName) addChangeRow(fieldName, oldText, newText, span);
+			if (fieldName) {
+				addChangeRow(fieldName, oldText, newText, span);
+			}
 			
 		});
 		
