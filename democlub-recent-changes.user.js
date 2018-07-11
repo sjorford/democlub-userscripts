@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.02.15
+// @version        2018.07.11.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -23,7 +23,7 @@ function onready() {
 		.sjo-number {text-align: right;}
 		.sjo-mychanges {background-color: #ffeb99 !important;}
 		.sjo-changes-candidacy-delete {background-color: pink !important;}
-		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject * {color: #ccc !important;}
+		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
 	</style>`).appendTo('head');
 	
 	var username = 'sjorford'; // TODO: get this from top of page?
