@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.05.18.0
+// @version     2018.08.07.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -95,6 +95,15 @@ function onready() {
 		}
 		
 	});
+	
+	// Add link to WCIVF
+	console.log(window.location.href);
+	var personID = window.location.href.match(/\/person\/(\d+)/)[1];
+	$(`
+		<div class="person__actions__action">
+			<h2>On other sites</h2>
+			<p>View on <a href="https://whocanivotefor.co.uk/person/${personID}/">Who Can I Vote For?</a></p>
+		</div>`).appendTo('.person__actions');
 	
 	// Remove blah
 	var blah = [
