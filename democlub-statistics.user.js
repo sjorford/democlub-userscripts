@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2018.08.27.0
+// @version     2018.08.27.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -77,7 +77,7 @@ function onready() {
 					var bullet = $(element);
 					var link = bullet.find('a');
 					if (link.length > 0) {
-						link.html(link.html()
+						link.html(link.html().trim()
 							.replace(/^Candidates per /, 'by ')
 							.replace(/^See progress towards locking all posts$/, 'progress'));
 						$('<td class="sjo-nowrap"></td>').append(link).appendTo(row);
