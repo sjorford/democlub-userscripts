@@ -245,5 +245,8 @@
   },
   "biography":{
     "display":"Biography"
+  },
+  "cancelled_poll":{
+
   }
 }
