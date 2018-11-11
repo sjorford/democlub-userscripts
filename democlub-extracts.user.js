@@ -2,15 +2,15 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018-11-07
+// @version        2018.11.11.0
 // @match          https://candidates.democracyclub.org.uk/help/api
-// @grant       GM_xmlhttpRequest
-// @connect     raw.githubusercontent.com
+// @grant          GM_xmlhttpRequest
+// @connect        raw.githubusercontent.com
+// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js
+// @require        https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js
+// @require        https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
+// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
-
-
-
-
 
 // Global variables
 var tableData = null;
@@ -19,9 +19,9 @@ var sortColumn = -1, sortOrder = 1;
 var currentExtract, currentTemplate, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
-var areasByKey;
 var badAreaNames = [];
-var allCandidatesUrl = 'https://candidates.democracyclub.org.uk/media/candidates-all.csv';
+var allCandidatesUrl = '/media/candidates-all.csv';
+var electionMappings = {};
 
 // Styles
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
@@ -67,9 +67,6 @@ $(`<style>
 	
 	.sjo-api-row-elected {background-color: #fbf2af !important;}
 	#sjo-api-table td.sjo-api-cell-icon {font-size: 1rem !important; text-align: center;}
-	xxx.sjo-api-cell-party_list_position, xxx.sjo-api-cell-_elected_icon {display: none;}
-	xxx.sjo-api-table-has-party-lists .sjo-api-cell-party_list_position {display: table-cell;}
-	xxx.sjo-api-table-has-results .sjo-api-cell-_elected_icon {display: table-cell;}
 	td.sjo-api-invalid {background-color: #ffd4d4 !important;}
 	#sjo-api-table.sjo-api-invalidonly tbody tr {display: none;}
 	#sjo-api-table.sjo-api-invalidonly tbody tr.sjo-api-invalid {display: table-row;}
@@ -100,15 +97,48 @@ var dataFields = {}; // GET extracts-fields.json
 
 // Download buttons
 var buttonSpecs = {}; // GET extract-selections.json
-var defaultButton = buttonSpecs.test ? 'test' : 'local1819';
+var defaultButton = 'local1819';
 
 // Fields to be displayed
 var templates = {}; // GET extract-templates.json
 
-// Initialize page
-$(function() {
-	console.log('initialize', dataFields);
+// Load configuration
+var configList = [
+	{
+		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-fields.json',
+		callback: response => dataFields = response
+	},
+	{
+		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-selections.json',
+		callback: response => buttonSpecs = response
+	},
+	{
+		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-templates.json',
+		callback: response => templates = response
+	},
+];
 
+$(function() {
+	$.each(configList, (i, config) => {
+
+		GM_xmlhttpRequest({
+			method: 'GET',
+			responseType: 'json',
+			url: config.url,
+			onload: data => {
+				config.callback.call(this, data.response);
+				configList.splice(configList.indexOf(config), 1);
+				if (configList.length == 0) initialize();
+			}
+		});
+		
+	});
+});
+
+// Initialize page
+function initialize() {
+	console.log('initialize');
+	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
 	
@@ -160,16 +190,6 @@ $(function() {
 	$('<div class="sjo-api-wrapper" id="sjo-api-error"></div>').appendTo(wrapper).hide();
 	$('<div class="sjo-api-wrapper" id="sjo-api-invalidonly-wrapper"><input type="checkbox" id="sjo-api-invalidonly" value="invalidonly"><label for="sjo-api-invalidonly">Show only exceptions</label></div>').appendTo(wrapper).hide().click(toggleInvalidOnly);
 	
-	// Add dupe finding buttons
-	var dupesWrapper = $('<div class="sjo-api-wrapper" id="sjo-api-dupes-wrapper"></div>').appendTo(wrapper).hide();
-	$('<input type="button" id="sjo-api-button-dupes" value="Find duplicates">').appendTo(dupesWrapper).click(findDuplicates);
-	$('<input type="button" id="sjo-api-button-splits" value="Find splits">').appendTo(dupesWrapper).click(findSplits);
-	$('<input type="button" id="sjo-api-button-dupes-pause" value="Pause">').appendTo(dupesWrapper).hide().click(pauseDuplicates);
-	$('<input type="button" id="sjo-api-button-dupes-resume" value="Resume">').appendTo(dupesWrapper).hide().click(resumeDuplicates);
-	$('<span id="sjo-api-status-dupes"></span>').appendTo(dupesWrapper);
-	$('<table id="sjo-api-table-dupes"></table>').appendTo(dupesWrapper).hide();
-	$('<input type="button" id="sjo-api-button-dupes-more" value="More...">').appendTo(dupesWrapper).hide().click(resumeDuplicates);
-	
 	// Create table
 	var table = $(`<table id="sjo-api-table"></table>`).appendTo(wrapper).hide();
 	
@@ -203,32 +223,11 @@ $(function() {
 	
 	$('#sjo-api-button-download').attr('disabled', false);
 	
-	areasByKey = {};
-	$.each(areas, (index, element) => areasByKey[element.type + '|' + element.area] = element);
-	
-	// TODO: might use this again?
-	function preloader(data, x, y) {
-		
-		// Parse area data
-		if (data.areas) {
-			areas = data.areas;
-			areasByKey = {};
-			$.each(areas, (index, element) => areasByKey[element.type + '|' + element.area] = element);
-		}
-		
-		if (data.parties) parties = data.parties;
-		if (data['election-types']) electionTypes = data['election-types'];
-		
-		// If all data loaded, enable extract button
-		if (areas && parties && electionTypes) $('#sjo-api-button-download').attr('disabled', false);
-		
-	}
-	
 	// Trigger event for other scripts
 	// TODO: not currently used?
 	$('body').trigger('sjo-api-loaded');
 	
-});
+}
 
 // Build list of download options
 function buildDownloadList(dropdown) {
@@ -607,40 +606,10 @@ function cleanData(index, candidate) {
 	if (candidate._post_label == 'Sheffield Brightside and Hillsborough') candidate._post_label = 'Sheffield, Brightside and Hillsborough';
 	
 	// Election
-	// TODO: rejig this, including one that includes local.umpshire for local only
-	/*
-	var electionMatch = candidate._election.match(/^(parl|pcc|nia|(local|sp|naw|gla|mayor)\.[^\.]+)\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
-	candidate._election_area = electionMatch[1];
-	candidate._election_name = electionMappings[candidate._election_area];
-	candidate._byelection = electionMatch[3] ? electionMatch[3] : '';
-	var areaSplit = candidate._election_area.split('.');
-	candidate._election_type = areaSplit[0] + (areaSplit[1] && areaSplit[1].length == 1 ? '.' + areaSplit[1] : '');
-	*/
 	var electionMatch = candidate._election.match(/^((parl|nia|pcc|mayor)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
 	candidate._election_type = electionMatch[2] || electionMatch[3] || electionMatch[6] || null;
 	candidate._election_area = electionMatch[1];
 	candidate._election_name = electionMappings[candidate.election];
-	
-	// Get area ID and country from JSON
-	// TODO: this is a mess
-	var areaName = 
-		candidate._election_area == 'gla.a' ? 'London' : 
-		candidate._election_type == 'local' || candidate._election_type == 'mayor' ? candidate._election_name : 
-		candidate._post_label;
-	var area = areasByKey[candidate._election_type + '|' + areaName];
-	if (area) {
-		candidate.__area = area;
-		candidate._county = area.county;
-		candidate._country = area.country;
-	} else if (badAreaNames.indexOf(areaName) < 0) {
-		badAreaNames.push(areaName);
-		console.warn('cleanData', 'area not found', candidate._election_type, areaName);
-	}
-	
-	// Country
-	// TODO: get from new JSON
-	//var place = candidate._election_area + (candidate._election_area == candidate._election_type ? '.' + candidate._post_label.toLowerCase().trim().replace(/\s+/g, '-') : '');
-	//candidate._country = getCountryForElection(place);
 	
 	// Election year and age at election
 	// TODO: fix sorting of ages outside the range 10-99
@@ -656,32 +625,6 @@ function cleanData(index, candidate) {
 		candidate._age_at_election = '';
 	}
 	
-	// Split name
-	// TODO: deal with peerage titles like Lord Cameron of Roundwood
-	// TODO: deal with loony names like Sir Dudley the Crazed
-	var name = candidate.name.trim();
-	var nameMatch = name.match(/^(.*?)\s+([JS]n?r\.?)$/);
-	if (nameMatch) {
-		candidate._suffix = nameMatch[2];
-		name = nameMatch[1];
-	} else {
-		candidate._suffix = '';
-	}
-	nameMatch = name.match(/^(.*?)\s+(((st\.?|de|de la|le|van|van de|van der|von|di|da|ab|ap|\u00D3|N\u00ED|al|el)\s+.*?)|\S+)$/i);
-	if (nameMatch) {
-		candidate._last_name = nameMatch[2];
-		nameMatch = nameMatch[1].match(/^(\S+)(\s+(.*?))?$/);
-		candidate._first_name = nameMatch[1];
-		candidate._middle_names = nameMatch[3] ? nameMatch[3] : '';
-	} else {
-		candidate._last_name = name;
-		candidate._first_name = '';
-		candidate._middle_names = '';
-	}
-	candidate._short_name = (candidate._first_name + ' ' + candidate._last_name).trim();
-	candidate._normal_name = (nameNorms[candidate._first_name] ? nameNorms[candidate._first_name] : candidate._first_name) + ' ' + candidate._last_name;
-	candidate._name_parts = [candidate._first_name].concat(candidate._middle_names.split(' '));
-	
 	// Gender
 	// TODO: clean up name-gender mapping file and put on Github
 	candidate.gender = candidate.gender.trim();
@@ -691,21 +634,10 @@ function cleanData(index, candidate) {
 		candidate.gender.match(/^(f|female|(mrs|miss|ms)\.?)$/i) ? 'f' :
 		'?';
 	candidate._gender_icon = {'m': '\u2642', 'f': '\u2640', '?': '?', '': ''}[candidate._gender];
-	//candidate._maleness = candidate._gender ? ['f', '?', 'm'].indexOf(candidate._gender) / 2 : genderData[candidate._first_name] ? genderData[candidate._first_name].est.male : 0.5;
-	var g = null; //genderData[candidate._first_name];
-	candidate._maleness = g ? (g.count.male + 1) / (g.count.male + g.count.female + 2) : 0.5;
-	
-	// Party group
-	candidate._party = parties[candidate.party_name] ? parties[candidate.party_name] : 'Oth';
-	
-	// Initialize biography field (not in CSV)
-	candidate.biography = candidate.biography || '';
 	
 	// Parse Wikipedia titles
 	var urlMatch = candidate.wikipedia_url ? candidate.wikipedia_url.match(/\/wiki\/(.*)$/) : null;
 	candidate._wikipedia = !candidate.wikipedia_url ? '' : !urlMatch ? '?' : decodeURIComponent(urlMatch[1]).replace(/_/g, ' ');
-	
-	// TODO: parse list of old IDs?
 	
 	return candidate;
 	
