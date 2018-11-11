@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.11.0
+// @version        2018.11.11.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -19,7 +19,6 @@ var sortColumn = -1, sortOrder = 1;
 var currentExtract, currentTemplate, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
-var badAreaNames = [];
 var allCandidatesUrl = '/media/candidates-all.csv';
 var electionMappings = {};
 
@@ -93,14 +92,14 @@ var isValid = {
 };
 
 // Available fields
-var dataFields = {}; // GET extracts-fields.json
+var dataFields = {};
 
 // Download buttons
-var buttonSpecs = {}; // GET extract-selections.json
+var buttonSpecs = {};
 var defaultButton = 'local1819';
 
 // Fields to be displayed
-var templates = {}; // GET extract-templates.json
+var templates = {};
 
 // Load configuration
 var configList = [
