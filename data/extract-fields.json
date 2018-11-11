@@ -1,0 +1,249 @@
+{
+  "_row":{
+    "display":"#",
+    "sort":"#"
+  },
+  "id":{
+    "display":"ID",
+    "sort":"#"
+  },
+  "old_person_ids":{
+    "display":"Old IDs"
+  },
+  "name":{
+    "display":"Name",
+    "filter":true,
+    "link":"/person/@@id@@",
+    "validate":"name"
+  },
+  "honorific_prefix":{
+
+  },
+  "honorific_suffix":{
+
+  },
+  "_first_name":{
+    "display":"First Name",
+    "filter":true
+  },
+  "_middle_names":{
+    "display":"Middle Names",
+    "filter":true
+  },
+  "_last_name":{
+    "display":"Surname",
+    "filter":true
+  },
+  "_short_name":{
+    "display":"Short Name",
+    "filter":true
+  },
+  "_suffix":{
+    "display":"Suffix",
+    "filter":true
+  },
+  "gender":{
+
+  },
+  "_gender":{
+    "validate":"gender"
+  },
+  "_gender_icon":{
+    "filter":false,
+    "icon":true,
+    "validate":"gender"
+  },
+  "_maleness":{
+    "display":"M",
+    "dp":2
+  },
+  "birth_date":{
+    "display":"DOB"
+  },
+  "_age_at_election":{
+    "display":"Age"
+  },
+  "election":{
+    "display":"Election",
+    "filter":true
+  },
+  "_election":{
+    "display":"Election",
+    "filter":true
+  },
+  "_election_area":{
+    "display":"Election",
+    "filter":true
+  },
+  "_election_name":{
+    "display":"Election",
+    "filter":true
+  },
+  "_election_type":{
+    "display":"Type",
+    "filter":true
+  },
+  "election_date":{
+    "display":"Date",
+    "filter":true
+  },
+  "_election_year":{
+    "display":"Year",
+    "filter":true,
+    "sort":"#"
+  },
+  "election_current":{
+
+  },
+  "_byelection":{
+    "display":"By",
+    "abbr":"by"
+  },
+  "_country":{
+    "display":"Co",
+    "filter":true
+  },
+  "_county":{
+    "display":"County",
+    "filter":true
+  },
+  "party_id":{
+    "display":"ID",
+    "validate":"party"
+  },
+  "party_name":{
+    "display":"Party",
+    "filter":true,
+    "link":"/election/@@election@@/party/@@party_id@@/",
+    "validate":"party"
+  },
+  "_party":{
+    "display":"Party"
+  },
+  "post_id":{
+    "display":"ID"
+  },
+  "post_label":{
+    "display":"Post",
+    "filter":true,
+    "link":"/election/@@election@@/post/@@post_id@@/"
+  },
+  "_post_label":{
+    "display":"Post",
+    "filter":true,
+    "link":"/election/@@election@@/post/@@post_id@@/"
+  },
+  "party_lists_in_use":{
+
+  },
+  "party_list_position":{
+    "display":"Pos",
+    "sort":"#"
+  },
+  "elected":{
+    "abbr":"\u2605",
+    "icon":true
+  },
+  "email":{
+    "display":"Email",
+    "abbr":"@",
+    "validate":"email",
+    "group":"links"
+  },
+  "twitter_username":{
+    "display":"Twitter",
+    "abbr":"tw",
+    "link":"//twitter.com/@@twitter_username@@",
+    "group":"links"
+  },
+  "facebook_personal_url":{
+    "display":"FB profile",
+    "abbr":"fbp",
+    "link":"@@facebook_personal_url@@",
+    "validate":"fb",
+    "group":"links"
+  },
+  "facebook_page_url":{
+    "display":"FB page",
+    "abbr":"fbc",
+    "link":"@@facebook_page_url@@",
+    "validate":"fb",
+    "group":"links"
+  },
+  "homepage_url":{
+    "display":"Homepage",
+    "abbr":"hp",
+    "link":"@@homepage_url@@",
+    "validate":"hp",
+    "group":"links"
+  },
+  "wikipedia_url":{
+    "display":"Wikipedia",
+    "abbr":"wp",
+    "link":"@@wikipedia_url@@",
+    "validate":"wp",
+    "group":"links"
+  },
+  "_wikipedia":{
+    "display":"Wikipedia",
+    "abbr":"wp",
+    "link":"@@wikipedia_url@@",
+    "validate":"wp",
+    "group":"links"
+  },
+  "linkedin_url":{
+    "display":"LinkedIn",
+    "abbr":"li",
+    "link":"@@linkedin_url@@",
+    "validate":"li",
+    "group":"links"
+  },
+  "party_ppc_page_url":{
+    "display":"Party page",
+    "abbr":"ppc",
+    "link":"@@party_ppc_page_url@@",
+    "validate":"ppc",
+    "group":"links"
+  },
+  "twitter_user_id":{
+
+  },
+  "image_url":{
+    "display":"Image",
+    "abbr":"\u263A",
+    "icon":true
+  },
+  "proxy_image_url_template":{
+
+  },
+  "image_copyright":{
+
+  },
+  "image_uploading_user":{
+
+  },
+  "image_uploading_user_notes":{
+
+  },
+  "mapit_url":{
+
+  },
+  "gss_code":{
+
+  },
+  "parlparse_id":{
+
+  },
+  "theyworkforyou_url":{
+
+  },
+  "party_ec_id":{
+
+  },
+  "favourite_biscuits":{
+    "display":"Biscuit"
+  },
+  "biography":{
+    "display":"Biography"
+  }
+}
