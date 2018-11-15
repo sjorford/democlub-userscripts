@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.11.1
+// @version        2018.11.15.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -405,60 +405,12 @@ function parseComplete(results) {
 		console.log('parseComplete', results.data.length);
 		$.each(results.data, (index, candidate) => cleanData(index, candidate));
 		console.log('parseComplete', results.data);
-			
-		// Call custom merge routine
-		if (currentTemplate.process) {
-			currentTemplate.process.call(this, results.data, mergeData, nextDownload);
-		} else {
-			mergeData();
-		}
 		
 	}
 	
-	function mergeData() {
-		console.log('mergeData', currentSet);
-		
-		if (currentSet === 0) {
-			
-			// Convert into multi-candidacy array
-			tableData = results.data.map(candidacy => {
-				var record = [candidacy];
-				record.minIndex = 0;
-				record.id = candidacy.id;
-				return record;
-			});
-			
-		} else {
-			
-			// Merge with existing data set
-			// for() is twice as fast as $.grep()
-			var numExistingRecords = tableData.length;
-			$.each(results.data, (index, candidacy) => {
-				
-				var found = false;
-				for (var dataIndex = 0; dataIndex < numExistingRecords; dataIndex++) {
-					if (!tableData[dataIndex][currentSet] && tableData[dataIndex].id == candidacy.id) {
-						tableData[dataIndex][currentSet] = candidacy;
-						found = true;
-						break;
-					}
-				}
-				
-				if (!found) {
-					var record = [];
-					record[currentSet] = candidacy;
-					record.minIndex = currentSet;
-					record.id = candidacy.id;
-					tableData.push(record);
-				}
-				
-			});
-			
-		}
-		
-		console.log('mergeData', tableData);
-		nextDownload();
-	}
+	tableData = tableData.concat(results.data);
+	
+	nextDownload();
 	
 	function nextDownload() {
 		
@@ -479,31 +431,29 @@ function prepareRender() {
 	console.log('prepareRender', tableData.length);
 	
 	// Auto truncate
-	// FIXME: handle multiple sets - truncate at cleanData stage?
 	if (currentExtract.urls[0] == allCandidatesUrl) {
 		
 		// Limit to current candidates only
 		if ($('#sjo-api-current').is(':checked') && $('#sjo-api-autotruncate').is(':checked')) {
-			tableData = $.grep(tableData, record => record[0].election_current);
+			tableData = $.grep(tableData, record => record.election_current);
 			console.log('prepareRender', tableData.length);
 		}
 		
 	}
 	
 	// Limit by values
-	// FIXME: handle multiple sets - truncate at cleanData stage?
 	// FIXME: is this slow?
 	if (currentExtract.limits) {
 		$.each(currentExtract.limits, (key, values) => {
 			console.log('prepareRender', 'limits', key, values);
 			if (Array.isArray(values)) {
-				tableData = $.grep(tableData, record => !record[0] || values.indexOf(record[0][key]) >= 0);
+				tableData = $.grep(tableData, record => !record || values.indexOf(record[key]) >= 0);
 			} else {
 				if (values.from) {
-					tableData = $.grep(tableData, record => !record[0] || record[0][key] >= values.from);
+					tableData = $.grep(tableData, record => !record || record[key] >= values.from);
 				}
 				if (values.to) {
-					tableData = $.grep(tableData, record => !record[0] || record[0][key] <= values.to);
+					tableData = $.grep(tableData, record => !record || record[key] <= values.to);
 				}
 			}
 		});
@@ -513,14 +463,10 @@ function prepareRender() {
 	// Parse template
 	console.log('prepareRender', 'currentTemplate', currentTemplate);
 	tableColumns = currentTemplate.columns.map(fieldName => {
-		var column = {'name': fieldName, 'has': false, 'set': -1};
+		var column = {'name': fieldName, 'has': false};
 		if (column.name.substr(0, 4) == 'has:') {
 			column.name = column.name.slice(4);
 			column.has = true;
-		}
-		if (column.name.indexOf('/') >= 0) {
-			[column.name, column.set] = column.name.split('/');
-			column.set = column.set - 0;
 		}
 		return column;
 	});
@@ -536,8 +482,8 @@ function prepareRender() {
 		tableData = tableData.sort((a, b) => {
 			for (var i = 0; i < currentTemplate.sort.length; i++) {
 				
-				var aValue = a[0][currentTemplate.sort[i].column];
-				var bValue = b[0][currentTemplate.sort[i].column];
+				var aValue = a[currentTemplate.sort[i].column];
+				var bValue = b[currentTemplate.sort[i].column];
 				
 				if (aValue > bValue) {
 					return currentTemplate.sort[i].order;
@@ -559,9 +505,6 @@ function prepareRender() {
 	
 	console.log('prepareRender', 'sortColumn', sortColumn, sortOrder);
 	updateSortIcon();
-	
-	// Store tableData on document
-	$('#sjo-api-table').data('tableData', tableData);
 	
 	// Render table
 	if ($('#sjo-api-option-raw').is(':checked')) {
@@ -743,14 +686,12 @@ function buildFilters() {
 				// Build list of filter options
 				values = [];
 				$.each(tableData, (index, record) => {
-					var set = column.set >= 0 ? column.set : record.minIndex;
-					if (!record[set]) return;
-					if (values.indexOf(record[set][column.name]) < 0) {
-						values.push(record[set][column.name]);
+					if (values.indexOf(record[column.name]) < 0) {
+						values.push(record[column.name]);
 						
 						// Add wildcard options
-						if (column.name == '_election_area' && currentExtract.urls[0] == allCandidatesUrl && record[set]._election_type != record[set]._election_area) {
-							var wildcardOption = record[set]._election_type + '.*';
+						if (column.name == '_election_area' && currentExtract.urls[0] == allCandidatesUrl && record._election_type != record._election_area) {
+							var wildcardOption = record._election_type + '.*';
 							if (values.indexOf(wildcardOption) < 0) {
 								values.push(wildcardOption);
 							}
@@ -764,9 +705,8 @@ function buildFilters() {
 				if (values.length <= 1) return;
 				
 				// Add dropdown to table header
-				var dropdownId = 'sjo-api-filter-' + column.name + (column.set >= 0 ? '__' + column.set : '');
+				var dropdownId = 'sjo-api-filter-' + column.name;
 				var dropdown = $(`<select multiple class="sjo-api-filter" id="${dropdownId}"></select>`)
-					.data('sjo-api-set', column.set)
 					.html(values.sort().map(value => `<option>${escapeHtml(value)}</option>`).join(''))
 					.appendTo(cells[colIndex]);
 				
@@ -820,11 +760,10 @@ function applyFilters(callback) {
 			
 			// Update the data set with the filter value
 			$.each(tableData, (index, record) => {
-				var set = column.set >= 0 ? column.set : record.minIndex;
-				if (!record[set]) {
-					if (checked && !indeterminate) record[record.minIndex].__filters[tableColumns.length + 1] = false;
+				if (!record) {
+					if (checked && !indeterminate) record.__filters[tableColumns.length + 1] = false;
 				} else {
-					record[set].__filters[colIndex] = indeterminate || checked === !!record[set][column.name];
+					record.__filters[colIndex] = indeterminate || checked === !!record[column.name];
 				}
 			});
 			
@@ -842,13 +781,12 @@ function applyFilters(callback) {
 			
 			// Update the data set with the filter value
 			$.each(tableData, (index, record) => {
-				var set = column.set >= 0 ? column.set : record.minIndex;
-				if (!record[set]) {
-					if (values) record[record.minIndex].__filters[tableColumns.length + 1] = false;
+				if (!record) {
+					if (values) record.__filters[tableColumns.length + 1] = false;
 					return;
 				}
-				record[set].__filters[colIndex] = values === null || values.indexOf(record[set][column.name]) >= 0 || 
-					(column.name == '_election_area' && values.indexOf(record[set][column.name].split('.')[0] + '.*') >= 0);
+				record.__filters[colIndex] = values === null || values.indexOf(record[column.name]) >= 0 || 
+					(column.name == '_election_area' && values.indexOf(record[column.name].split('.')[0] + '.*') >= 0);
 			});
 			
 			// Hide extra space in dropdowns
@@ -863,8 +801,7 @@ function applyFilters(callback) {
 	var current = currentExtract.urls[0] == allCandidatesUrl && $('#sjo-api-current').is(':checked');
 	console.log('applyFilters', current);
 	$.each(tableData, (index, record) => {
-		if (!record[0]) return;
-		record[0].__filters[tableColumns.length] = current ? record[0].election_current : true;
+		record.__filters[tableColumns.length] = current ? record.election_current : true;
 	});
 	
 	// Render table
@@ -891,33 +828,22 @@ function sortData(col) {
 	// Sort data
 	tableData.sort(function(a, b) {
 		
-		// Check for missing records
-		if (column.set >= 0) {
-			if (!a[column.set] && !b[column.set]) return a.__index - b.__index;
-			if (!a[column.set]) return +1;
-			if (!b[column.set]) return -1;
-		}
-		
-		// Get values
-		var aValue = column.set >= 0 ? a[column.set][column.name] : a[0] ? a[0][column.name] : a[1][column.name];
-		var bValue = column.set >= 0 ? b[column.set][column.name] : b[0] ? b[0][column.name] : b[1][column.name];
-		
 		// Check for blank values
-		if (isNull(aValue) && isNull(bValue)) return a.__index - b.__index;
-		if (isNull(aValue)) return +1;
-		if (isNull(bValue)) return -1;
+		if (isNull(a[column.name]) && isNull(b[column.name])) return a.__index - b.__index;
+		if (isNull(a[column.name])) return +1;
+		if (isNull(b[column.name])) return -1;
 		
 		// Don't sort abbreviation fields
 		if (column.has) return a.__index - b.__index;
 		
 		// If values are the same, keep in current order
-		if (aValue == bValue) return a.__index - b.__index;
+		if (a[column.name] == b[column.name]) return a.__index - b.__index;
 		
 		// Sort numbers and strings correctly
 		if (field.sort == '#') {
-			return sortOrder * (aValue - bValue);
+			return sortOrder * (a[column.name] - b[column.name]);
 		} else {
-			return sortOrder * aValue.localeCompare(bValue, {'sensitivity': 'base', 'ignorePunctuation': true});
+			return sortOrder * a[column.name].localeCompare(b[column.name], {'sensitivity': 'base', 'ignorePunctuation': true});
 		}
 		
 	});
@@ -987,15 +913,18 @@ function renderTable(callback) {
 	$('.sjo-api-paging').show(); //toggle(renderData.numRowsMatched > maxTableRows);
 	
 	// Toggle display of columns
-	$('#sjo-api-table').toggleClass('sjo-api-table-has-party-lists', tableData.some(record => record[0] && record[0].party_lists_in_use));
-	$('#sjo-api-table').toggleClass('sjo-api-table-has-results', tableData.some(record => record[0] && record[0].elected));
+	$('#sjo-api-table').toggleClass('sjo-api-table-has-party-lists', tableData.some(record => record && record.party_lists_in_use));
+	$('#sjo-api-table').toggleClass('sjo-api-table-has-results', tableData.some(record => record && record.elected));
 	
 	// Toggle display of truncation button
 	// TODO: base this on row count?
 	var current = $('#sjo-api-current').is(':checked');
-	var currents = new Set(tableData.map(record => !record[0] ? null : record[0].election_current));
+	var currents = new Set(tableData.map(record => record.election_current));
 	console.log('renderTable', current, currents);
-	$('#sjo-api-button-truncate').toggle((current && currents.has(false)) || $('.sjo-api-filter option:selected').length > 0 || $('.sjo-api-filter-checkbox').filter((index, element) => $(element).data('sjo-api-checked') != 1).length > 0);
+	$('#sjo-api-button-truncate').toggle(
+		(current && currents.has(false)) 
+		|| $('.sjo-api-filter option:selected').length > 0 
+		|| $('.sjo-api-filter-checkbox').filter((index, element) => $(element).data('sjo-api-checked') != 1).length > 0);
 	
 	// Display invalid rows only
 	$('#sjo-api-invalidonly-wrapper').show();
@@ -1032,7 +961,7 @@ function buildTableRows() {
 		if (numRowsMatched >= startRowNo && numRowsMatched < endRowNo) {
 			
 			// Add row to table body
-			bodyHtml.push('<tr' + (record[0] && record[0].elected ? ' class="sjo-api-row-elected"' : '') + '>' + buildTableRowCells(record).join('') + '</tr>');
+			bodyHtml.push('<tr' + (record && record.elected ? ' class="sjo-api-row-elected"' : '') + '>' + buildTableRowCells(record).join('') + '</tr>');
 			numRowsDisplayed++;
 			
 		}
@@ -1061,21 +990,20 @@ function buildTableRowCells(record) {
 		
 		// Get field
 		var field = dataFields[column.name];
-		var set = column.set >= 0 ? column.set : record.minIndex;
 		
 		// Build cell content
 		// TODO: add popups for has: values
 		var content = '', title = '';
-		if (record[set] && record[set][column.name] !== null && record[set][column.name] !== false && record[set][column.name] !== '') {
-			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[set][column.name].toFixed(field.dp) : escapeHtml(record[set][column.name]);
-			content = field.link ? `<a href="${getLinkAddress(field, record[set])}">${value}</a>` : value;
-			title = column.has ? escapeHtml(record[set][column.name]) : '';
+		if (record && record[column.name] !== null && record[column.name] !== false && record[column.name] !== '') {
+			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[column.name].toFixed(field.dp) : escapeHtml(record[column.name]);
+			content = field.link ? `<a href="${getLinkAddress(field, record)}">${value}</a>` : value;
+			title = column.has ? escapeHtml(record[column.name]) : '';
 		}
 		
 		// Set classes
 		var classes = [`sjo-api-cell-${column.has ? '__has_' : ''}${column.name}`];
 		if (field.icon) classes.push('sjo-api-cell-icon');
-		if (content && field.validate && !field.validate.call(this, record[set][column.name], record[set])) classes.push('sjo-api-invalid');
+		if (content && field.validate && !field.validate.call(this, record[column.name], record)) classes.push('sjo-api-invalid');
 		
 		// Return cell HTML
 		return `<td class="${classes.join(' ')}" title="${title}">${content}</td>`;
@@ -1116,15 +1044,14 @@ function tidyFilters() {
 			// Go through data and find values that are valid when accounting for other filters
 			var values = [];
 			$.each(tableData, function(index, record) {
-				var set = column.set >= 0 ? column.set : record.minIndex;
-				if (record[set].__filters.every((value, filterIndex) => filterIndex == colIndex || value)) {
-					values.push(record[set][column.name]);
+				if (record.__filters.every((value, filterIndex) => filterIndex == colIndex || value)) {
+					values.push(record[column.name]);
 					
 					// Add wildcard options
 					// TODO: this is duplicate code?
-					if (column.name == '_election_area' && currentExtract.urls[0] == allCandidatesUrl && record[set]._election_type != record[set]._election_area) {
-						if (values.indexOf(record[set]._election_type + '.*') < 0) {
-							values.push(record[set]._election_type + '.*');
+					if (column.name == '_election_area' && currentExtract.urls[0] == allCandidatesUrl && record._election_type != record._election_area) {
+						if (values.indexOf(record._election_type + '.*') < 0) {
+							values.push(record._election_type + '.*');
 						}
 					}
 					
@@ -1206,19 +1133,13 @@ function buildRawOutputRow(dataRow) {
 		// Get field
 		var field = dataFields[column.name];
 		
-		// Get candidacy to use
-		// TODO: this is used everywhere, make a function
-		var set = column.set >= 0 ? column.set : dataRow.minIndex;
-		
-		if (!dataRow[set]) {
-			return '';
-		} else if (dataRow[set][column.name] === null || dataRow[set][column.name] === false || dataRow[set][column.name] === '') {
+		if (dataRow[column.name] === null || dataRow[column.name] === false || dataRow[column.name] === '') {
 			return '';
 		} else {
 			return column.has ? field.abbr : 
-				   field.dp ? dataRow[set][column.name].toFixed(field.dp) : 
-				   typeof dataRow[set][column.name] == 'string' ? dataRow[set][column.name].replace(/\s+/g, ' ') : 
-				   dataRow[set][column.name];
+				   field.dp ? dataRow[column.name].toFixed(field.dp) : 
+				   typeof dataRow[column.name] == 'string' ? dataRow[column.name].replace(/\s+/g, ' ') : 
+				   dataRow[column.name];
 		}
 		
 	});

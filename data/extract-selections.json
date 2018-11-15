@@ -80,36 +80,6 @@
       "/media/candidates-parl.2017-06-08.csv"
     ]
   },
-  "ge1715":{
-    "text":"GE 17/15",
-    "template":"ge2",
-    "urls":[
-      "/media/candidates-parl.2017-06-08.csv",
-      "/media/candidates-2015.csv"
-    ]
-  },
-  "ge1715elec":{
-    "text":"GE 17/15 Elected",
-    "template":"ge2elec",
-    "urls":[
-      "/media/candidates-parl.2017-06-08.csv",
-      "/media/candidates-2015.csv"
-    ]
-  },
-  "wa1716email":{
-    "text":"WA 17/16",
-    "template":"email3",
-    "urls":[
-      "/media/candidates-parl.2017-06-08.csv",
-      "/media/candidates-naw.c.2016-05-05.csv",
-      "/media/candidates-naw.r.2016-05-05.csv"
-    ],
-    "limits":{
-      "_country":[
-        "WA"
-      ]
-    }
-  },
   "ni":{
     "text":"NI",
     "template":"standard",
