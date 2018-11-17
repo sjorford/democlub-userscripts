@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.11.17.0
+// @version     2018.11.17.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -77,9 +77,13 @@ function onready() {
 		
 	});
 	
-	// Add link to WCIVF
-	console.log(window.location.href);
 	var personID = window.location.href.match(/\/person\/(\d+)/)[1];
+	
+	// Add link to alt names
+	$(`<a href="/person/${personID}/other-names" class="button">Manage alternative names</a>`)
+		.insertAfter('.person__actions a:contains("Edit candidate")');
+	
+	// Add link to WCIVF
 	$(`
 		<div class="person__actions__action">
 			<h2>On other sites</h2>
