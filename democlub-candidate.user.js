@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.08.07.0
+// @version     2018.11.17.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -43,7 +43,7 @@ function onready() {
 	$('dt', '.person__details, .person__versions').each((index, element) => {
 		
 		var dt = $(element);
-		var dd = dt.next('dd');
+		var dd = dt.nextUntil(':not(dd)', 'dd');
 		
 		var link = $('.constituency-value-standing-link a', dd);
 		if (link.length > 0) {
@@ -57,30 +57,11 @@ function onready() {
 			}
 			dt.html(council + ' <span class="sjo-heading-note">(' + (date.length > 4 ? moment(date).format("D MMM YYYY") : date) + ')</span>');
 			
-			/*
-			// Remove duplicate votes
-			var result = {'votes': null, 'elected': null};
-			$('.candidate-result-confirmed, .vote-count, br', dd).hide();
-			$('.vote-count', dd).each((index, element) => {
-				var votesSpan = $(element);
-				votesSpan.next('br').hide();
-				var electedSpan = votesSpan.prev('.candidate-result-confirmed');
-				if (votesSpan.text() == result.votes && electedSpan.text() == result.elected) {
-					votesSpan.hide();
-					electedSpan.hide().prev('br').hide();
-				} else {
-					result.votes = votesSpan.text();
-					result.elected = electedSpan.text();
-				}
-			});
-			*/
-			
 		} else if (!dt.text().match('Changes made')) {
 			
 			// Format fields
 			dt.addClass('sjo-list-dt');
 			dd.addClass('sjo-list-dd');
-			//dd.nextUntil('dt', 'dd').addClass('sjo-list-dd');
 			if (dd.text().trim() == 'Unknown') dd.text('');
 			
 			// Trim labels
