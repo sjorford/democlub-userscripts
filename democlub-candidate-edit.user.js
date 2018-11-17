@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2018.07.26.0
+// @version     2018.11.17.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -73,10 +73,10 @@ function onready() {
 	var electionFields = {
 		'id_standing_{slug}':				'Standing',
 		'id_constituency_{slug}':			'Constituency',
-		'id_party_gb_{slug}':				'Party',
-		'id_party_ni_{slug}':				'Party',
-		'id_party_list_position_gb_{slug}':	'Position',
-		'id_party_list_position_ni_{slug}':	'Position',
+		'id_party_GB_{slug}':				'Party',
+		'id_party_NI_{slug}':				'Party',
+		'id_party_list_position_GB_{slug}':	'Position',
+		'id_party_list_position_NI_{slug}':	'Position',
 	};
 	
 	// Format general candidate fields
@@ -163,6 +163,9 @@ function onready() {
 	function updateElectionsWarning() {
 		$('.sjo-noelections-warning').toggle($('.post-select').length == 0);
 	}
+	
+	// Hide extra buttons
+	$('#id_name + button:contains("Title Case")').hide();
 	
 	// ================================================================
 	// Format list of elections
