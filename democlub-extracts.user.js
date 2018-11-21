@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.15.0
+// @version        2018.11.15.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -996,7 +996,7 @@ function buildTableRowCells(record) {
 		var content = '', title = '';
 		if (record && record[column.name] !== null && record[column.name] !== false && record[column.name] !== '') {
 			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[column.name].toFixed(field.dp) : Utils.escapeHtml(record[column.name]);
-			content = field.link ? `<a href="${getLinkAddress(field, record)}">${value}</a>` : value;
+			content = field.link ? `<a href="${Utils.getLinkAddress(field, record)}">${value}</a>` : value;
 			title = column.has ? Utils.escapeHtml(record[column.name]) : '';
 		}
 		
