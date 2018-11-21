@@ -646,7 +646,7 @@ function initializeTable() {
 	var colGroupsHtml = tableColumns.map(column => '<col class="sjo-api-col sjo-api-col-' + (column.has ? '__has_' : '') + column.name + '">');
 	var headerCellsHtml = tableColumns.map(column => 
 		'<th class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '">' + 
-			(dataFields[column.name].display && !column.has ? escapeHtml(dataFields[column.name].display) : '\u00B7') + '</th>');
+			(dataFields[column.name].display && !column.has ? Utils.escapeHtml(dataFields[column.name].display) : '\u00B7') + '</th>');
 	var filterCellsHtml = tableColumns.map(column => '<td class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"></td>');
 	$('#sjo-api-table').empty().html(`<colgroup>${colGroupsHtml.join('')}</colgroup><thead>
 		<tr id="sjo-api-row-header">${headerCellsHtml.join('')}</tr>
@@ -707,7 +707,7 @@ function buildFilters() {
 				// Add dropdown to table header
 				var dropdownId = 'sjo-api-filter-' + column.name;
 				var dropdown = $(`<select multiple class="sjo-api-filter" id="${dropdownId}"></select>`)
-					.html(values.sort().map(value => `<option>${escapeHtml(value)}</option>`).join(''))
+					.html(values.sort().map(value => `<option>${Utils.escapeHtml(value)}</option>`).join(''))
 					.appendTo(cells[colIndex]);
 				
 			}
@@ -995,9 +995,9 @@ function buildTableRowCells(record) {
 		// TODO: add popups for has: values
 		var content = '', title = '';
 		if (record && record[column.name] !== null && record[column.name] !== false && record[column.name] !== '') {
-			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[column.name].toFixed(field.dp) : escapeHtml(record[column.name]);
+			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[column.name].toFixed(field.dp) : Utils.escapeHtml(record[column.name]);
 			content = field.link ? `<a href="${getLinkAddress(field, record)}">${value}</a>` : value;
-			title = column.has ? escapeHtml(record[column.name]) : '';
+			title = column.has ? Utils.escapeHtml(record[column.name]) : '';
 		}
 		
 		// Set classes
