@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.21.1
+// @version        2018.11.21.3
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -590,7 +590,7 @@ function truncateDataTable() {
 	console.log('truncateDataTable');
 	
 	// Reduce the data table to just the filtered rows
-	tableData = $.grep(tableData, record => record.every(candidacy => candidacy.__filters.every(value => value)));
+	tableData = $.grep(tableData, record => record.__filters.every(value => value));
 	
 	// Rebuild the filters
 	buildFilters();
@@ -738,11 +738,7 @@ function applyFilters(callback) {
 	console.log('applyFilters', tableData);
 	
 	// Reset the null record flag
-	$.each(tableData, (index, record) => {
-		$.each(record, (index, candidacy) => {
-			if (candidacy) candidacy.__filters[tableColumns.length + 1] = true;
-		});
-	});
+	$.each(tableData, (index, record) => record.__filters[tableColumns.length + 1] = true);
 
 	$('select.sjo-api-filter, .sjo-api-filter-checkbox').each(function(index, element) {
 		
@@ -954,7 +950,7 @@ function buildTableRows() {
 	$.each(tableData, function(index, record) {
 		
 		// Check if this row passes all the filters
-		if (!record.every(candidacy => candidacy.__filters.every(value => value))) return;
+		if (!record.__filters.every(value => value)) return;
 		numRowsMatched++;
 		
 		// Show only selected page
@@ -1003,7 +999,8 @@ function buildTableRowCells(record) {
 		// Set classes
 		var classes = [`sjo-api-cell-${column.has ? '__has_' : ''}${column.name}`];
 		if (field.icon) classes.push('sjo-api-cell-icon');
-		if (content && field.validate && !field.validate.call(this, record[column.name], record)) classes.push('sjo-api-invalid');
+		//FIXME
+		//if (content && field.validate && !field.validate.call(this, record[column.name], record)) classes.push('sjo-api-invalid');
 		
 		// Return cell HTML
 		return `<td class="${classes.join(' ')}" title="${title}">${content}</td>`;
@@ -1147,3 +1144,20 @@ function buildRawOutputRow(dataRow) {
 	return cellValues;
 	
 }
+
+// temp
+function escapeHtml(string) {
+	return string ? ('' + string).replace(/</g, '&lt;').replace(/>/g, '&gt;') : string;
+}
+
+function getLinkAddress(field, candidate) {
+	var href = field.link;
+	var match;
+	while (match = href.match(/^(.*?)@@(.*?)@@(.*)$/)) {
+		href = match[1] + candidate[match[2]] + match[3];
+	}
+	return href;
+}
+
+if (!Utils.escapeHtml) Utils.escapeHtml = escapeHtml;
+if (!Utils.getLinkAddress) Utils.getLinkAddress = getLinkAddress;
