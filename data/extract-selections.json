@@ -8,7 +8,7 @@
   },
   "local19":{
     "text":"LE 19",
-    "template":"le19",
+    "template":"le18",
     "urls":[
       "/media/candidates-all.csv"
     ],
@@ -31,7 +31,7 @@
     "limits":{
       "election_date":{
         "from":"2018-05-04",
-        "to":"2019-05-02"
+        "to":"2019-05-01"
       },
       "_election_type":[
         "local"
