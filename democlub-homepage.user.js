@@ -2,10 +2,11 @@
 // @name           Democracy Club homepage
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.06.17.0
+// @version        2018.11.24.0
 // @match          https://candidates.democracyclub.org.uk/
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
+// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
 // ==/UserScript==
 
 $(function() {
@@ -31,15 +32,26 @@ $(function() {
 			// Fix width of subheading
 			var headerRow = $(element);
 			headerRow.find('th').attr('colspan', '4');
-
-			// Trim election names
+			
+			// Loop through rows
 			var contentRows = headerRow.nextUntil(headerRows);
 			contentRows.each((index, element) => {
 				var row = $(element);
+				
+				// Trim election names
 				var electionLink = row.find('td').first().find('a');
 				var electionName = electionLink.text().replace(/ local election$/, '');
 				electionName = Utils.shortOrgName(electionName);
 				electionLink.text(electionName);
+				
+				// Change lock icons
+				var lockCell = row.find('td').eq(3);
+				if (lockCell.text().trim() == Unicode.OPEN_LOCK) {
+					lockCell.text(Unicode.BUSTS_IN_SILHOUETTE);
+				} else if (lockCell.text().trim() == 'No') {
+					lockCell.text('');
+				}
+				
 			});
 
 			// Sort elections
