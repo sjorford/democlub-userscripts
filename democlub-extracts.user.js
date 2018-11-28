@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.3
+// @version        2018.11.28.4
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -38,7 +38,7 @@ $(`<style>
 	.sjo-api-paging-current {color: black; pointer-events:none;}
 	
 	#sjo-api-table {margin: 0.5rem 0;}
-	#sjo-api-table th, #sjo-api-table td, #sjo-api-table-dupes th, #sjo-api-table-dupes td {padding: 0.25rem; font-size: 0.75rem !important;}
+	#sjo-api-table th, #sjo-api-table td {padding: 0.25rem; font-size: 0.75rem !important;}
 	#sjo-api-table th {user-select: none; -moz-user-select: none; text-align: center; background-repeat: no-repeat; background-position: center right;}
 	#sjo-api-table th.sjo-api-th-sort-up {background-image:url(//en.wikipedia.org/w/resources/src/jquery/images/sort_up.png);}
 	#sjo-api-table th.sjo-api-th-sort-down {background-image:url(//en.wikipedia.org/w/resources/src/jquery/images/sort_down.png);}
@@ -69,8 +69,6 @@ $(`<style>
 	#sjo-api-table.sjo-api-invalidonly tbody tr {display: none;}
 	#sjo-api-table.sjo-api-invalidonly tbody tr.sjo-api-invalid {display: table-row;}
 	
-	.sjo-api-dupes-first {border-top: 1px black solid;}
-	.sjo-api-dupes-verymuch {background-color: bisque !important;}
 	#sjo-api-button-help {margin-top: 0.5rem;}
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
@@ -191,6 +189,7 @@ function initialize() {
 	
 	// Add start button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').click(startDownload).attr('disabled', true);
+	// TODO: make this automatic
 	$('<input type="button" id="sjo-api-button-redo" value="Re-render">').insertAfter('#sjo-api-button-download').click(redoRender).hide();
 	
 	// Add actions wrapper
@@ -354,12 +353,6 @@ function startDownload(event) {
 	$('#sjo-api-error').empty().hide();
 	resetPage();
 	
-	// Reset dupe finding
-	$('#sjo-api-dupes-wrapper').hide();
-	$('#sjo-api-button-dupes-pause, #sjo-api-button-dupes-resume, #sjo-api-button-dupes-more').hide();
-	$('#sjo-api-status-dupes').empty();
-	$('#sjo-api-table-dupes').empty().hide();
-	
 	// Download first file
 	sjo.api.tableData = [];
 	currentSet = 0;
@@ -516,9 +509,6 @@ function prepareRender() {
 	}
 	
 	// Display buttons
-	$('#sjo-api-dupes-wrapper').show();
-	$('#sjo-api-button-dupes').show();
-	$('#sjo-api-button-splits').show();
 	$('#sjo-api-button-redo').show();
 	
 	$('body').trigger('sjo-api-action');
@@ -1070,7 +1060,6 @@ function outputRaw() {
 	
 	$('#sjo-api-button-truncate').hide();
 	$('#sjo-api-invalidonly-wrapper').hide();
-	$('#sjo-api-button-dupes').show();
 	
 }
 
