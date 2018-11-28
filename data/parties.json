@@ -1,11 +1,11 @@
 {
-'party:51':				{group: 'party:52'},
-'joint-party:53-119':	{group: 'party:53'},
-'party:84':				{group: 'party:85'},
-'party:130':			{group: 'party:63'},
-'party:305':			{group: 'party:63'},
-'party:685':			{group: 'party:684'},
-'party:2708':			{group: 'party:2707'},
-'party:6664':			{group: 'party:6662'},
-'party:6721':			{group: 'party:6719'}
+"party:51":				{"group": "party:52"},
+"joint-party:53-119":	{"group": "party:53"},
+"party:84":				{"group": "party:85"},
+"party:130":			{"group": "party:63"},
+"party:305":			{"group": "party:63"},
+"party:685":			{"group": "party:684"},
+"party:2708":			{"group": "party:2707"},
+"party:6664":			{"group": "party:6662"},
+"party:6721":			{"group": "party:6719"}
 }
