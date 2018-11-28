@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.2
+// @version        2018.11.28.3
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -152,11 +152,11 @@ function initialize() {
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
 	
 	// Add checkboxes for options
+	// TODO: change this to tabs
 	var optionsWrapper = $('<div></div>').appendTo(wrapper);
 	$('<input type="checkbox" id="sjo-api-option-raw" value="raw" checked><label for="sjo-api-option-raw">Raw output</label>').appendTo(optionsWrapper);
-	$('<input type="checkbox" id="sjo-api-current" value="current"><label for="sjo-api-current">Current only</label>').appendTo(optionsWrapper).change(applyCurrentFlag);
-	$('<input type="checkbox" id="sjo-api-autotruncate" value="truncate" checked><label for="sjo-api-autotruncate">Auto truncate</label>').appendTo(optionsWrapper);
 	
+	// TODO: make this automatic on changing template/tab
 	function redoRender() {
 		if (!sjo.api.tableData) return;
 		resetPage();
@@ -442,17 +442,6 @@ function parseComplete(results) {
 
 function prepareRender() {
 	console.log('prepareRender', sjo.api.tableData.length);
-	
-	// Auto truncate
-	if (currentExtract.urls[0] == allCandidatesUrl) {
-		
-		// Limit to current candidates only
-		if ($('#sjo-api-current').is(':checked') && $('#sjo-api-autotruncate').is(':checked')) {
-			sjo.api.tableData = $.grep(sjo.api.tableData, record => record.election_current);
-			console.log('prepareRender', sjo.api.tableData.length);
-		}
-		
-	}
 	
 	// Limit by values
 	// FIXME: is this slow?
@@ -755,9 +744,6 @@ function applyFilters(callback) {
 	if (!sjo.api.tableData) return;
 	console.log('applyFilters', sjo.api.tableData);
 	
-	// Reset the null record flag
-	$.each(sjo.api.tableData, (index, record) => record.__filters[tableColumns.length + 1] = true);
-
 	$('select.sjo-api-filter, .sjo-api-filter-checkbox').each(function(index, element) {
 		
 		// Get filter parameters
@@ -774,11 +760,7 @@ function applyFilters(callback) {
 			
 			// Update the data set with the filter value
 			$.each(sjo.api.tableData, (index, record) => {
-				if (!record) {
-					if (checked && !indeterminate) record.__filters[tableColumns.length + 1] = false;
-				} else {
-					record.__filters[colIndex] = indeterminate || checked === !!record[column.name];
-				}
+				record.__filters[colIndex] = indeterminate || checked === !!record[column.name];
 			});
 			
 		} else {
@@ -795,10 +777,6 @@ function applyFilters(callback) {
 			
 			// Update the data set with the filter value
 			$.each(sjo.api.tableData, (index, record) => {
-				if (!record) {
-					if (values) record.__filters[tableColumns.length + 1] = false;
-					return;
-				}
 				record.__filters[colIndex] = values === null || values.indexOf(record[column.name]) >= 0 || 
 					(column.name == '_election_area' && values.indexOf(record[column.name].split('.')[0] + '.*') >= 0);
 			});
@@ -809,13 +787,6 @@ function applyFilters(callback) {
 			
 		}
 		
-	});
-	
-	// Apply the current elections filter
-	var current = currentExtract.urls[0] == allCandidatesUrl && $('#sjo-api-current').is(':checked');
-	console.log('applyFilters', current);
-	$.each(sjo.api.tableData, (index, record) => {
-		record.__filters[tableColumns.length] = current ? record.election_current : true;
 	});
 	
 	// Render table
@@ -1032,10 +1003,6 @@ function buildTableRowCells(record) {
 // Sort available filters at the top, and grey out others
 function tidyFilters() {
 	
-	// Check if current flag is checked
-	var current = currentExtract.urls[0] == allCandidatesUrl && $('#sjo-api-current').is(':checked');
-	console.log('tidyFilters', current);
-	
 	// Go through all filterable fields
 	// TODO: make this loop the same as buildFilters, or vice versa
 	$.each(tableColumns, (colIndex, column) => {
@@ -1054,7 +1021,7 @@ function tidyFilters() {
 		options = dropdown.find('option');
 		
 		// Only sort this dropdown if other dropdowns are selected
-		if (current || $('.sjo-api-filter').not(dropdown).find(':checked').length > 0) {
+		if ($('.sjo-api-filter').not(dropdown).find(':checked').length > 0) {
 			
 			// Go through data and find values that are valid when accounting for other filters
 			var values = [];
@@ -1114,15 +1081,12 @@ function buildRawOutput() {
 	var bodyHtml = [];
 	var numRowsMatched = 0;
 	var numRowsDisplayed = 0;
-	var current = $('#sjo-api-current').is(':checked');
-	console.log('buildRawOutput', current, sjo.api.tableData);
+	console.log('buildRawOutput', sjo.api.tableData);
 	
 	// Loop through all data rows
 	$.each(sjo.api.tableData, function(index, dataRow) {
-		//console.log(index, dataRow);
 		
 		// Check if this row passes all the filters
-		if (current && (!dataRow[0] || !dataRow[0].election_current)) return;
 		numRowsMatched++;
 		
 		// Add row to table body
