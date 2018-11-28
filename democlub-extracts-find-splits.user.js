@@ -2,11 +2,17 @@
 // @name           Democracy Club extracts - find splits
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.0
+// @version        2018.11.28.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
+
+$(`<style>
+	.sjo-api-splits-table tbody::before {content: unset;}
+	.sjo-api-splits-table td {padding: 3px;}
+	.sjo-api-splits-table td.sjo-api-splits-diff {background-color: #eee;}
+</style>`).appendTo('head');
 
 $('body').on('sjo-api-loaded', function() {
 	
@@ -34,7 +40,7 @@ $('body').on('sjo-api-loaded', function() {
 		
 		// Create table
 		$('.sjo-api-actions-output').empty();
-		var table = $('<table></table>').appendTo('.sjo-api-actions-output');
+		var table = $('<table class="sjo-api-splits-table"></table>').appendTo('.sjo-api-actions-output');
 		
 		var idsChecked = [];
 		
@@ -73,9 +79,10 @@ $('body').on('sjo-api-loaded', function() {
 						.addCell(candidacy.id)
 						.addCellHTML(`<a href="/person/${candidacy.id}">${candidacy.name}</a>`)
 						.addCell(candidacy.election_date)
-						.addCell(candidacy._election_name)
-						.addCell(candidacy.party_name)
-						.addCell(candidacy._post_label)
+						.addCell(candidacy._election_name, areas.length > 1   ? 'sjo-api-splits-diff' : '')
+						.addCell(candidacy._post_label,    areas.length > 1   ? 'sjo-api-splits-diff' : '')
+						.addCell(candidacy.party_id,       parties.length > 1 ? 'sjo-api-splits-diff' : '')
+						.addCell(candidacy.party_name,     parties.length > 1 ? 'sjo-api-splits-diff' : '')
 						.appendTo(tableBody);
 					
 				});
@@ -114,4 +121,3 @@ function eachAsync(array, loopFunction, completeFunction) {
 	}
 	
 }
-
