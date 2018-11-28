@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.0
+// @version        2018.11.28.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -100,6 +100,9 @@ var defaultButton = 'local1819';
 // Fields to be displayed
 var templates = {};
 
+// Other data
+var parties = {};
+
 // Load configuration
 var configList = [
 	{
@@ -113,6 +116,10 @@ var configList = [
 	{
 		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-templates.json',
 		callback: response => templates = response
+	},
+	{
+		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/parties.json',
+		callback: response => parties = response
 	},
 ];
 
@@ -587,6 +594,9 @@ function cleanData(index, candidate) {
 	// Parse Wikipedia titles
 	var urlMatch = candidate.wikipedia_url ? candidate.wikipedia_url.match(/\/wiki\/(.*)$/) : null;
 	candidate._wikipedia = !candidate.wikipedia_url ? '' : !urlMatch ? '?' : decodeURIComponent(urlMatch[1]).replace(/_/g, ' ');
+	
+	// Party groups
+	candidate._party_group_id = parties[candidate.party_id] ? parties[candidate.party_id].group : candidate.party_id;
 	
 	return candidate;
 	

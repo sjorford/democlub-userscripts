@@ -120,6 +120,9 @@
   "_party":{
     "display":"Party"
   },
+  "_party_group_id":{
+    "display":"Grp ID"
+  },
   "post_id":{
     "display":"ID"
   },
