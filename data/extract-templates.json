@@ -85,7 +85,6 @@
       "has:party_ppc_page_url",
       "birth_date",
       "_age_at_election",
-      "_maleness",
       "_gender_icon",
       "has:image_url",
       "has:elected"
@@ -137,7 +136,6 @@
       "has:party_ppc_page_url",
       "birth_date",
       "_age_at_election",
-      "_maleness",
       "_gender_icon",
       "has:image_url",
       "has:elected"
