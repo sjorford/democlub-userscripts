@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.1
+// @version        2018.11.28.2
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -195,6 +195,7 @@ function initialize() {
 	
 	// Add actions wrapper
 	$('<div class="sjo-api-wrapper sjo-api-actions"></div>').appendTo(wrapper);
+	$('<div class="sjo-api-wrapper sjo-api-actions-output"></div>').appendTo(wrapper);
 	
 	// Add other options
 	$('<span id="sjo-api-status"></span>').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').hide();
