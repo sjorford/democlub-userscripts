@@ -6,6 +6,16 @@
       "/media/candidates-all.csv"
     ]
   },
+  "current":{
+    "text":"Current",
+    "template":"standard",
+    "limits":{
+      "election_current":true
+    },
+    "urls":[
+      "/media/candidates-all.csv"
+    ]
+  },
   "local19":{
     "text":"LE 19",
     "template":"le",
