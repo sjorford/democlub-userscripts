@@ -8,7 +8,7 @@
   },
   "local19":{
     "text":"LE 19",
-    "template":"le18",
+    "template":"le",
     "urls":[
       "/media/candidates-all.csv"
     ],
@@ -40,7 +40,7 @@
   },
   "local18":{
     "text":"LE 18",
-    "template":"le18",
+    "template":"le",
     "urls":[
       "/media/candidates-all.csv"
     ],
@@ -56,7 +56,7 @@
   },
   "local17":{
     "text":"LE 17",
-    "template":"standard",
+    "template":"le",
     "urls":[
       "/media/candidates-all.csv"
     ],
