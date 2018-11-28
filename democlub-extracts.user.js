@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.27.0
+// @version        2018.11.28.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -13,7 +13,6 @@
 // ==/UserScript==
 
 // Global variables
-var tableData = null;
 var pageNo = 1, maxPageNo = 1;
 var sortColumn = -1, sortOrder = 1;
 var currentExtract, currentTemplate, currentSet, currentIndex; // TODO: singletonize this
@@ -138,6 +137,10 @@ $(function() {
 function initialize() {
 	console.log('initialize');
 	
+	// Put data in page so it can be shared between userscripts
+	$('<script>var sjo = {api: {}};</script>').appendTo('head');
+	sjo.api.tableData = null;
+	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
 	
@@ -148,7 +151,7 @@ function initialize() {
 	$('<input type="checkbox" id="sjo-api-autotruncate" value="truncate" checked><label for="sjo-api-autotruncate">Auto truncate</label>').appendTo(optionsWrapper);
 	
 	function redoRender() {
-		if (!tableData) return;
+		if (!sjo.api.tableData) return;
 		resetPage();
 		prepareRender();
 	}
@@ -182,6 +185,9 @@ function initialize() {
 	// Add start button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').click(startDownload).attr('disabled', true);
 	$('<input type="button" id="sjo-api-button-redo" value="Re-render">').insertAfter('#sjo-api-button-download').click(redoRender).hide();
+	
+	// Add actions wrapper
+	$('<div class="sjo-api-wrapper sjo-api-actions"></div>').appendTo(wrapper);
 	
 	// Add other options
 	$('<span id="sjo-api-status"></span>').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').hide();
@@ -223,7 +229,6 @@ function initialize() {
 	$('#sjo-api-button-download').attr('disabled', false);
 	
 	// Trigger event for other scripts
-	// TODO: not currently used?
 	$('body').trigger('sjo-api-loaded');
 	
 }
@@ -348,7 +353,7 @@ function startDownload(event) {
 	$('#sjo-api-table-dupes').empty().hide();
 	
 	// Download first file
-	tableData = [];
+	sjo.api.tableData = [];
 	currentSet = 0;
 	currentIndex = 0;
 	doDownload();
@@ -408,7 +413,7 @@ function parseComplete(results) {
 		
 	}
 	
-	tableData = tableData.concat(results.data);
+	sjo.api.tableData = sjo.api.tableData.concat(results.data);
 	
 	nextDownload();
 	
@@ -428,15 +433,15 @@ function parseComplete(results) {
 }
 
 function prepareRender() {
-	console.log('prepareRender', tableData.length);
+	console.log('prepareRender', sjo.api.tableData.length);
 	
 	// Auto truncate
 	if (currentExtract.urls[0] == allCandidatesUrl) {
 		
 		// Limit to current candidates only
 		if ($('#sjo-api-current').is(':checked') && $('#sjo-api-autotruncate').is(':checked')) {
-			tableData = $.grep(tableData, record => record.election_current);
-			console.log('prepareRender', tableData.length);
+			sjo.api.tableData = $.grep(sjo.api.tableData, record => record.election_current);
+			console.log('prepareRender', sjo.api.tableData.length);
 		}
 		
 	}
@@ -447,17 +452,17 @@ function prepareRender() {
 		$.each(currentExtract.limits, (key, values) => {
 			console.log('prepareRender', 'limits', key, values);
 			if (Array.isArray(values)) {
-				tableData = $.grep(tableData, record => !record || values.indexOf(record[key]) >= 0);
+				sjo.api.tableData = $.grep(sjo.api.tableData, record => !record || values.indexOf(record[key]) >= 0);
 			} else {
 				if (values.from) {
-					tableData = $.grep(tableData, record => !record || record[key] >= values.from);
+					sjo.api.tableData = $.grep(sjo.api.tableData, record => !record || record[key] >= values.from);
 				}
 				if (values.to) {
-					tableData = $.grep(tableData, record => !record || record[key] <= values.to);
+					sjo.api.tableData = $.grep(sjo.api.tableData, record => !record || record[key] <= values.to);
 				}
 			}
 		});
-		console.log('prepareRender', tableData.length);
+		console.log('prepareRender', sjo.api.tableData.length);
 	}
 	
 	// Parse template
@@ -479,7 +484,7 @@ function prepareRender() {
 		sortColumn = currentTemplate.sort[0].column;
 		sortOrder = currentTemplate.sort[0].order;
 		
-		tableData = tableData.sort((a, b) => {
+		sjo.api.tableData = sjo.api.tableData.sort((a, b) => {
 			for (var i = 0; i < currentTemplate.sort.length; i++) {
 				
 				var aValue = a[currentTemplate.sort[i].column];
@@ -518,7 +523,9 @@ function prepareRender() {
 	$('#sjo-api-button-dupes').show();
 	$('#sjo-api-button-splits').show();
 	$('#sjo-api-button-redo').show();
-
+	
+	$('body').trigger('sjo-api-action');
+	
 }
 
 // TODO: make a class
@@ -590,7 +597,7 @@ function truncateDataTable() {
 	console.log('truncateDataTable');
 	
 	// Reduce the data table to just the filtered rows
-	tableData = $.grep(tableData, record => record.__filters.every(value => value));
+	sjo.api.tableData = $.grep(sjo.api.tableData, record => record.__filters.every(value => value));
 	
 	// Rebuild the filters
 	buildFilters();
@@ -666,7 +673,7 @@ function buildFilters() {
 	
 	// Don't build filters on short data set
 	// TODO: parameterise this
-	if (tableData.length >= 10) {
+	if (sjo.api.tableData.length >= 10) {
 		
 		// Loop through filterable fields
 		var values;
@@ -685,7 +692,7 @@ function buildFilters() {
 				
 				// Build list of filter options
 				values = [];
-				$.each(tableData, (index, record) => {
+				$.each(sjo.api.tableData, (index, record) => {
 					if (values.indexOf(record[column.name]) < 0) {
 						values.push(record[column.name]);
 						
@@ -734,11 +741,11 @@ function buildFilters() {
 
 // Apply a filter selection
 function applyFilters(callback) {
-	if (!tableData) return;
-	console.log('applyFilters', tableData);
+	if (!sjo.api.tableData) return;
+	console.log('applyFilters', sjo.api.tableData);
 	
 	// Reset the null record flag
-	$.each(tableData, (index, record) => record.__filters[tableColumns.length + 1] = true);
+	$.each(sjo.api.tableData, (index, record) => record.__filters[tableColumns.length + 1] = true);
 
 	$('select.sjo-api-filter, .sjo-api-filter-checkbox').each(function(index, element) {
 		
@@ -755,7 +762,7 @@ function applyFilters(callback) {
 			console.log('applyFilters', colIndex, column, checked, indeterminate, filter);
 			
 			// Update the data set with the filter value
-			$.each(tableData, (index, record) => {
+			$.each(sjo.api.tableData, (index, record) => {
 				if (!record) {
 					if (checked && !indeterminate) record.__filters[tableColumns.length + 1] = false;
 				} else {
@@ -776,7 +783,7 @@ function applyFilters(callback) {
 			}
 			
 			// Update the data set with the filter value
-			$.each(tableData, (index, record) => {
+			$.each(sjo.api.tableData, (index, record) => {
 				if (!record) {
 					if (values) record.__filters[tableColumns.length + 1] = false;
 					return;
@@ -796,7 +803,7 @@ function applyFilters(callback) {
 	// Apply the current elections filter
 	var current = currentExtract.urls[0] == allCandidatesUrl && $('#sjo-api-current').is(':checked');
 	console.log('applyFilters', current);
-	$.each(tableData, (index, record) => {
+	$.each(sjo.api.tableData, (index, record) => {
 		record.__filters[tableColumns.length] = current ? record.election_current : true;
 	});
 	
@@ -818,11 +825,11 @@ function sortData(col) {
 	console.log('sortData', sortColumn, sortOrder, field);
 	
 	// Store current order to produce a stable sort
-	$.each(tableData, (index, record) => record.__index = index);
-	console.log('sortData', tableData);
+	$.each(sjo.api.tableData, (index, record) => record.__index = index);
+	console.log('sortData', sjo.api.tableData);
 	
 	// Sort data
-	tableData.sort(function(a, b) {
+	sjo.api.tableData.sort(function(a, b) {
 		
 		// Check for blank values
 		if (isNull(a[column.name]) && isNull(b[column.name])) return a.__index - b.__index;
@@ -849,7 +856,7 @@ function sortData(col) {
 	}
 	
 	// Remove the temporary index column
-	$.each(tableData, (index, record) => delete record.__index);
+	$.each(sjo.api.tableData, (index, record) => delete record.__index);
 	
 	// Update the column header
 	updateSortIcon();
@@ -894,8 +901,8 @@ function renderTable(callback) {
 	
 	// Change status message
 	$('#sjo-api-status').text('Matched ' + 
-		(renderData.numRowsMatched == tableData.length ? '' : 
-			renderData.numRowsMatched + ' of ') + tableData.length + ' rows' + 
+		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
+			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows' + 
 		(renderData.numRowsDisplayed == renderData.numRowsMatched ? '' : 
 			' (displaying ' + (renderData.startRowNo) + '-' + (renderData.startRowNo + renderData.numRowsDisplayed - 1) + ')')).show();
 	
@@ -909,13 +916,13 @@ function renderTable(callback) {
 	$('.sjo-api-paging').show(); //toggle(renderData.numRowsMatched > maxTableRows);
 	
 	// Toggle display of columns
-	$('#sjo-api-table').toggleClass('sjo-api-table-has-party-lists', tableData.some(record => record && record.party_lists_in_use));
-	$('#sjo-api-table').toggleClass('sjo-api-table-has-results', tableData.some(record => record && record.elected));
+	$('#sjo-api-table').toggleClass('sjo-api-table-has-party-lists', sjo.api.tableData.some(record => record && record.party_lists_in_use));
+	$('#sjo-api-table').toggleClass('sjo-api-table-has-results', sjo.api.tableData.some(record => record && record.elected));
 	
 	// Toggle display of truncation button
 	// TODO: base this on row count?
 	var current = $('#sjo-api-current').is(':checked');
-	var currents = new Set(tableData.map(record => record.election_current));
+	var currents = new Set(sjo.api.tableData.map(record => record.election_current));
 	console.log('renderTable', current, currents);
 	$('#sjo-api-button-truncate').toggle(
 		(current && currents.has(false)) 
@@ -947,7 +954,7 @@ function buildTableRows() {
 	console.log('buildTableRows', pageNo, maxTableRows, startRowNo, endRowNo);
 	
 	// Loop through all data rows
-	$.each(tableData, function(index, record) {
+	$.each(sjo.api.tableData, function(index, record) {
 		
 		// Check if this row passes all the filters
 		if (!record.__filters.every(value => value)) return;
@@ -1040,7 +1047,7 @@ function tidyFilters() {
 			
 			// Go through data and find values that are valid when accounting for other filters
 			var values = [];
-			$.each(tableData, function(index, record) {
+			$.each(sjo.api.tableData, function(index, record) {
 				if (record.__filters.every((value, filterIndex) => filterIndex == colIndex || value)) {
 					values.push(record[column.name]);
 					
@@ -1080,8 +1087,8 @@ function outputRaw() {
 
 	// Change status message
 	$('#sjo-api-status').text('Matched ' + 
-		(renderData.numRowsMatched == tableData.length ? '' : 
-			renderData.numRowsMatched + ' of ') + tableData.length + ' rows').show();
+		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
+			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows').show();
 	
 	$('#sjo-api-button-truncate').hide();
 	$('#sjo-api-invalidonly-wrapper').hide();
@@ -1097,10 +1104,10 @@ function buildRawOutput() {
 	var numRowsMatched = 0;
 	var numRowsDisplayed = 0;
 	var current = $('#sjo-api-current').is(':checked');
-	console.log('buildRawOutput', current, tableData);
+	console.log('buildRawOutput', current, sjo.api.tableData);
 	
 	// Loop through all data rows
-	$.each(tableData, function(index, dataRow) {
+	$.each(sjo.api.tableData, function(index, dataRow) {
 		//console.log(index, dataRow);
 		
 		// Check if this row passes all the filters
