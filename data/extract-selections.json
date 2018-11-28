@@ -10,7 +10,7 @@
     "text":"Current",
     "template":"standard",
     "limits":{
-      "election_current":true
+      "election_current":[true]
     },
     "urls":[
       "/media/candidates-all.csv"
