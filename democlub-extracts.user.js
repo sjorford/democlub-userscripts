@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.28.4
+// @version        2018.12.02.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -15,7 +15,7 @@
 // Global variables
 var pageNo = 1, maxPageNo = 1;
 var sortColumn = -1, sortOrder = 1;
-var currentExtract, currentTemplate, currentSet, currentIndex; // TODO: singletonize this
+var currentExtract, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
@@ -60,8 +60,9 @@ $(`<style>
 	#sjo-api-row-filter td {font-weight: normal; vertical-align: middle;}
 	#sjo-api-row-filter ul {font-size: 0.75rem !important;}
 	.sjo-api-filter-checkbox {margin: 0 !important;}
-	.sjo-api-filter {min-width: 4rem; max-width: 20rem;}
+	.sjo-api-filter {xxxmin-width: 4rem; max-width: 20rem;}
 	#sjo-api-row-filter .chosen-results .sjo-api-filter-unavailable {color: #ccc;}
+	#sjo-api-row-filter .chosen-drop {width: auto; min-width: 100%;}
 	
 	.sjo-api-row-elected {background-color: #fbf2af !important;}
 	#sjo-api-table td.sjo-api-cell-icon {font-size: 1rem !important; text-align: center;}
@@ -76,6 +77,7 @@ $(`<style>
 </style>`).appendTo('head');
 
 // Validation functions
+// TODO: use or lose?
 var isValid = {
 	'name':		(val, cand) => val.match(/^[A-ZÓ]/) && val.match(/^[-.' a-zàáâçèéëíòóôöüŷ]+$/i) && !val.match(/[A-Z]{2,}/) && !val.match(/Mc[^A-Z]/),
 	'email':	(val, cand) => true || !val.match(/\.gov\.uk$/),
@@ -345,8 +347,7 @@ function startDownload(event) {
 		localStorage.setItem('sjo-api-url', extract.urls[0]);
 	}
 	currentExtract = extract;
-	currentTemplate = templates[$('#sjo-api-select-template').val()];
-	console.log('startDownload', currentExtract, currentTemplate);
+	console.log('startDownload', currentExtract);
 	
 	// Reset download status
 	$('#sjo-api-status').empty().hide();
@@ -456,6 +457,7 @@ function prepareRender() {
 	}
 	
 	// Parse template
+	var currentTemplate = templates[$('#sjo-api-select-template').val()];
 	console.log('prepareRender', 'currentTemplate', currentTemplate);
 	tableColumns = currentTemplate.columns.map(fieldName => {
 		var column = {'name': fieldName, 'has': false};
