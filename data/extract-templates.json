@@ -44,6 +44,7 @@
       "_election_type",
       "_election_name",
       "_post_label",
+      "party_id",
       "party_name",
       "has:email",
       "has:twitter_username",
