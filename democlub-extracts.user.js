@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.05.0
+// @version        2018.12.05.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -66,29 +66,12 @@ $(`<style>
 	
 	.sjo-api-row-elected {background-color: #fbf2af !important;}
 	#sjo-api-table td.sjo-api-cell-icon {font-size: 1rem !important; text-align: center;}
-	td.sjo-api-invalid {background-color: #ffd4d4 !important;}
-	#sjo-api-table.sjo-api-invalidonly tbody tr {display: none;}
-	#sjo-api-table.sjo-api-invalidonly tbody tr.sjo-api-invalid {display: table-row;}
 	
 	#sjo-api-button-help {margin-top: 0.5rem;}
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
 	
 </style>`).appendTo('head');
-
-// Validation functions
-// TODO: use or lose?
-var isValid = {
-	'name':		(val, cand) => val.match(/^[A-ZÓ]/) && val.match(/^[-.' a-zàáâçèéëíòóôöüŷ]+$/i) && !val.match(/[A-Z]{2,}/) && !val.match(/Mc[^A-Z]/),
-	'email':	(val, cand) => true || !val.match(/\.gov\.uk$/),
-	'fb': 		(val, cand) => val.match(/^https?:\/\/((www|en-gb)\.)?facebook\.com\//),
-	'wp': 		(val, cand) => val.match(/^https?:\/\/en\.wikipedia\.org\//),
-	'li': 		(val, cand) => val.match(/^https?:\/\/((uk|www)\.)?linkedin\.com\//),
-	'hp': 		(val, cand) => !isValid.fb(val) && !isValid.wp(val) && !isValid.li(val),
-	'ppc': 		(val, cand) => !isValid.fb(val) && !isValid.wp(val) && !isValid.li(val),
-	'gender': 	(val, cand) => cand._gender !== '?',
-	'party': 	(val, cand) => !((cand.party_id == 'party:130' && cand._country != 'SC') || (cand.party_id == 'party:63' && cand._country == 'SC')),
-};
 
 // Available fields
 var dataFields = {};
@@ -151,18 +134,6 @@ function initialize() {
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
 	
-	// Add checkboxes for options
-	// TODO: change this to tabs
-	var optionsWrapper = $('<div></div>').appendTo(wrapper);
-	$('<input type="checkbox" id="sjo-api-option-raw" value="raw" checked><label for="sjo-api-option-raw">Raw output</label>').appendTo(optionsWrapper);
-	
-	// TODO: make this automatic on changing template/tab
-	function redoRender() {
-		if (!sjo.api.tableData) return;
-		resetPage();
-		prepareRender();
-	}
-	
 	// Add extract options
 	var extractWrapper = $('<div class="sjo-api-wrapper"></div>').appendTo(wrapper);
 	$.each(buttonSpecs, (key, extract) => {
@@ -202,13 +173,51 @@ function initialize() {
 	$('<span id="sjo-api-status"></span>').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').hide();
 	$('<input type="button" id="sjo-api-button-truncate" value="Truncate">').insertAfter('#sjo-api-status').hide().click(truncateDataTable);
 	$('<div class="sjo-api-wrapper" id="sjo-api-error"></div>').appendTo(wrapper).hide();
-	$('<div class="sjo-api-wrapper" id="sjo-api-invalidonly-wrapper"><input type="checkbox" id="sjo-api-invalidonly" value="invalidonly"><label for="sjo-api-invalidonly">Show only exceptions</label></div>').appendTo(wrapper).hide().click(toggleInvalidOnly);
+	
+	
+	
+	
+	
+	$(`<style>
+		.sjo-api-tabs {display: none;}
+		.sjo-api-tab {display: inline-block; border: 1px solid grey; padding: 0.25em 0.5em; border-bottom: 0; color: lightgrey;}
+		.sjo-api-output {border: 1px solid grey; padding: 0.5em; display: none;}
+		.sjo-api-tab.active {background-color: white; color: black;}
+	</style>`).appendTo('head');
+	
+	// Create tabs
+	var tabsWrapper = $('<div class="sjo-api-tabs"></div>')
+		.append('<div class="sjo-api-tab" data-sjo-api-tab="#sjo-api-output-raw">Raw output</div>')
+		.append('<div class="sjo-api-tab" data-sjo-api-tab="#sjo-api-output-table">Table</div>')
+		.appendTo(wrapper);
+	$('body').on('click', '.sjo-api-tab', switchTab);
 	
 	// Create table
-	var table = $(`<table id="sjo-api-table"></table>`).appendTo(wrapper).hide();
+	var table = $(`<table id="sjo-api-table"></table>`).appendTo(wrapper)
+		.wrap('<div class="sjo-api-output" id="sjo-api-output-table"></div>');
 	
 	// Create raw output area
-	$('<textarea id="sjo-api-textarea-raw" readonly="readonly"></textarea>').appendTo(wrapper).hide().click((event) => event.target.select());
+	$('<textarea id="sjo-api-textarea-raw" readonly="readonly"></textarea>').appendTo(wrapper)
+		.wrap('<div class="sjo-api-output" id="sjo-api-output-raw"></div>')
+		.click((event) => event.target.select());
+		
+	function switchTab() {
+		$('.sjo-api-tab').removeClass('active');
+		var tabID = $(this).addClass('active').data('sjo-api-tab');
+		$('.sjo-api-output').hide();
+		$(tabID).show();
+	}
+	
+	// TODO: make this automatic on changing template/tab
+	function redoRender() {
+		if (!sjo.api.tableData) return;
+		//resetPage();
+		prepareRender();
+	}
+	
+	
+		
+	
 	
 	// Paging buttons
 	table.before('<div class="sjo-api-paging"></div>');
@@ -319,24 +328,12 @@ function buildDownloadList(dropdown) {
 
 }
 
-function applyCurrentFlag() {
-	if ($('#sjo-api-option-raw').is(':checked')) {
-		outputRaw();
-	} else {
-		applyFilters();
-	}
-}
-
 function gotoPage(newPageNo) {
 	console.log('gotoPage', newPageNo);
 	if ((newPageNo >= 1 && newPageNo <= maxPageNo) || newPageNo == Infinity) {
 		pageNo = newPageNo;
 		renderTable();
 	}
-}
-
-function toggleInvalidOnly() {
-	$('#sjo-api-table').toggleClass('sjo-api-invalidonly', $('#sjo-api-invalidonly').prop('checked'));
 }
 
 function startDownload(event) {
@@ -352,7 +349,7 @@ function startDownload(event) {
 	// Reset download status
 	$('#sjo-api-status').empty().hide();
 	$('#sjo-api-error').empty().hide();
-	resetPage();
+	//resetPage();
 	
 	// Download first file
 	sjo.api.tableData = [];
@@ -362,11 +359,10 @@ function startDownload(event) {
 	
 }
 
+// TODO: delete?
 function resetPage() {
 	
 	// Reset page before re-rendering
-	$('#sjo-api-invalidonly').prop('checked', false);
-	$('#sjo-api-invalidonly-wrapper').hide();
 	$('#sjo-api-textarea-raw').hide();
 	$('#sjo-api-table').empty().hide();
 	$('.sjo-api-paging').hide();
@@ -504,14 +500,34 @@ function prepareRender() {
 	updateSortIcon();
 	
 	// Render table
-	if ($('#sjo-api-option-raw').is(':checked')) {
+	//if ($('#sjo-api-option-raw').is(':checked')) {
 		outputRaw();
-	} else {
+	//} else {
 		initializeTable();
-	}
+	//}
 	
 	// Display buttons
-	$('#sjo-api-button-redo').show();
+	//$('#sjo-api-button-redo').show();
+	
+	
+	
+	if ($('.sjo-api-tab.active').length == 0) {
+		$('.sjo-api-tabs').show();
+		$('.sjo-api-tab').first().click();
+	}
+	
+	// Change status message
+	$('#sjo-api-status').text('Matched ' + 
+		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
+			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows').show();
+	
+	$('#sjo-api-button-truncate').hide();
+	
+	
+	
+	
+	
+	
 	
 	$('body').trigger('sjo-api-action');
 	
@@ -871,14 +887,15 @@ function renderTable(callback) {
 	// Replace the table body
 	$('#sjo-api-table tbody').html(renderData.bodyHtml.join(''));
 	$('#sjo-api-table').show();
-	$('#sjo-api-table tr:has(.sjo-api-invalid)').addClass('sjo-api-invalid');
 	
+	/*
 	// Change status message
 	$('#sjo-api-status').text('Matched ' + 
 		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
 			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows' + 
 		(renderData.numRowsDisplayed == renderData.numRowsMatched ? '' : 
 			' (displaying ' + (renderData.startRowNo) + '-' + (renderData.startRowNo + renderData.numRowsDisplayed - 1) + ')')).show();
+	*/
 	
 	// Display paging buttons
 	// TODO: if there are a lot, only ... display ... selected ... pages
@@ -902,10 +919,6 @@ function renderTable(callback) {
 		(current && currents.has(false)) 
 		|| $('.sjo-api-filter option:selected').length > 0 
 		|| $('.sjo-api-filter-checkbox').filter((index, element) => $(element).data('sjo-api-checked') != 1).length > 0);
-	
-	// Display invalid rows only
-	$('#sjo-api-invalidonly-wrapper').show();
-	toggleInvalidOnly();
 	
 	// Set up filters on first render
 	if (callback) callback.call();
@@ -980,8 +993,6 @@ function buildTableRowCells(record) {
 		// Set classes
 		var classes = [`sjo-api-cell-${column.has ? '__has_' : ''}${column.name}`];
 		if (field.icon) classes.push('sjo-api-cell-icon');
-		//FIXME
-		//if (content && field.validate && !field.validate.call(this, record[column.name], record)) classes.push('sjo-api-invalid');
 		
 		// Return cell HTML
 		return `<td class="${classes.join(' ')}" title="${title}">${content}</td>`;
@@ -1054,14 +1065,6 @@ function outputRaw() {
 	var renderData = buildRawOutput();
 	
 	$('#sjo-api-textarea-raw').html(renderData.bodyHtml.join('\r\n')).show();
-
-	// Change status message
-	$('#sjo-api-status').text('Matched ' + 
-		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
-			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows').show();
-	
-	$('#sjo-api-button-truncate').hide();
-	$('#sjo-api-invalidonly-wrapper').hide();
 	
 }
 
