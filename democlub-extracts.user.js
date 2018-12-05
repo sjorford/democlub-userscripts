@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.02.0
+// @version        2018.12.05.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -62,7 +62,7 @@ $(`<style>
 	.sjo-api-filter-checkbox {margin: 0 !important;}
 	.sjo-api-filter {xxxmin-width: 4rem; max-width: 20rem;}
 	#sjo-api-row-filter .chosen-results .sjo-api-filter-unavailable {color: #ccc;}
-	#sjo-api-row-filter .chosen-drop {width: auto; min-width: 100%;}
+	#sjo-api-row-filter .chosen-drop {width: auto; min-width: 130%; white-space: nowrap;}
 	
 	.sjo-api-row-elected {background-color: #fbf2af !important;}
 	#sjo-api-table td.sjo-api-cell-icon {font-size: 1rem !important; text-align: center;}
