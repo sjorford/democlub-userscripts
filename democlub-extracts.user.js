@@ -2,12 +2,12 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.06.0
+// @version        2018.12.06.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js
-// @require        https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.jquery.min.js
+// @require        https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -62,7 +62,8 @@ $(`<style>
 	.sjo-api-filter-checkbox {margin: 0 !important;}
 	.sjo-api-filter {xxxmin-width: 4rem; max-width: 20rem;}
 	#sjo-api-row-filter .chosen-results .sjo-api-filter-unavailable {color: #ccc;}
-	#sjo-api-row-filter .chosen-drop {width: auto; min-width: 130%; white-space: nowrap;}
+	#sjo-api-row-filter .chosen-drop {width: auto; white-space: nowrap;}
+	#sjo-api-row-filter .chosen-results li {padding-right: 2em;}
 	
 	.sjo-api-row-elected {background-color: #fbf2af !important;}
 	#sjo-api-table td.sjo-api-cell-icon {font-size: 1rem !important; text-align: center;}
