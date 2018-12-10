@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.06.1
+// @version        2018.12.10.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -147,7 +147,9 @@ function initialize() {
 		var button = $('.sjo-api-option-extract').removeClass('sjo-api-option-extract-selected').filter(event.target).addClass('sjo-api-option-extract-selected');
 		var extract = JSON.parse(button.data('sjo-api-extract'));
 		console.log('click', button, extract);
-		$('#sjo-api-select-template').val(extract.template).trigger('chosen:updated');
+		if (event.target.value != 'Other') {
+			$('#sjo-api-select-template').val(extract.template).trigger('chosen:updated');
+		}
 	});
 	
 	// Add extract dropdown
