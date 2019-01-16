@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/*
-// @version     2018.04.04.0
+// @version     2019.01.16.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -33,8 +33,8 @@ function onready() {
 		.insertBefore('#bulk_add_form').wrapAll('<div></div>');
 	
 	// Add a checkbox to show all parties
-	$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
-		.insertBefore('#bulk_add_form').wrapAll('<div></div>').change(Utils.showAllParties);
+	//$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
+	//	.insertBefore('#bulk_add_form').wrapAll('<div></div>').change(Utils.showAllParties);
 	
 	// Show rows incrementally
 	$('#bulk_add_form .form_group').first().show();
