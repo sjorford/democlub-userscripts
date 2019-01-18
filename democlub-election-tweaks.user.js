@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Democracy Club Every Election tweaks
+// @name        Democracy Club Elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2018.06.01.0
+// @version     2019.01.18.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -28,11 +28,12 @@ function onready() {
 		.sjo-columns {column-width: 15em;}
 		.sjo-hidden, .sjo-hidden-nir {color: #bbb; display: none;}
 		.sjo-election-sublist a {color: #333}
+		a[href="/accounts/login/"] {border: 3px solid black; background-color: yellow; border-radius: 5px; margin-left: 0.5rem;}
 		
 	</style>`).appendTo('head');
 	
 	// Add link to radar
-	$('.menu').append('<li><a href="/election_radar/?status=new">Radar</a></li>');
+	//$('.menu').append('<li><a href="/election_radar/?status=new">Radar</a></li>');
 	
 	if (location.href == 'https://elections.democracyclub.org.uk/') {
 		displaySubIDs();
