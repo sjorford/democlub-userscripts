@@ -1,8 +1,8 @@
 // ==UserScript==
-// @name        Democracy Club posts list
+// @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
-// @include     https://candidates.democracyclub.org.uk/posts
-// @version     2018.05.18.0
+// @include     https://candidates.democracyclub.org.uk/elections/
+// @version     2019.01.18.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
