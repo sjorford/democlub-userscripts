@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2019.01.20.0
+// @version     2019.01.20.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -36,6 +36,14 @@ function onready() {
 		'Wikipedia URL': 								'Wikipedia',
 		'LinkedIn URL': 								'LinkedIn',
 		"The party's candidate page for this person": 	'Party page',
+		
+		'Twitter_Username':								'Twitter',
+		'Facebook_Personal_Url':						'FB profile',
+		'Facebook_Page_Url':							'FB page',
+		'Homepage_Url':									'Homepage',
+		'Wikipedia_Url':								'Wikipedia',
+		'Linkedin_Url':									'LinkedIn',
+		'Party_Ppc_Page_Url':							'Party page',
 	};
 	labelMappings[`Favourite biscuit ${Unicode.COOKIE}`] = `Biscuit ${Unicode.COOKIE}`;
 	
