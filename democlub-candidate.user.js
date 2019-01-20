@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2019.01.20.1
+// @version     2019.01.20.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -53,8 +53,8 @@ function onready() {
 		var dt = $(element);
 		var dd = dt.nextUntil(':not(dd)', 'dd');
 		
-		var link = $('.constituency-value-standing-link a', dd);
-		if (link.length > 0) {
+		var link = $('a', dd);
+		if (link.parents().is('.constituency-value-standing-link')) {
 			
 			// Format election headers
 			var date = link.attr('href').match(/(\d{4}(-\d{2}-\d{2})?)\//)[1];
@@ -79,6 +79,12 @@ function onready() {
 			if (dt.text() == 'Revert to this') {
 				dt.hide();
 				dd.hide();
+			}
+			
+			// Add Twitter links
+			if (dt.text() == 'Twitter' && link.length == 0) {
+				var handle = dd.text().trim();
+				dd.html(`<a href="https://twitter.com/${handle}">${handle}</a>`);
 			}
 			
 		}
