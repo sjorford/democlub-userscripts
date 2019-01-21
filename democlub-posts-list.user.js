@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.01.21.0
+// @version     2019.01.21.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -38,8 +38,7 @@ function onready() {
 		if (lists.find('li').length > 50) {
 			
 			// For big election days, just hide them for now
-			var mayTable;
-			var wrapper = $('<div class="sjo-posts-may"></div>').append(h2.nextUntil('h2')).insertAfter(h2);
+			var wrapper = $('<div class="sjo-posts-may"></div>').append(h2.nextUntil('h2').hide()).insertAfter(h2);
 			var expandButton = $(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections).hide();
 			var collapseButton = $(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections);
 			toggleMayElections();
@@ -51,10 +50,19 @@ function onready() {
 				collapseButton.toggle();
 				
 				if (wrapper.is(':visible') && !wrapper.is('.sjo-processed')) {
-					var mayTable = $('<table class="sjo-posts"></table>').prependTo(wrapper);
-					processLists(lists, mayTable, date);
+					
+					var localTable = $('<table class="sjo-posts"></table>').prependTo(wrapper);
+					var mayorTable = $('<table class="sjo-posts"></table>').insertAfter(localTable);
+					processLists(lists, localTable, mayorTable, date);
 					wrapper.addClass('sjo-processed');
+					
+					var numMayors = mayorTable.find('tr').length;
+					if (numMayors > 0) {
+						mayorTable.before(`<h3>Mayoral elections (${numMayors})</h3>`);
+					}
+					
 				}
+				
 			}
 			
 		} else {
@@ -62,7 +70,7 @@ function onready() {
 			// Otherwise, add to main table
 			byTable = byTable || $('<table class="sjo-posts"></table>').insertBefore(dateHeadings.first());
 			
-			processLists(lists, byTable, date);
+			processLists(lists, byTable, null, date);
 			
 			h2.hide();
 			h2.next('h3').hide();
@@ -74,16 +82,14 @@ function onready() {
 	byTable.before(`<h2>By-elections (${byTable.find('tr').length})</h2>`);
 	
 	$('body').on('click', '.sjo-posts', event => {
-		console.log(event);
 		if (!$(event.target).is('a')) $(event.currentTarget).selectRange();
 	});
 	
-	function processLists(lists, table, date) {
-		
-		console.log('processLists', lists, table, date);
+	function processLists(lists, localTable, mayorTable, date) {
 		
 		lists.each((index, element) => {
 			
+			var table;
 			var list = $(element).hide();
 			var items = list.find('li');
 			
@@ -98,11 +104,16 @@ function onready() {
 				
 				var post = listItem.find('a').text();
 				var postUrl = listItem.find('a').attr('href');
-				var postSlug = (postUrl.match(/\.([^.]+\.[^.]+)\.by\.\d{4}-\d{2}-\d{2}\//) || postUrl.match(/\.([^.]+\.[^.]+)\.\d{4}-\d{2}-\d{2}\//))[1];
+				var postSlug = (postUrl.match(/((local|mayor)\..+?)\.by\.\d{4}-\d{2}-\d{2}\//) || 
+								postUrl.match(/((local|mayor)\..+?)\.\d{4}-\d{2}-\d{2}\//))[1];
 				var lock = listItem.find('abbr').text();
 				
-				// TODO: split out mayoral elections into separate table
-				if (postUrl.match(/\/election\/mayor\./)) post = Utils.shortOrgName(post);
+				if (mayorTable && postUrl.match(/\/elections\/mayor\./)) {
+					post = Utils.shortOrgName(post);
+					table = mayorTable;
+				} else {
+					table = localTable;
+				}
 				
 				$('<tr></tr>')
 					.addCell(lock)
