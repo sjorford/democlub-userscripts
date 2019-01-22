@@ -2,7 +2,7 @@
 // @name           Democracy Club homepage
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.24.0
+// @version        2019.01.22.0
 // @match          https://candidates.democracyclub.org.uk/
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -15,7 +15,7 @@ $(function() {
 		.sjo-table th, .sjo-table td {padding: .35rem}
 	</style>`).appendTo('head');
 	
-	var futureTable = $('h3:contains("Upcoming elections")').next('table');
+	var futureTable = $('h3:contains("Upcoming by-elections")').next('table');
 	futureTable.find('thead tr:first-of-type th:contains("Candidates known")').text('Known');
 	formatElectionsTable(futureTable);
 	
