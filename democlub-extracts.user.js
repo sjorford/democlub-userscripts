@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.23.0
+// @version        2019.01.23.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -294,7 +294,7 @@ function buildDownloadList(dropdown) {
 		links.each((index, element) => {
 			
 			// Add option to group
-			var downloadName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?)( (local|mayoral) election)? candidates$/)[2];
+			var downloadName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?)(( (local|mayoral))? election)? candidates$/)[2];
 			downloadName = Utils.shortOrgName(downloadName);
 			groupHtml += `<option value="${element.href}">${downloadName}</option>`;
 			
