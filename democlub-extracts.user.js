@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.12.10.0
+// @version        2019.01.23.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -577,11 +577,14 @@ function cleanData(index, candidate) {
 		if (candidate.birth_date.length == 4) {
 			var ageThisYear = candidate._election_year - candidate.birth_date;
 			candidate._age_at_election = (ageThisYear - 1) + '-' + ageThisYear;
+			candidate._age_at_election_min = '' + (ageThisYear - 1)
 		} else {
 			candidate._age_at_election = '' + moment(candidate.election_date).diff(moment(candidate.birth_date), 'years');
+			candidate._age_at_election_min = candidate._age_at_election;
 		}
 	} else {
 		candidate._age_at_election = '';
+		candidate._age_at_election_min = '';
 	}
 	
 	// Gender
