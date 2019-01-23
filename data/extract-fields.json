@@ -63,6 +63,9 @@
   "_age_at_election":{
     "display":"Age"
   },
+  "_age_at_election_min":{
+    "display":"Age"
+  },
   "election":{
     "display":"Election",
     "filter":true
