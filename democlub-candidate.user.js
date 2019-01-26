@@ -2,7 +2,7 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2019.01.26.0
+// @version     2019.01.26.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -18,10 +18,10 @@ function onready() {
 	$(`<style>
 		.person__actions__action {padding: 1em; margin-bottom: 1em;}
 		.person__details dl {margin-bottom: 1em;}
-		.sjo-list-dt {float: left; width: 8rem;}
+		.sjo-list-dt {float: left; width: 9rem;}
 		.sjo-list-dt, .sjo-list-dd {margin-bottom: 0px !important;}
 		.sjo-list-dd::after {content: "\\a"; white-space: pre-line;}
-		.sjo-list-dd {overflow: hidden; margin-left: 8rem;}
+		.sjo-list-dd {overflow: hidden; margin-left: 9rem;}
 		.sjo-list-dd:first-of-type {margin-left: 0;}
 		.sjo-heading-note {font-weight: normal; font-size: small;}
 		.person__versions {padding-top: 0;}
@@ -36,6 +36,7 @@ function onready() {
 		'Wikipedia URL': 								'Wikipedia',
 		'LinkedIn URL': 								'LinkedIn',
 		"The party's candidate page for this person": 	'Party page',
+		'TheyWorkForYou Profile': 						'TheyWorkForYou',
 		'Favourite biscuit':							'Biscuit',
 		
 		'Twitter_Username':								'Twitter',
