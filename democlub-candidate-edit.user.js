@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.01.26.2
+// @version     2019.01.26.3
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -233,7 +233,7 @@ function onready() {
 		elections = $.map(elections, function(value, index) {
 			return {
 				id: value.id,
-				text: (value.id.split('.')[0] == 'mayor' ? 'Mayor of ' : '') + value.name + ' (' + value.election_date + ')'
+				text: value.name + ' (' + value.election_date + ')'
 			};
 		});
 		//console.log(elections);
