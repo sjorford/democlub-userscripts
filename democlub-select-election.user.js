@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.26.1
+// @version        2019.01.26.2
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -43,7 +43,7 @@ function onready() {
 			// Parse the button text
 			var listitem = $(this).addClass('sjo-addperson-listitem');
 			var button = $('a', listitem).addClass('sjo-addperson-button');
-			var electionName = button.text().trim().match(/^Add .+? to the (.*?)( (local|mayoral) election)?$/)[1];
+			var electionName = button.text().trim().replace(/^Add .+? to the /, '');
 			electionName = Utils.shortOrgName(electionName);
 			button.text(electionName);
 			
