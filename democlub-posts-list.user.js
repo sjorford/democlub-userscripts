@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.01.21.1
+// @version     2019.01.26.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -96,7 +96,7 @@ function onready() {
 			var h4 = list.prev('h4').hide();
 			var a = h4.find('a');
 			
-			var election = Utils.shortOrgName(h4.text().replace(/ local election$/, ''));
+			var election = Utils.shortOrgName(h4.text());
 			var electionUrl = h4.find('a').attr('href');
 			
 			items.each((index, element) => {
