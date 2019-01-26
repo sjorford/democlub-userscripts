@@ -2,7 +2,8 @@
 // @name        Democracy Club versions
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2018.07.02.0
+// @exclude     https://candidates.democracyclub.org.uk/person/create/*
+// @version     2019.01.26.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js

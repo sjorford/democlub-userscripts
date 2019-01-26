@@ -2,7 +2,8 @@
 // @name        Democracy Club candidate
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
-// @version     2019.01.26.1
+// @exclude     https://candidates.democracyclub.org.uk/person/create/*
+// @version     2019.01.26.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
