@@ -2,19 +2,13 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.26.0
+// @version        2019.01.26.1
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/districts.js
 // ==/UserScript==
-
-// TODO:
-// separate May elections from by-elections
-// indicate mayoral elections
-// remove . from St. Helens
-// that'll do for now
 
 // temporary fix due to c.dc script errors
 // $(onready);
@@ -52,7 +46,7 @@ function onready() {
 			var electionName = button.text().trim().match(/^Add .+? to the (.*?)( (local|mayoral) election)?$/)[1];
 			electionName = Utils.shortOrgName(electionName);
 			button.text(electionName);
-						
+			
 			// Add an ID to the button
 			var electionID = button.attr('href').match(/\/election\/(.*)\/person\//)[1];
 			if (!button.attr('id')) button.attr('id', 'sjo-addperson-button-' + electionID.replace(/\./g, '_'));
