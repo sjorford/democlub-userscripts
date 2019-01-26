@@ -20,12 +20,9 @@
     "text":"LE 19",
     "template":"le",
     "urls":[
-      "/media/candidates-all.csv"
+      "/media/candidates-2019-05-02.csv"
     ],
     "limits":{
-      "election_date":[
-        "2019-05-02"
-      ],
       "_election_type":[
         "local",
         "mayor"
