@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.26.4
+// @version     2019.01.26.5
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -30,25 +30,12 @@ function onready() {
 	
 	var labelMappings = {
 		'Statement to voters':							'Statement',
-		'Twitter username (e.g. democlub)': 			'Twitter',
-		'Facebook profile URL': 						'FB profile',
-		'Facebook page (e.g. for their campaign)': 		'FB page',
-		'Homepage URL': 								'Homepage',
-		'Wikipedia URL': 								'Wikipedia',
-		'LinkedIn URL': 								'LinkedIn',
-		"The party's candidate page for this person": 	'Party page',
 		'TheyWorkForYou Profile': 						'TheyWorkForYou',
-		'Favourite biscuit':							'Biscuit',
-		
-		'Twitter_Username':								'Twitter',
 		'Facebook_Personal_Url':						'FB profile',
-		'Facebook_Page_Url':							'FB page',
-		'Homepage_Url':									'Homepage',
-		'Wikipedia_Url':								'Wikipedia',
+		'Facebook Page': 								'FB page',
 		'Linkedin_Url':									'LinkedIn',
-		'Party_Ppc_Page_Url':							'Party page',
+		'Party candidate page':							'Party page',
 	};
-	//labelMappings[`Favourite biscuit ${Unicode.COOKIE}`] = `Biscuit ${Unicode.COOKIE}`;
 	
 	// Candidate details
 	$('dt', '.person__details, .person__versions').each((index, element) => {
