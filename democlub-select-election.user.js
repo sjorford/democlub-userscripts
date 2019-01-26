@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.09.4
+// @version        2019.01.26.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -29,11 +29,6 @@ function onready() {
 		.sjo-addperson-listitem {margin: 0;}
 		
 		.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem; text-align: left; width: 100%; background-color: #e7e7e7; color: black;}
-		xxx.sjo-addperson-button-LBO {background-color: #c4d1ff;}
-		xxx.sjo-addperson-button-MBO {background-color: #ffbaba;}
-		xxx.sjo-addperson-button-UTA {background-color: #ffe766;}
-		xxx.sjo-addperson-button-CTY {background-color: #6fd16f;}
-		xxx.sjo-addperson-button-DIS {background-color: #95f095;}
 		
 		.sjo-addperson-button-mayor::before {content: "\u{1F464}"; right: 0; position: absolute; padding-right: 0.5em;}
 		.sjo-addperson-latest {background-color: gold;}
@@ -92,7 +87,6 @@ function onready() {
 		if (groups.indexOf(group) < 0) groups.push(group);
 	});
 	groups = groups.sort();
-	console.log(groups);
 	
 	// Sort all elections by date and type
 	// TODO: display local/mayor/etc. subheadings, but not always?
@@ -107,7 +101,6 @@ function onready() {
 	
 	// Retrieve button ID on load
 	var lastButtonID = localStorage.getItem('sjo-addperson-button');
-	console.log(lastButtonID);
 	if (lastButtonID) $(`[id="${lastButtonID}"]`).addClass('sjo-addperson-latest');
 	
 	// Add filter
@@ -116,7 +109,6 @@ function onready() {
 	
 	var filter = $('.sjo-filter').focus().on('change keyup', event => {
 		var filterText = filter.val().trim().toLowerCase();
-		console.log(filterText);
 		
 		$('.sjo-addperson-listitem').each((index, element) => {
 			var listitem = $(element);
