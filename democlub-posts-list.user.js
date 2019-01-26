@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.01.26.0
+// @version     2019.01.26.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -122,6 +122,7 @@ function onready() {
 					.addCellHTML(`<a href="${postUrl}">${post}</a>`)
 					.addCellHTML(`${postSlug}`, 'sjo-slug')
 					.addClass(
+						date.format('YYYY-MM-DD') == '2019-05-02' ? '' : 
 						lock == '\u{1f513}' ? 'sjo-post-complete' : 
 						lock == '\u{1f512}' ? 'sjo-post-verified' : 
 						'sjo-post-incomplete')
