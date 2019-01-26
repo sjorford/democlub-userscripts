@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.01.26.1
+// @version     2019.01.26.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -199,7 +199,7 @@ function onready() {
 		// Check if fields have loaded
 		function checkElectionsLoaded() {
 			console.log('checkElectionsLoaded');
-			if ($(`#s2id_add_more_elections`).length > 0) {
+			if ($(`#select2-add_more_elections-container`).length > 0) {
 				clearInterval(refreshTimerAdd);
 				refreshTimerAdd = null;
 				$.getJSON('/api/current-elections/', formatElectionsList);
