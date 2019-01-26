@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.01.26.0
+// @version     2019.01.26.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -81,6 +81,20 @@ function onready() {
 	
 	// Format general candidate fields
 	$.each(candidateFields, (key, value) => formatField(key, value, null));
+	
+	// Find heading of candidacy section
+	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
+	
+	// Add a checkbox to show all parties
+	$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
+		.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
+	
+	// Format current election headings
+	heading.closest('div').find('h3').each((index, element) => {
+		var subHeading = $(element);
+		var electionName = Utils.shortOrgName(subHeading.text());
+		subHeading.text(electionName);
+	});
 	
 	// Format election fields on page load
 	$('[id^="id_standing_"]')
@@ -170,12 +184,6 @@ function onready() {
 	// ================================================================
 	// Format list of elections
 	// ================================================================
-	
-	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
-	
-	// Add a checkbox to show all parties
-	$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
-		.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
 	
 	var refreshTimerAdd;
 	$('body').on('click', '#add_election_button', getElectionsList);
