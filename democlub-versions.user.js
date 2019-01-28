@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.26.0
+// @version     2019.01.28.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -36,51 +36,84 @@ function onready() {
 		// Create table for version changes
 		var versionTable = $('<table class="sjo-version"></table>').insertBefore(diffsPara);
 		
+		function parseValue(key, text) {
+			var value = JSON.parse(text);
+			return flattenValue(key, value);
+		}
+		
+		function flattenValue(key, value) {
+			var flatValue = {};
+			if (Array.isArray(value)) {
+				$.each(value, (arrayIndex, arrayValue) => {
+					$.each(flattenValue(arrayIndex, arrayValue), (k,v) => {
+						flatValue[key + '/' + k] = v;
+					});
+				});
+			} else if (typeof value == 'object') {
+				$.each(value, (k, v) => {
+					flatValue[key + '/' + k] = v;
+				});
+			} else {
+				flatValue[key] = value;
+			}
+			return flatValue;
+		}
+		
 		// Reformat version changes as a table
 		// TODO: sort fields into input order
 		// TODO: indicate recent/ancient versions
 		diffsPara.find('span').each(function(index, element) {
 			
+			var changeRows = [];
 			var span = $(element);
 			var spanText = span.text().replace(/\n|\r/g, ' ');
-			var oldText = '', newText = '';
-			var fieldName = null;
 			
 			// Data added
 			if (span.hasClass('version-op-add')) {
-				var matchAdd = spanText.match(/^Added: (.+) => ["\[\{]([\s\S]*)["\]\}]$/);
-				if (matchAdd) [, fieldName, newText] = matchAdd;
+				var matchAdd = spanText.match(/^Added: (.+) => (.+)$/);
+				if (matchAdd) {
+					$.each(parseValue(matchAdd[1], matchAdd[2]), (key, newValue) => {
+						changeRows.push({fieldName: key, 
+										 oldValue: null, 
+										 newValue: newValue, 
+										 span: span});
+					});
+				}
 				
 			// Data replaced
 			} else if (span.hasClass('version-op-replace')) {
-				var matchReplace = spanText.match(/^At (.+) replaced ["\[\{](.*)["\]\}] with ["\[\{](.*)["\]\}]$/);
-				if (matchReplace) [, fieldName, oldText, newText] = matchReplace;
+				var matchReplace = spanText.match(/^At (.+) replaced (.*) with (.*)$/);
+				if (matchReplace) {
+					changeRows.push({fieldName: matchReplace[1], 
+									 oldValue: matchReplace[2].replace(/^"|"$/g, ''), 
+									 newValue: matchReplace[3].replace(/^"|"$/g, ''),
+									 span: span});
+				}
 				
 			// Data removed
 			} else if (span.hasClass('version-op-remove')) {
-				var matchDelete = spanText.match(/^Removed: (.+) \(previously it was ["\[\{](.*)["\]\}]\)$/); // TODO: null
-				if (matchDelete) [, fieldName, oldText] = matchDelete;
+				var matchDelete = spanText.match(/^Removed: (.+) \(previously it was (.*)\)$/);
+				if (matchDelete) {
+					$.each(parseValue(matchDelete[1], matchDelete[2]), (key, oldValue) => {
+						changeRows.push({fieldName: key, 
+										 oldValue: oldValue, 
+										 newValue: null, 
+										 span: span});
+					});
+				}
 				
 			}
 			
-			oldText = oldText.trim();
-			newText = newText.trim();
-			
-			if (fieldName == 'extra_fields') {
-				if (oldText == '"favourite_biscuits": ""') oldText = '';
-				if (newText == '"favourite_biscuits": ""') newText = '';
-			}
-			
-			// Add to table
-			if (fieldName) {
-				addChangeRow(fieldName, oldText, newText, span);
-			}
+			changeRows.sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0);
+			$.each(changeRows, (index, row) => {
+				addChangeRow(row.fieldName, row.oldValue, row.newValue, row.span);
+			});
 			
 		});
 		
 		function addChangeRow(fieldName, dataFrom, dataTo, original) {
 			
-			if (dataFrom.length > 0 || dataTo.length > 0) {
+			if ((dataFrom && dataFrom.length > 0) || (dataTo && dataTo.length > 0)) {
 				
 				// Add a row to the diff table
 				var row = $('<tr></tr>')
@@ -99,7 +132,7 @@ function onready() {
 				} else {
 					
 					// Deleted value
-					if (dataFrom.length > 0) {
+					if (dataFrom && dataFrom.length > 0) {
 						row.addCell('-', 'sjo-version-delete sjo-version-op')
 						   .addCellHTML(cleanData(dataFrom), 'sjo-version-delete sjo-version-data');
 					} else {
@@ -108,7 +141,7 @@ function onready() {
 					}
 					
 					// New value
-					if (dataTo.length > 0) {
+					if (dataTo && dataTo.length > 0) {
 						row.addCell('+', 'sjo-version-add sjo-version-op')
 						   .addCellHTML(cleanData(dataTo), 'sjo-version-add sjo-version-data');
 					} else {
