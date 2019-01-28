@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.28.0
+// @version     2019.01.28.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -28,6 +28,8 @@ function onready() {
 		.sjo-version-add ins    {text-decoration: none; background-color: gold;}
 		.sjo-version-add del    {display: none;} 
 	</style>`).appendTo('head');
+	
+	var oldNames = [];
 	
 	$('.version-diff').each((index, element) => {
 		
@@ -60,7 +62,6 @@ function onready() {
 		}
 		
 		// Reformat version changes as a table
-		// TODO: sort fields into input order
 		// TODO: indicate recent/ancient versions
 		diffsPara.find('span').each(function(index, element) {
 			
@@ -156,6 +157,13 @@ function onready() {
 			// Remove original diff
 			original.next('br').remove();
 			original.remove();
+			
+			// Gather previous names
+			if (dataTo && (fieldName == 'name' || fieldName.match(/^other_names\/\d+\/name$/))) {
+				if (oldNames.indexOf(dataTo) < 0) {
+					oldNames.push(dataTo);
+				}
+			}
 			
 		}
 		
