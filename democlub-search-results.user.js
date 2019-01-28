@@ -2,7 +2,7 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.03.02
+// @version        2019.01.28.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
 // ==/UserScript==
@@ -29,5 +29,13 @@ function onready() {
 			item.addClass('sjo-search-exact');
 		}
 	});
+	
+	// Capitalise name in new candidate button
+	if (searchName == searchName.toLowerCase()) {
+		var createName = searchName.replace(/\b([a-z]+)\b/g, m => m.substr(0, 1).toUpperCase() + m.substr(1));
+		var button = $('a[href^="/person/create/select_election?name="]');
+		button.attr('href', '/person/create/select_election?name=' + createName);
+		button.text(`Add "${createName}" as a new candidate`);
+	}
 	
 }
