@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.28.1
+// @version     2019.01.29.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -27,6 +27,7 @@ function onready() {
 		.sjo-version-delete ins {display: none;} 
 		.sjo-version-add ins    {text-decoration: none; background-color: gold;}
 		.sjo-version-add del    {display: none;} 
+		.sjo-former-name {color: red; border: solid red; border-width: 1px 0;}
 	</style>`).appendTo('head');
 	
 	var oldNames = [];
@@ -172,5 +173,17 @@ function onready() {
 		}
 		
 	});
+	
+	// Display previous names in header
+	var partyLabel = $('.person__details dt:contains("Party")');
+	var latestVersion = JSON.parse($('.full-version-json').first().text());
+	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => a.name) : [];
+	currentNames.push(latestVersion.name);
+	$.each(oldNames, (index, name) => {
+		if (!currentNames.includes(name)) {
+			$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertBefore(partyLabel);
+		}
+	});
+	$('.sjo-former-name').first().before('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
 	
 }
