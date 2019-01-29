@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.29.0
+// @version     2019.01.29.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -27,7 +27,7 @@ function onready() {
 		.sjo-version-delete ins {display: none;} 
 		.sjo-version-add ins    {text-decoration: none; background-color: gold;}
 		.sjo-version-add del    {display: none;} 
-		.sjo-former-name {color: red; border: solid red; border-width: 1px 0;}
+		.sjo-former-name        {color: red; border: solid red; border-width: 1px 0;}
 	</style>`).appendTo('head');
 	
 	var oldNames = [];
@@ -52,7 +52,7 @@ function onready() {
 						flatValue[key + '/' + k] = v;
 					});
 				});
-			} else if (typeof value == 'object') {
+			} else if (typeof value == 'object' && value !== null) {
 				$.each(value, (k, v) => {
 					flatValue[key + '/' + k] = v;
 				});
