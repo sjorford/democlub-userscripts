@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.30.1
+// @version     2019.01.30.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -17,6 +17,7 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style>
+		
 		.person__actions__action {padding: 1em; margin-bottom: 1em;}
 		.person__details dl {margin-bottom: 1em;}
 		.sjo-list-dt {float: left; width: 9rem;}
@@ -27,6 +28,18 @@ function onready() {
 		.sjo-heading-note {font-weight: normal; font-size: small;}
 		.person__versions {padding-top: 0;}
 		.candidate-result-confirmed {font-weight: normal;}
+		
+		.sjo-heading-byelection::after {
+			content: "by";
+			font-size: 66%;
+			font-weight: normal;
+			color: white;
+			background-color: darkgoldenrod;
+			padding: 0.25em;
+			border-radius: 1em;
+			margin-left: 0.5em;
+		}
+		
 	</style>`).appendTo('head');
 	
 	var labelMappings = {
@@ -54,6 +67,11 @@ function onready() {
 				council = 'Mayor of ' + council;
 			}
 			dt.html(council + ' <span class="sjo-heading-note">(' + (date.length > 4 ? moment(date).format("D MMM YYYY") : date) + ')</span>');
+			
+			// Add by-election marker
+			if (link.attr('href').match(/\.by\./)) {
+				$('<span class="sjo-heading-byelection"></span>').appendTo(dt);
+			}
 			
 		} else if (!dt.text().match('Changes made')) {
 			
