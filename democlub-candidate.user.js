@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.30.0
+// @version     2019.01.30.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -77,6 +77,12 @@ function onready() {
 				dd.html(`<a href="https://twitter.com/${handle}">${handle}</a>`);
 			}
 			
+			// Hide blank fields
+			if (dd.text().trim() == '') {
+				dt.hide();
+				dd.hide();
+			}
+
 		}
 		
 	});
