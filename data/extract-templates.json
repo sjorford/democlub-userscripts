@@ -262,5 +262,19 @@
       "id",
       "old_person_ids"
     ]
+  },
+  "biscuit":{
+    "display":"Favourite biscuit",
+    "columns":[
+      "id",
+      "name",
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "party_id",
+      "party_name",
+      "favourite_biscuits",
+      "has:elected"
+    ]
   }
 }
