@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.01.0
+// @version        2019.02.01.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -477,26 +477,15 @@ function prepareRender() {
 	if (currentTemplate.sort) {
 		
 		// Sort by template
-		sortColumn = currentTemplate.sort[0].column;
-		sortOrder = currentTemplate.sort[0].order;
-		
-		// TODO: combine this function with sortData
-		sjo.api.tableData = sjo.api.tableData.sort((a, b) => {
-			for (var i = 0; i < currentTemplate.sort.length; i++) {
-				
-				var aValue = a[currentTemplate.sort[i].column];
-				var bValue = b[currentTemplate.sort[i].column];
-				
-				if (aValue > bValue) {
-					return currentTemplate.sort[i].order;
-				} else if (aValue < bValue) {
-					return -currentTemplate.sort[i].order;
-				}
-				
-			}
-			return 0;
-		});
-		
+		var sortColumnName, sortField;
+		for (var i = currentTemplate.sort.length - 1; i >= 0; i--) {
+			sortColumnName = currentTemplate.sort[i].column;
+			sortColumn = tableColumns[currentTemplate.columns.indexOf(sortColumnName)];
+			sortOrder = currentTemplate.sort[i].order;
+			sortField = dataFields[sortColumn.name];
+			sjo.api.tableData = sjo.api.tableData.sort((a, b) => sortCompare(sortColumn, sortField, a, b));
+		}
+
 	} else {
 		
 		// Default sort
@@ -831,37 +820,39 @@ function sortData(col) {
 	console.log('sortData', sjo.api.tableData);
 	
 	// Sort data
-	sjo.api.tableData.sort(function(a, b) {
-		
-		// Check for blank values
-		if (isNull(a[column.name]) && isNull(b[column.name])) return a.__index - b.__index;
-		if (isNull(a[column.name])) return +1;
-		if (isNull(b[column.name])) return -1;
-		
-		// Don't sort abbreviation fields
-		if (column.has) return a.__index - b.__index;
-		
-		// If values are the same, keep in current order
-		if (a[column.name] == b[column.name]) return a.__index - b.__index;
-		
-		// Sort numbers and strings correctly
-		if (field.sort == '#') {
-			return sortOrder * (a[column.name] - b[column.name]);
-		} else {
-			return sortOrder * a[column.name].localeCompare(b[column.name], {'sensitivity': 'base', 'ignorePunctuation': true});
-		}
-		
-	});
-	
-	function isNull(value) {
-		return value === null || value === '' || (column.has && value === false);
-	}
+	sjo.api.tableData.sort((a, b) => sortCompare(column, field, a, b));
 	
 	// Remove the temporary index column
 	$.each(sjo.api.tableData, (index, record) => delete record.__index);
 	
 	// Update the column header
 	updateSortIcon();
+	
+}
+
+function sortCompare(column, field, a, b) {
+	
+	// Check for blank values
+	if (isNull(a[column.name]) && isNull(b[column.name])) return a.__index - b.__index;
+	if (isNull(a[column.name])) return +1;
+	if (isNull(b[column.name])) return -1;
+
+	// Don't sort abbreviation fields
+	if (column.has) return a.__index - b.__index;
+
+	// If values are the same, keep in current order
+	if (a[column.name] == b[column.name]) return a.__index - b.__index;
+
+	// Sort numbers and strings correctly
+	if (field.sort == '#') {
+		return sortOrder * (a[column.name] - b[column.name]);
+	} else {
+		return sortOrder * a[column.name].localeCompare(b[column.name], {'sensitivity': 'base', 'ignorePunctuation': true});
+	}
+	
+	function isNull(value) {
+		return value === null || value === '' || (column.has && value === false);
+	}
 	
 }
 
