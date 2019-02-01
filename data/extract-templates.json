@@ -275,6 +275,12 @@
       "party_name",
       "favourite_biscuits",
       "has:elected"
+    ],
+    "sort":[
+      {
+        "column":"favourite_biscuits",
+        "order":1
+      }
     ]
   }
 }
