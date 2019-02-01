@@ -29,6 +29,16 @@
       ]
     }
   },
+  "biscuit19":{
+    "text":"Biscuits",
+    "template":"biscuit",
+    "urls":[
+      "/media/candidates-2019-05-02.csv"
+    ],
+    "limits":{
+      "has:favourite_biscuits":true
+    }
+  },
   "local1819":{
     "text":"LE 18-19",
     "template":"le1819",
