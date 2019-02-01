@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.01.1
+// @version        2019.02.01.2
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -554,8 +554,7 @@ function cleanData(index, candidate) {
 		candidate.election;
 	
 	// Tweak ward names
-	candidate._post_label = candidate.post_label.replace(/^(Police and Crime Commissioner for|London Borough of) | (ward|Police|Constabulary|Combined Authority|Borough Council)$/g, '').trim();
-	if (candidate._post_label == 'Sheffield Brightside and Hillsborough') candidate._post_label = 'Sheffield, Brightside and Hillsborough';
+	candidate._post_label = Utils.shortPostName(candidate.post_label);
 	
 	// Election
 	var electionMatch = candidate._election.match(/^((parl|nia|pcc|mayor)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
