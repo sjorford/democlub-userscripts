@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.23.1
+// @version        2019.02.01.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -443,7 +443,10 @@ function prepareRender() {
 	if (currentExtract.limits) {
 		$.each(currentExtract.limits, (key, values) => {
 			console.log('prepareRender', 'limits', key, values);
-			if (Array.isArray(values)) {
+			if (key.startsWith('has:')) {
+				key = key.substr(4);
+				sjo.api.tableData = $.grep(sjo.api.tableData, record => !!record[key] == !!values);
+			} else if (Array.isArray(values)) {
 				sjo.api.tableData = $.grep(sjo.api.tableData, record => !record || values.indexOf(record[key]) >= 0);
 			} else {
 				if (values.from) {
@@ -477,6 +480,7 @@ function prepareRender() {
 		sortColumn = currentTemplate.sort[0].column;
 		sortOrder = currentTemplate.sort[0].order;
 		
+		// TODO: combine this function with sortData
 		sjo.api.tableData = sjo.api.tableData.sort((a, b) => {
 			for (var i = 0; i < currentTemplate.sort.length; i++) {
 				
