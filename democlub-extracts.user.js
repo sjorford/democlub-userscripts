@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.03.1
+// @version        2019.02.03.2
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -42,20 +42,6 @@ $(`<style>
 	#sjo-api-table th {user-select: none; -moz-user-select: none; text-align: center; background-repeat: no-repeat; background-position: center right;}
 	#sjo-api-table th.sjo-api-th-sort-up {background-image:url(//en.wikipedia.org/w/resources/src/jquery/images/sort_up.png);}
 	#sjo-api-table th.sjo-api-th-sort-down {background-image:url(//en.wikipedia.org/w/resources/src/jquery/images/sort_down.png);}
-	
-	.sjo-api-col				{width: 1.5em;	min-width: 1.5em;}
-	.sjo-api-col-id				{width: 3em;	min-width: 3em;}
-	.sjo-api-col-name			{width: 12em;	min-width: 12em;}
-	.sjo-api-col-election_date	{width: 5em;	min-width: 5em;}
-	.sjo-api-col-_country		{width: 2em;	min-width: 2em;}
-	.sjo-api-col-_election_area	{width: 12em;	min-width: 12em;}
-	.sjo-api-col-_election_name	{width: 12em;	min-width: 12em;}
-	.sjo-api-col-_post_label		{width: 12em;	min-width: 12em;}
-	.sjo-api-col-party_id		{width: 5em;	min-width: 5em;}
-	.sjo-api-col-party_name		{width: 12em;	min-width: 12em;}
-	.sjo-api-col-birth_date		{width: 5em;	min-width: 5em;}
-	.sjo-api-col-birth_date		{width: 5em;	min-width: 5em;}
-	.sjo-api-col-age			{width: 3em;	min-width: 3em;}
 	
 	#sjo-api-row-filter td {font-weight: normal; vertical-align: middle;}
 	#sjo-api-row-filter ul {font-size: 0.75rem !important;}
@@ -667,7 +653,8 @@ function initializeTable() {
 	// TODO: specify fixed widths to stop table from jumping
 	var colGroupsHtml = tableColumns.map(column => '<col class="sjo-api-col sjo-api-col-' + (column.has ? '__has_' : '') + column.name + '">');
 	var headerCellsHtml = tableColumns.map(column => 
-		'<th class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '">' + 
+		'<th class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"' + 
+			(dataFields[column.name].width ? ` style="width: ${dataFields[column.name].width};"` : '') + '>' + 
 			(dataFields[column.name].display && !column.has ? Utils.escapeHtml(dataFields[column.name].display) : '\u00B7') + '</th>');
 	var filterCellsHtml = tableColumns.map(column => '<td class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"></td>');
 	$('#sjo-api-table').empty().html(`<colgroup>${colGroupsHtml.join('')}</colgroup><thead>
