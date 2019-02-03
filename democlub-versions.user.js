@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.01.0
+// @version     2019.02.03.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -175,7 +175,7 @@ function onready() {
 	});
 	
 	// Display previous names in header
-	var partyLabel = $('.person__details dt:contains("Party")');
+	var partyLabel = $('.person__details dt').filter((i,e) => e.innerText.trim() == "Party");
 	var latestVersion = JSON.parse($('.full-version-json').first().text());
 	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => a.name) : [];
 	currentNames.push(latestVersion.name);
