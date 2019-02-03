@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.03.0
+// @version        2019.02.03.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -278,11 +278,7 @@ function buildDownloadList(dropdown) {
 		var groupName = '';
 		if (h5.length > 0) {
 			var groupMoment = moment(h4.text(), 'Do MMMM YYYY');
-			if (groupMoment.month() == 4 && groupMoment.date() <= 7) {
-				groupName = `${h5.text()} (${groupMoment.year()})`;
-			} else {
-				groupName = `${h5.text()} (${groupMoment.format('D MMM YYYY')})`;
-			}
+			groupName = `${h5.text()} (${groupMoment.format('D MMM YYYY')})`;
 		} else if (h4.length > 0) {
 			groupName = h4.text();
 		} else {
@@ -293,21 +289,28 @@ function buildDownloadList(dropdown) {
 		var groupHtml = '';
 		links.each((index, element) => {
 			
-			// Add option to group
-			var downloadName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?)(( (local|mayoral))? election)? candidates$/)[2];
-			downloadName = Utils.shortOrgName(downloadName);
-			groupHtml += `<option value="${element.href}">${downloadName}</option>`;
-			
-			// Add election to mapping table
+			// Parse election ID
 			var electionIdMatch = element.href.match(/\/candidates-(.+)\.csv$/);
-			if (electionIdMatch) {
-				var electionId = electionIdMatch[1];
-				if (!electionMappings[electionId]) {
-					var electionName = downloadName.replace(/\s+by-election.*$/, '');
-					electionMappings[electionId] = electionName;
-				}
+			var electionId = electionIdMatch ? electionIdMatch[1] : '';
+			
+			// Parse election name
+			var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
+			electionName = Utils.shortOrgName(electionName);
+			electionName = electionName.replace(/\s+by-election.*$/, '');
+			if (electionId.startsWith('parl.') && electionName != 'General Election') {
+				electionName = 'UK Parliament elections';
+			} else if (electionId.startsWith('mayor.') && !electionName.startsWith('Mayor of ')) {
+				electionName = 'Mayor of ' + electionName;
 			}
 			
+			// Add option to group
+			groupHtml += `<option value="${element.href}">${electionName}</option>`;
+			
+			// Add election to mapping table
+			if (electionId && !electionMappings[electionId]) {
+				electionMappings[electionId] = electionName;
+			}
+
 		});
 		
 		// Add group to dropdown
