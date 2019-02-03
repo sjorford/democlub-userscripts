@@ -42,6 +42,7 @@
       "id",
       "name",
       "_election_type",
+      "_country",
       "_election_name",
       "_post_label",
       "party_id",
