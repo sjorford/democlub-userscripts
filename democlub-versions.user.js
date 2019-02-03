@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.03.0
+// @version     2019.02.03.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -84,11 +84,11 @@ function onready() {
 				
 			// Data replaced
 			} else if (span.hasClass('version-op-replace')) {
-				var matchReplace = spanText.match(/^At (.+) replaced "(.*)" with "(.*)"$/);
+				var matchReplace = spanText.match(/^At (.+) replaced ("(.*)"|null) with ("(.*)"|null)$/);
 				if (matchReplace) {
 					changeRows.push({fieldName: matchReplace[1], 
-									 oldValue: matchReplace[2], 
-									 newValue: matchReplace[3],
+									 oldValue: matchReplace[3], 
+									 newValue: matchReplace[5], 
 									 span: span});
 				}
 				
