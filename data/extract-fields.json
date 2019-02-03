@@ -5,7 +5,8 @@
   },
   "id":{
     "display":"ID",
-    "sort":"#"
+    "sort":"#",
+    "width":"3em"
   },
   "old_person_ids":{
     "display":"Old IDs"
@@ -14,7 +15,8 @@
     "display":"Name",
     "filter":true,
     "link":"/person/@@id@@",
-    "validate":"name"
+    "validate":"name",
+    "width":"12em"
   },
   "honorific_prefix":{
 
@@ -58,7 +60,8 @@
     "dp":2
   },
   "birth_date":{
-    "display":"DOB"
+    "display":"DOB",
+    "width":"5em"
   },
   "_age_at_election":{
     "display":"Age"
@@ -76,11 +79,13 @@
   },
   "_election_area":{
     "display":"Election",
-    "filter":true
+    "filter":true,
+    "width":"12em"
   },
   "_election_name":{
     "display":"Election",
-    "filter":true
+    "filter":true,
+    "width":"12em"
   },
   "_election_type":{
     "display":"Type",
@@ -88,7 +93,8 @@
   },
   "election_date":{
     "display":"Date",
-    "filter":true
+    "filter":true,
+    "width":"2em"
   },
   "_election_year":{
     "display":"Year",
@@ -104,7 +110,8 @@
   },
   "_country":{
     "display":"Co",
-    "filter":true
+    "filter":true,
+    "width":"2em"
   },
   "_county":{
     "display":"County",
@@ -112,13 +119,15 @@
   },
   "party_id":{
     "display":"ID",
-    "validate":"party"
+    "validate":"party",
+    "width":"2em"
   },
   "party_name":{
     "display":"Party",
     "filter":true,
     "link":"/election/@@election@@/party/@@party_id@@/",
-    "validate":"party"
+    "validate":"party",
+    "width":"12em"
   },
   "_party":{
     "display":"Party"
@@ -132,7 +141,8 @@
   "post_label":{
     "display":"Post",
     "filter":true,
-    "link":"/election/@@election@@/post/@@post_id@@/"
+    "link":"/election/@@election@@/post/@@post_id@@/",
+    "width":"12em"
   },
   "_post_label":{
     "display":"Post",
@@ -247,7 +257,8 @@
 
   },
   "favourite_biscuits":{
-    "display":"Biscuit"
+    "display":"Biscuit",
+    "width":"12em"
   },
   "biography":{
     "display":"Biography"
