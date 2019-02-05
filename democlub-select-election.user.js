@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.26.2
+// @version        2019.02.05.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -20,6 +20,7 @@ function onready() {
 		
 		.sjo-addperson-listcolumns {xxxcolumn-width: 200px; columns: 5;}
 		.sjo-addperson-listcolumns p {font-size: 0.8rem;}
+		.sjo-addperson-listcolumns h4 {font-size: 1rem; font-weight: bold;}
 		.sjo-addperson-listitem {margin: 0;}
 		
 		.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem; text-align: left; width: 100%; background-color: #e7e7e7; color: black;}
@@ -87,7 +88,15 @@ function onready() {
 	$.each(groups, (index, group) => {
 		var parts = group.split('_');
 		var listitems = $(`[id^="sjo-addperson-button-${parts[1]}"][id\$="${parts[0]}"]`).closest('.sjo-addperson-listitem');
-		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems).before(`<h4>${moment(parts[0], "YYYY-MM-DD").format("D MMM YYYY")}</h4>`);
+		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems)
+			.before(`<h3>${moment(parts[0], "YYYY-MM-DD").format("D MMM YYYY")}</h3>`);
+		
+		// Add alphabetic index
+		if (listitems.length > 20) {
+			listitems.filter((i, e) => i == 0 || e.innerText[0] != listitems.get(i - 1).innerText[0])
+				.each((i, e) => $(`<h4>${e.innerText[0]}</h4>`).insertBefore(e));
+		}
+		
 	});
 	
 	// Store button ID when clicked
@@ -109,7 +118,7 @@ function onready() {
 			listitem.toggleClass('sjo-hidden', !listitem.text().trim().toLowerCase().match(filterText));
 		});
 		
-		$('.sjo-addperson-listcolumns h4').each((index, element) => {
+		$('.sjo-addperson-listcolumns h3').each((index, element) => {
 			var heading = $(element);
 			heading.toggleClass('sjo-hidden', heading.next('div[role="list"]').has('.sjo-addperson-listitem:not(.sjo-hidden)').length == 0);
 		});
