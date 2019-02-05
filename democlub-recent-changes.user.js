@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2018.11.03.0
+// @version        2019.02.05.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -61,7 +61,7 @@ function onready() {
 		row.addClass('sjo-changes-' + cells.eq(headings['Action']).text());
 		
 		// Flag bot edits
-		if (cells.eq(headings['User']).text().toLowerCase().indexOf('bot') >= 0) {
+		if (cells.eq(headings['User']).text().toLowerCase().match(/bot(?!ting)/)) {
 			row.addClass('sjo-changes-bot');
 		}
 		
