@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2018.10.19.0
+// @version     2019.02.08.0
 // @grant       none
 // ==/UserScript==
 
@@ -64,6 +64,15 @@ function cleanInputName(value, reverse) {
 	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})\s+(.*[a-z].*)$/);
 	if (match) {
 		if (debug) console.log('cleanInputName route 2');
+		cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
+		if (debug) console.log('cleanInputName', cleanedName);
+		return cleanedName;
+	}
+	
+	// Check for SURNAMEForenames
+	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})([A-Z].*[a-z].*)?$/);
+	if (match) {
+		if (debug) console.log('cleanInputName route 4');
 		cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
 		if (debug) console.log('cleanInputName', cleanedName);
 		return cleanedName;
