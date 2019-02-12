@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.03.1
+// @version     2019.02.12.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -162,7 +162,7 @@ function onready() {
 			// Gather previous names
 			if (dataTo && (fieldName == 'name' || fieldName.match(/^other_names\/\d+\/name$/))) {
 				if (oldNames.indexOf(dataTo) < 0) {
-					oldNames.push(dataTo);
+					oldNames.push(cleanChars(dataTo));
 				}
 			}
 			
@@ -177,13 +177,18 @@ function onready() {
 	// Display previous names in header
 	var partyLabel = $('.person__details dt').filter((i,e) => e.innerText.trim() == "Party");
 	var latestVersion = JSON.parse($('.full-version-json').first().text());
-	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => a.name) : [];
-	currentNames.push(latestVersion.name);
+	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => cleanChars(a.name)) : [];
+	currentNames.push(cleanChars(latestVersion.name));
 	$.each(oldNames, (index, name) => {
 		if (!currentNames.includes(name)) {
 			$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertBefore(partyLabel);
 		}
 	});
 	$('.sjo-former-name').first().before('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
+	
+	// Clean white space and non-printing chars
+	function cleanChars(text) {
+		return text.replace(/[\s\u200f]+/g, ' ').trim();
+	}
 	
 }
