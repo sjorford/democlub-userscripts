@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.03.2
+// @version        2019.02.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -504,17 +504,7 @@ function prepareRender() {
 	}
 	
 	// Change status message
-	$('#sjo-api-status').text('Matched ' + 
-		(renderData.numRowsMatched == sjo.api.tableData.length ? '' : 
-			renderData.numRowsMatched + ' of ') + sjo.api.tableData.length + ' rows').show();
-	
-	$('#sjo-api-button-truncate').hide();
-	
-	
-	
-	
-	
-	
+	$('#sjo-api-status').html(`${sjo.api.tableData.length} records found in <a href="${currentExtract.urls[0]}">${currentExtract.urls[0]}</a>`).show();
 	
 	$('body').trigger('sjo-api-action');
 	
