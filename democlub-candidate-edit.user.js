@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.01.26.3
+// @version     2019.02.14.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -111,7 +111,7 @@ function onready() {
 		console.log('electionChanged', slug);
 		
 		// Update saved election
-		localStorage.setItem('sjo-addperson-button', 'sjo-addperson-listitem-' + slug.replace(/\./g, '_'));
+		localStorage.setItem('sjo-addperson-button', 'sjo-addperson-button-' + slug.replace(/\./g, '_'));
 		
 		// Wait for form to load
 		if (!refreshTimerChange) {
