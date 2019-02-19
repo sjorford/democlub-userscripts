@@ -41,6 +41,8 @@ function onready() {
 		
 		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
+		[id^="id_standing_"], label[for^="id_standing_"] {display: none;}
+		
 	</style>`).appendTo('head');
 	
 	if (location.href.indexOf('/person/create/') >= 0) {
