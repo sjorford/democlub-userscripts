@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.02.14.0
+// @version     2019.02.19.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -65,6 +65,7 @@ function onready() {
 		'id_party_ppc_page_url':			'Party page',
 		'id_gender':						'Gender',
 		'id_birth_date':					'Date of birth',
+		'id_death_date':					'Date of death',
 		'id_biography':						'Statement',
 		'id_favourite_biscuit':				'Biscuit \u{1F36A}',
 		'add_more_elections':				'Election',
