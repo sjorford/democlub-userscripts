@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.02.19.0
+// @version     2019.02.19.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -168,6 +168,13 @@ function onready() {
 		// FIXME: not working any more?
 		if (input.is('select.party-select')) {
 			Utils.formatPartySelects(input);
+		}
+		
+		// Hide date of death field
+		if (id == 'id_death_date' && input.val() == '') {
+			input.hide();
+			var showDeath = $('<a class="sjo-show-death">Add</a>').insertAfter(input)
+				.click(event => {showDeath.hide(); input.show();});
 		}
 		
 	}
