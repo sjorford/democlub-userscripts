@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.17.0
+// @version     2019.02.25.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -28,7 +28,7 @@ function onready() {
 		.sjo-version-add ins    {text-decoration: none; background-color: gold;}
 		.sjo-version-add del    {display: none;} 
 		.sjo-former-name        {color: red; border: solid red; border-width: 1px 0;}
-		.sjo-name-suffix, sjo-name-suffix {font-size: 75%}
+		.sjo-name-suffix        {font-size: 75%;}
 	</style>`).appendTo('head');
 	
 	var oldNames = [];
