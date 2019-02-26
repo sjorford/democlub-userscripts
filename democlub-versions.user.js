@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.25.0
+// @version     2019.02.26.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -162,7 +162,7 @@ function onready() {
 			
 			// Gather previous names
 			if (dataTo && (fieldName == 'name' || fieldName.match(/^other_names\/\d+\/name$/))) {
-				if (oldNames.indexOf(dataTo) < 0) {
+				if (oldNames.indexOf(cleanChars(dataTo)) < 0) {
 					oldNames.push(cleanChars(dataTo));
 				}
 			}
@@ -193,7 +193,7 @@ function onready() {
 	
 	// Clean white space and non-printing chars
 	function cleanChars(text) {
-		return text.replace(/[\s\u200f]+/g, ' ').trim();
+		return text.replace(/[\s\u200f]+/g, ' ').replace(/’/g, "'").trim();
 	}
 	
 }
