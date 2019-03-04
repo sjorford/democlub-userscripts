@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.01.26.1
+// @version     2019.03.04.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -37,17 +37,22 @@ function onready() {
 		var lists = h2.nextUntil('h2', 'ul');
 		if (lists.find('li').length > 50) {
 			
-			// For big election days, just hide them for now
+			// Separate out big election days
 			var wrapper = $('<div class="sjo-posts-may"></div>').append(h2.nextUntil('h2').hide()).insertAfter(h2);
-			var expandButton = $(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections).hide();
-			var collapseButton = $(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections);
-			toggleMayElections();
+			var expandButton = $(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections);
+			var collapseButton = $(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections).hide();
+			showMayElections();
 			
 			function toggleMayElections() {
 				
 				wrapper.toggle();
 				expandButton.toggle();
 				collapseButton.toggle();
+				showMayElections();
+				
+			}
+			
+			function showMayElections() {
 				
 				if (wrapper.is(':visible') && !wrapper.is('.sjo-processed')) {
 					
