@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.03.04.1
+// @version     2019.03.06.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -79,7 +79,7 @@ function onready() {
 			processLists(lists, byTable, null, date);
 			
 			h2.hide();
-			h2.next('h3').hide();
+			h2.nextUntil('h2', 'h3').hide();
 			
 		}
 		
@@ -110,8 +110,7 @@ function onready() {
 				
 				var post = listItem.find('a').text();
 				var postUrl = listItem.find('a').attr('href');
-				var postSlug = (postUrl.match(/((local|mayor)\..+?)\.by\.\d{4}-\d{2}-\d{2}\//) || 
-								postUrl.match(/((local|mayor)\..+?)\.\d{4}-\d{2}-\d{2}\//))[1];
+				var postSlug = postUrl.match(/^\/elections\/(.+?)(\.by)?\.\d{4}-\d{2}-\d{2}\/$/)[1];
 				var lock = listItem.find('abbr').text();
 				
 				if (mayorTable && postUrl.match(/\/elections\/mayor\./)) {
