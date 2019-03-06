@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.22.0
+// @version     2019.03.06.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -29,16 +29,18 @@ function onready() {
 		.person__versions {padding-top: 0;}
 		.candidate-result-confirmed {font-weight: normal;}
 		
-		.sjo-heading-byelection::after {
-			content: "by";
+		.sjo-marker {
 			font-size: 66%;
 			font-weight: normal;
 			color: white;
-			background-color: darkgoldenrod;
 			padding: 0.25em;
 			border-radius: 1em;
-			margin-left: 0.5em;
+			vertical-align: text-bottom;
 		}
+		
+		.sjo-marker-byelection        {background-color: darkgoldenrod;}
+		.sjo-marker-main              {background-color: royalblue;}
+		.sjo-heading-past .sjo-marker {background-color: darkgrey;} /* wtf is darkgrey lighter than grey? */
 		
 	</style>`).appendTo('head');
 	
@@ -51,6 +53,8 @@ function onready() {
 		'Party candidate page':							'Party page',
 	};
 	
+	var today = moment();
+	
 	// Candidate details
 	$('dt', '.person__details, .person__versions').each((index, element) => {
 		
@@ -61,16 +65,25 @@ function onready() {
 		if (link.parents().is('.constituency-value-standing-link')) {
 			
 			// Format election headers
-			var date = link.attr('href').match(/(\d{4}(-\d{2}-\d{2})?)\//)[1];
+			var date = moment(link.attr('href').match(/\.(\d{4}-\d{2}-\d{2})\//)[1]);
 			var council = Utils.shortOrgName(dt.html().trim().replace(/^Contest(ed|ing) the (\d{4} )?/, ''));
 			if (link.attr('href').match(/\/elections\/mayor\./) && !council.startsWith('Mayor of ')) {
 				council = 'Mayor of ' + council;
 			}
-			dt.html(council + ' <span class="sjo-heading-note">(' + (date.length > 4 ? moment(date).format("D MMM YYYY") : date) + ')</span>');
+			dt.html(`${council} <span class="sjo-heading-note">(${date.format("D MMM YYYY")})</span>`);
 			
-			// Add by-election marker
+			// Add markers for current elections and by-elections
 			if (link.attr('href').match(/\.by\./)) {
-				$('<span class="sjo-heading-byelection"></span>').appendTo(dt);
+				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
+			} else if (date.year() >= today.year()) {
+				dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
+			}
+			
+			// Highlight future elections
+			if (date.isSameOrAfter(today, 'day')) {
+				dt.addClass('sjo-heading-future');
+			} else {
+				dt.addClass('sjo-heading-past');
 			}
 			
 		} else if (!dt.text().match('Changes made')) {
