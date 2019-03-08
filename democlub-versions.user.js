@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.02.26.0
+// @version     2019.03.08.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -188,8 +188,9 @@ function onready() {
 	$('.sjo-former-name').first().before('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
 	
 	// Format name prefix and suffix
-	$('.sjo-list-dt').filter((i,e) => e.innerText == 'Name').next('dd')
-		.html(`<span class="sjo-name-prefix">${latestVersion.honorific_prefix}</span> ${latestVersion.name} <span class="sjo-name-suffix">${latestVersion.honorific_suffix}</span>`);
+	var nameItem = $('.sjo-list-dt').filter((i,e) => e.innerText == 'Name').next('dd').text(latestVersion.name);
+	if (latestVersion.honorific_prefix) nameItem.prepend(`<span class="sjo-name-prefix">${latestVersion.honorific_prefix}</span> `);
+	if (latestVersion.honorific_suffix) nameItem.append(` <span class="sjo-name-suffix">${latestVersion.honorific_suffix}</span>`);
 	
 	// Clean white space and non-printing chars
 	function cleanChars(text) {
