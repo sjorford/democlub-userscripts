@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.03.06.0
+// @version     2019.03.09.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -103,10 +103,15 @@ function onready() {
 			}
 			
 			// Add links
-			if (dt.parent('dl').prev('h2').text() == 'Links and social media:') {
-				var linkText = dd.text().trim();
-				if (dt.text() == 'Twitter' && dd.find('a').length == 0 && linkText.match(/[a-z0-9_]{1,15}/i)) {
-					dd.html(`<a href="https://twitter.com/${linkText}">${linkText}</a>`);
+			if (dd.find('a').length == 0) {
+				var headingText = dt.parent('dl').prev('h2').text();
+				if (headingText == 'Links and social media:') {
+					var linkText = dd.text().trim();
+					if (dt.text() == 'Twitter' && linkText.match(/[a-z0-9_]{1,15}/i)) {
+						dd.html(`<a href="https://twitter.com/${linkText}">${linkText}</a>`);
+					}
+				} else if (dt.text() == 'Source') {
+					dd.html(dd.text().replace(/(https?:[^\s]+)/g, '<a href="$1">$1</a>'));
 				}
 			}
 			
