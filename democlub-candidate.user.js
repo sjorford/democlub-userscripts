@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.03.09.0
+// @version     2019.03.10.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -71,6 +71,7 @@ function onready() {
 				council = 'Mayor of ' + council;
 			}
 			dt.html(`${council} <span class="sjo-heading-note">(${date.format("D MMM YYYY")})</span>`);
+			link.text(Utils.shortPostName(link.text()));
 			
 			// Add markers for current elections and by-elections
 			if (link.attr('href').match(/\.by\./)) {
