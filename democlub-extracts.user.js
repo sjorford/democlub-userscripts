@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.12.0
+// @version        2019.03.11.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -65,7 +65,6 @@ var dataFields = {};
 
 // Download buttons
 var buttonSpecs = {};
-var defaultButton = 'local1819';
 
 // Fields to be displayed
 var templates = {};
@@ -124,9 +123,9 @@ function initialize() {
 	// Add extract options
 	var extractWrapper = $('<div class="sjo-api-wrapper"></div>').appendTo(wrapper);
 	$.each(buttonSpecs, (key, extract) => {
+		extract.key = key;
 		var button = $(`<input type="button" id="sjo-api-option-extract-${key}" class="sjo-api-option-extract" value="${extract.text}">`).data('sjo-api-extract', JSON.stringify(extract)).appendTo(extractWrapper);
 		if (key == 'other') button.wrap('<div class="sjo-api-wrapper"></div>');
-		if (key == defaultButton) button.addClass('sjo-api-option-extract-selected');
 	});
 	
 	$('.sjo-api-option-extract').click(event => {
@@ -146,7 +145,6 @@ function initialize() {
 	// Add template dropdown
 	$('<select id="sjo-api-select-template"></select>').append(Object.keys(templates).map(key => `<option value="${key}">${templates[key].display}</option>`).join(''))
 		.appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').before('Template: ')
-		.val(buttonSpecs[defaultButton].template)
 		.chosen();
 	
 	// Add start button
@@ -310,8 +308,12 @@ function buildDownloadList(dropdown) {
 	dropdown.html(dropdownHtml);
 	
 	// Select default election
+	var lastExtract = localStorage.getItem('sjo-api-extract');
 	var lastUrl = localStorage.getItem('sjo-api-url');
-	console.log('buildDownloadList', lastUrl);
+	console.log('buildDownloadList', lastExtract, lastUrl);
+	if (lastExtract) {
+		$(`#sjo-api-option-extract-${lastExtract}`).click();
+	}
 	if (lastUrl) {
 		dropdown.find(`option[value="${lastUrl}"]`).first().prop({selected: true});
 		dropdown.trigger('change');
@@ -333,6 +335,7 @@ function gotoPage(newPageNo) {
 function startDownload(event) {
 	
 	var extract = JSON.parse($('.sjo-api-option-extract-selected').data('sjo-api-extract'));
+	localStorage.setItem('sjo-api-extract', extract.key);
 	if (!extract.urls) {
 		extract.urls = [$('#sjo-api-select-extract').val()];
 		localStorage.setItem('sjo-api-url', extract.urls[0]);
