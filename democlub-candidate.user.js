@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.03.10.0
+// @version     2019.03.12.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -33,7 +33,7 @@ function onready() {
 			font-size: 66%;
 			font-weight: normal;
 			color: white;
-			padding: 0.25em;
+			padding: 0.25em 0.5em;
 			border-radius: 1em;
 			vertical-align: text-bottom;
 		}
