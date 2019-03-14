@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.03.11.0
+// @version        2019.03.14.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -161,6 +161,18 @@ function initialize() {
 	$('<input type="button" id="sjo-api-button-truncate" value="Truncate">').insertAfter('#sjo-api-status').hide().click(truncateDataTable);
 	$('<div class="sjo-api-wrapper" id="sjo-api-error"></div>').appendTo(wrapper).hide();
 	
+	// Select defaults
+	var lastExtract = localStorage.getItem('sjo-api-extract');
+	var lastUrl = localStorage.getItem('sjo-api-url');
+	console.log('localStorage', lastExtract, lastUrl);
+	if (lastUrl) {
+		console.log(dropdown.find(`option[value="${lastUrl}"]`).first().prop({selected: true})); // FIXME
+		dropdown.trigger('change');
+	}
+	if (lastExtract) {
+		$(`#sjo-api-option-extract-${lastExtract}`).click();
+	}
+	
 	
 	
 	
@@ -306,18 +318,6 @@ function buildDownloadList(dropdown) {
 	
 	// Add all downloads to dropdown
 	dropdown.html(dropdownHtml);
-	
-	// Select default election
-	var lastExtract = localStorage.getItem('sjo-api-extract');
-	var lastUrl = localStorage.getItem('sjo-api-url');
-	console.log('buildDownloadList', lastExtract, lastUrl);
-	if (lastExtract) {
-		$(`#sjo-api-option-extract-${lastExtract}`).click();
-	}
-	if (lastUrl) {
-		dropdown.find(`option[value="${lastUrl}"]`).first().prop({selected: true});
-		dropdown.trigger('change');
-	}
 	
 	// Style dropdown after adding options
 	dropdown.chosen();
