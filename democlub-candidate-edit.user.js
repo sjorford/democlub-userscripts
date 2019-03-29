@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.02.19.2
+// @version     2019.03.29.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -89,8 +89,8 @@ function onready() {
 	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
 	
 	// Add a checkbox to show all parties
-	$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
-		.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
+	//$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
+	//	.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
 	
 	// Format current election headings
 	heading.closest('div').find('h3').each((index, element) => {
@@ -166,8 +166,9 @@ function onready() {
 		
 		// Trim party selection
 		// FIXME: not working any more?
+		// FIXME: hide this since the party lists no longer contain numbers of candidates
 		if (input.is('select.party-select')) {
-			Utils.formatPartySelects(input);
+			//Utils.formatPartySelects(input);
 		}
 		
 		// Hide date of death field
