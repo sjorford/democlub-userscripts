@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2019.02.08.0
+// @version     2019.03.31.0
 // @grant       none
 // ==/UserScript==
 
@@ -70,7 +70,7 @@ function cleanInputName(value, reverse) {
 	}
 	
 	// Check for SURNAMEForenames
-	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})([A-Z].*[a-z].*)?$/);
+	match = value.match(/^([-'A-Z ]{2,}|Mc[-'A-Z ]{2,})([A-Z].*[a-z].*)$/);
 	if (match) {
 		if (debug) console.log('cleanInputName route 4');
 		cleanedName = properCaseName(match[2]) + ' ' + properCaseName(match[1]);
@@ -97,7 +97,7 @@ function cleanInputName(value, reverse) {
 }
 
 function properCaseName(name) {
-	if (debug) console.log('properCaseName', name, name.codePointAt(0));
+	if (debug) console.log('properCaseName', name);
 	
 	// Split names at spaces and hyphens
 	if (name.indexOf(' ') >= 0) return name.split(' ').map(value => properCaseName(value)).join(' ');
