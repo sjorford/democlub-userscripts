@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.03.12.0
+// @version     2019.04.09.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -98,10 +98,10 @@ function onready() {
 			if (labelMappings[dt.text()]) dt.text(labelMappings[dt.text()]);
 			
 			// Hide reversion button to prevent accidental clicking
-			if (dt.text() == 'Revert to this') {
-				dt.hide();
-				dd.hide();
-			}
+			//if (dt.text() == 'Revert to this') {
+			//	dt.hide();
+			//	dd.hide();
+			//}
 			
 			// Add links
 			if (dd.find('a').length == 0) {
@@ -117,7 +117,7 @@ function onready() {
 			}
 			
 			// Hide blank fields
-			if (dd.text().trim() == '') {
+			if (dd.text().trim() == '' && dt.text() != 'Revert to this') {
 				dt.hide();
 				dd.hide();
 			}
