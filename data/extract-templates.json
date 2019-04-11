@@ -119,6 +119,15 @@
       "party_name"
     ]
   },
+  "post_names":{
+    "display":"Post names",
+    "columns":[
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "post_label",
+    ]
+  },
   "ge":{
     "display":"General Election",
     "columns":[
