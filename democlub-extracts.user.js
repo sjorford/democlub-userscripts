@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.03.14.0
+// @version        2019.04.11.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -535,14 +535,19 @@ function cleanData(index, candidate) {
 		candidate.election == '2015' ? 'parl.2015-05-07' :
 		candidate.election;
 	
-	// Tweak ward names
-	candidate._post_label = Utils.shortPostName(candidate.post_label);
-	
 	// Election
 	var electionMatch = candidate._election.match(/^((parl|nia|pcc|mayor)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
 	candidate._election_type = electionMatch[2] || electionMatch[3] || electionMatch[6] || null;
 	candidate._election_area = electionMatch[1];
 	candidate._election_name = electionMappings[candidate.election];
+	
+	// Tweak ward names
+	candidate._post_label = candidate.post_label;
+	if (candidate._election_type == 'local') {
+		candidate._post_label = candidate._post_label.replace(/ ward$/, '');
+	} else if (candidate._election_type == 'mayor' || candidate._election_type == 'pcc') {
+		candidate._post_label = Utils.shortPostName(candidate._post_label);
+	}
 	
 	// Country
 	var fakeSlug = candidate._election_area + (candidate._election_area == candidate._election_type ? '.' + candidate.post_label.toLowerCase().trim().replace(/\s+/g, '-') : '');
