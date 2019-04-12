@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.11.0
+// @version        2019.04.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -20,6 +20,7 @@ var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
 var electionMappings = {};
+var templateDropdown;
 
 // Styles
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
@@ -116,6 +117,7 @@ function initialize() {
 	// Put data in page so it can be shared between userscripts
 	$('<script>var sjo = {api: {}};</script>').appendTo('head');
 	sjo.api.tableData = null;
+	sjo.api.addTemplateOption = addTemplateOption;
 	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
@@ -143,9 +145,12 @@ function initialize() {
 	dropdown.change(event => $('#sjo-api-option-extract-other').click());
 	
 	// Add template dropdown
-	$('<select id="sjo-api-select-template"></select>').append(Object.keys(templates).map(key => `<option value="${key}">${templates[key].display}</option>`).join(''))
-		.appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').before('Template: ')
-		.chosen();
+	templateDropdown = $('<select id="sjo-api-select-template"></select>')
+		.appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').before('Template: ');
+	$.each(templates, (key, template) => {
+		addTemplateOption(key, template);
+	});
+	templateDropdown.chosen();
 	
 	// Add start button
 	$('<input type="button" id="sjo-api-button-download" value="Extract">').appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').click(startDownload).attr('disabled', true);
@@ -250,6 +255,13 @@ function initialize() {
 	// Trigger event for other scripts
 	$('body').trigger('sjo-api-loaded');
 	
+}
+
+function addTemplateOption(key, template) {
+	console.log(key, template);
+	templates[key] = template;
+	$('<option></option>').val(key).text(template.display).appendTo(templateDropdown);
+	templateDropdown.trigger('chosen:updated');
 }
 
 // Build list of download options
