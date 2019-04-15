@@ -5,7 +5,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.04.13.0
+// @version     2019.04.15.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -182,9 +182,7 @@ function onready() {
 		// Format names with unexpected characters
 		// TODO: remove the class once the name is edited
 		if (id == 'id_name') {
-			if (!input.val().match(/^[-A-Za-zÀ-ÖØ-ßà-öø-ÿ '.]+$/) || input.val() != input.val().replace(/\s+/, ' ').trim()) {
-				input.addClass('sjo-input-invalid');
-			}
+			Utils.validateNameField(input);
 		}
 		
 	}
