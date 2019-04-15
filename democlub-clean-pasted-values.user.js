@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2019.04.15.0
+// @version     2019.04.15.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -48,8 +48,15 @@ function cleanInputValue(input) {
 function cleanInputName(value, reverse) {
 	if (debug) console.log('cleanInputName', value, reverse);
 	
-	value = value.replace(/\u200B/g, ' ').replace(/[`\u2019]/g, "'").trim();
-	value = value.replace(/ - /g, '-');
+	// Replace non standard characters
+	value = value
+		.replace(/[\u200B]/g, ' ')
+		.replace(/[\u0060\u2019]/g, "'")
+		.replace(/[\u2010]/g, "-")
+		.trim();
+	
+	// Fix hyphen spacing
+	value = value.replace(/ ?- ?/g, '-');
 	
 	var match, cleanedName;
 	
