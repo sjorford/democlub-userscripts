@@ -207,6 +207,18 @@
     "validate":"wp",
     "group":"links"
   },
+  "wikidata_url":{
+    "display":"Wikidata",
+    "abbr":"wd",
+    "link":"@@wikidata_url@@",
+    "group":"links"
+  },
+  "_wikidata":{
+    "display":"Wikidata",
+    "abbr":"wd",
+    "link":"@@wikidata_url@@",
+    "group":"links"
+  },
   "linkedin_url":{
     "display":"LinkedIn",
     "abbr":"li",
