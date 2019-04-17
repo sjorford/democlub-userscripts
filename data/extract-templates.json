@@ -63,6 +63,31 @@
       "has:elected"
     ]
   },
+  "euro":{
+    "display":"Standard",
+    "columns":[
+      "id",
+      "name",
+      "_post_label",
+      "party_list_position",
+      "party_id",
+      "party_name",
+      "has:email",
+      "has:twitter_username",
+      "has:facebook_personal_url",
+      "has:facebook_page_url",
+      "has:homepage_url",
+      "has:wikipedia_url",
+      "has:wikidata_url",
+      "has:linkedin_url",
+      "has:party_ppc_page_url",
+      "birth_date",
+      "_age_at_election",
+      "_gender_icon",
+      "has:image_url",
+      "has:elected"
+    ]
+  },
   "standard":{
     "display":"Standard",
     "columns":[
