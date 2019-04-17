@@ -41,6 +41,7 @@
     "columns":[
       "id",
       "name",
+      "_last_name",
       "_election_type",
       "_country",
       "_election_name",
