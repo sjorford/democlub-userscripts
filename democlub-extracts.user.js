@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.17.1
+// @version        2019.04.17.3
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -542,13 +542,10 @@ function cleanData(index, candidate) {
 	candidate.elected = candidate.elected == 'True';
 	
 	// Tweak historical general election IDs for consistency
-	candidate._election = 
-		candidate.election == '2010' ? 'parl.2010-05-06' :
-		candidate.election == '2015' ? 'parl.2015-05-07' :
-		candidate.election;
+	candidate._election = candidate.election;
 	
 	// Election
-	var electionMatch = candidate._election.match(/^((parl|nia|pcc|mayor)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
+	var electionMatch = candidate.election.match(/^((parl|nia|pcc|mayor|europarl)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
 	candidate._election_type = electionMatch[2] || electionMatch[3] || electionMatch[6] || null;
 	candidate._election_area = electionMatch[1];
 	candidate._election_name = electionMappings[candidate.election];
