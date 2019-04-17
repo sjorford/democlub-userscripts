@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.12.1
+// @version        2019.04.17.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -600,9 +600,9 @@ function cleanData(index, candidate) {
 	candidate._party_group_id = parties[candidate.party_id] ? parties[candidate.party_id].group : candidate.party_id;
 	
 	// Name parts
-	var nameMatch = candidate.name.trim().match(/^((.*) )?([^\s]+)$/);
-	candidate._first_name = nameMatch[2];
-	candidate._last_name = nameMatch[3];
+	var trimmedName = candidate.name.replace(/\s+/g, ' ').trim();
+	candidate._last_name = (trimmedName.match(/ (van de|van der|van den|van|von|de la|de|la|le|di) [^ ]+$/i) || trimmedName.match(/[^ ]+$/))[0].trim();
+	candidate._first_name = name.substring(0, name.length - candidate._last_name.length).trim();
 	
 	return candidate;
 	
