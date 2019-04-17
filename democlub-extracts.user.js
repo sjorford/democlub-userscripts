@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.17.0
+// @version        2019.04.17.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -595,6 +595,10 @@ function cleanData(index, candidate) {
 	// Parse Wikipedia titles
 	var urlMatch = candidate.wikipedia_url ? candidate.wikipedia_url.match(/\/wiki\/(.*)$/) : null;
 	candidate._wikipedia = !candidate.wikipedia_url ? '' : !urlMatch ? '?' : decodeURIComponent(urlMatch[1]).replace(/_/g, ' ');
+	
+	// Parse Wikidata ID
+	urlMatch = candidate.wikidata_url ? candidate.wikidata_url.match(/\/wiki\/(.*)$/) : null;
+	candidate._wikidata = !candidate.wikidata_url ? '' : !urlMatch ? '?' : urlMatch[1];
 	
 	// Party groups
 	candidate._party_group_id = parties[candidate.party_id] ? parties[candidate.party_id].group : candidate.party_id;
