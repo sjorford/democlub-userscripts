@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.01.26.0
+// @version     2019.04.18.0
 // @grant       none
 // ==/UserScript==
 
@@ -151,5 +151,83 @@ function onready() {
 		$('.sjo-tree-current').removeClass('sjo-tree-current');
 		button.addClass('sjo-tree-current');
 	});
+	
+	// Navigate with arrows
+	$('body').on('keydown', event => {
+		if (event.shiftKey || event.ctrlKey || event.altKey) return;
+		if (!event.key.startsWith('Arrow')) return;
+		event.preventDefault();
 		
+		var currentCell = $('.sjo-tree-current').closest('td');
+		if (currentCell.length == 0) return;
+		
+		if (event.key == 'ArrowLeft') {
+			
+			while (currentCell.length > 0 && !currentCell.is('th')) {
+				currentCell = currentCell.prev();
+				if (currentCell.find('.sjo-tree-version').length > 0) break;
+			}
+			
+		} else if (event.key == 'ArrowRight') {
+			
+			while (currentCell.length > 0 && !currentCell.is('th')) {
+				currentCell = currentCell.next();
+				if (currentCell.find('.sjo-tree-version').length > 0) break;
+				if (currentCell.is('.sjo-tree-turnup')) {
+					currentCell = cellUp(currentCell);
+				}
+			}
+			
+		} else if (event.key == 'ArrowUp') {
+			
+			currentCell = cellUp(currentCell);
+			
+			while (currentCell.length > 0 && !currentCell.is('th')) {
+				currentCell = currentCell.prev();
+				if (currentCell.find('.sjo-tree-version').length > 0) break;
+			}
+			
+			if (currentCell.find('.sjo-tree-version').length == 0) {
+				while (currentCell.is('th')) {
+					currentCell = currentCell.next();
+				}
+				while (currentCell.length > 0 && !currentCell.is('th')) {
+					currentCell = currentCell.next();
+					if (currentCell.find('.sjo-tree-version').length > 0) break;
+				}
+			}
+			
+		} else if (event.key == 'ArrowDown') {
+			
+			currentCell = cellDown(currentCell);
+			
+			while (currentCell.length > 0 && !currentCell.is('th')) {
+				currentCell = currentCell.prev();
+				if (currentCell.find('.sjo-tree-version').length > 0) break;
+			}
+			
+			if (currentCell.find('.sjo-tree-version').length == 0) {
+				while (currentCell.is('th')) {
+					currentCell = currentCell.next();
+				}
+				while (currentCell.length > 0 && !currentCell.is('th')) {
+					currentCell = currentCell.next();
+					if (currentCell.find('.sjo-tree-version').length > 0) break;
+				}
+			}
+			
+		}
+		
+		currentCell.find('.sjo-tree-version').click();
+		
+	});
+	
+	function cellUp(cell) {
+		return cell.closest('tr').prev().find('td').eq(cell.prevAll('td').length);
+	}
+	
+	function cellDown(cell) {
+		return cell.closest('tr').next().find('td').eq(cell.prevAll('td').length);
+	}
+	
 }
