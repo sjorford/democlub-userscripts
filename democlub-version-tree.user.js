@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.04.18.1
+// @version     2019.04.18.2
 // @grant       none
 // ==/UserScript==
 
@@ -141,7 +141,6 @@ function onready() {
 	});
 	
 	// Show selected version
-	// TODO: stop the page jumping
 	$('.sjo-tree').on('click', '.sjo-tree-version', event => {
 		var button = $(event.target);
 		var versionId = button.data('sjo-tree-version');
@@ -150,6 +149,7 @@ function onready() {
 		$('#sjo-versions-showall').show();
 		$('.sjo-tree-current').removeClass('sjo-tree-current');
 		button.addClass('sjo-tree-current');
+		$('.person__versions').css({minHeight: '800px'});
 	});
 	
 	// Navigate with arrows
