@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.04.09.0
+// @version     2019.04.19.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -47,7 +47,7 @@ function onready() {
 	var labelMappings = {
 		'Statement to voters':							'Statement',
 		'TheyWorkForYou Profile': 						'TheyWorkForYou',
-		'Facebook_Personal_Url':						'FB profile',
+		'Facebook Personal':							'FB personal',
 		'Facebook Page': 								'FB page',
 		'Linkedin_Url':									'LinkedIn',
 		'Party candidate page':							'Party page',
