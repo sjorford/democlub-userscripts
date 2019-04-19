@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.17.3
+// @version        2019.04.19.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -536,10 +536,11 @@ function cleanData(index, candidate) {
 	candidate.party_list_position = candidate.party_list_position === '' ? '' : parseInt(candidate.party_list_position);
 	
 	// Parse boolean values
-	// TODO: parse party_list_position here?
-	candidate.election_current = candidate.election_current == 'True';
-	candidate.party_lists_in_use = candidate.party_lists_in_use == 'True';
-	candidate.elected = candidate.elected == 'True';
+	$.each(dataFields, (key, field) => {
+		if (field.boolean) {
+			candidate[key] = (candidate[key] == 'True');
+		}
+	});
 	
 	// Tweak historical general election IDs for consistency
 	candidate._election = candidate.election;
