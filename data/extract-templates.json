@@ -54,6 +54,7 @@
       "has:facebook_page_url",
       "has:homepage_url",
       "has:wikipedia_url",
+      "has:wikidata_url",
       "has:linkedin_url",
       "has:party_ppc_page_url",
       "birth_date",
