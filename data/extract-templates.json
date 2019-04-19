@@ -62,7 +62,7 @@
       "_gender_icon",
       "has:image_url",
       "has:elected",
-      "cancelled_poll"
+      "has:cancelled_poll"
     ]
   },
   "euro":{
