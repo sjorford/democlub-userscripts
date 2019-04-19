@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.19.0
+// @version        2019.04.19.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -113,6 +113,10 @@ $(function() {
 // Initialize page
 function initialize() {
 	console.log('initialize');
+	
+	console.log('fields', dataFields);
+	console.log('extracts', buttonSpecs);
+	console.log('templates', templates);
 	
 	// Put data in page so it can be shared between userscripts
 	$('<script>var sjo = {api: {}};</script>').appendTo('head');
@@ -258,7 +262,6 @@ function initialize() {
 }
 
 function addTemplateOption(key, template) {
-	console.log(key, template);
 	templates[key] = template;
 	$('<option></option>').val(key).text(template.display).appendTo(templateDropdown);
 	templateDropdown.trigger('chosen:updated');
