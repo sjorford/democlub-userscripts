@@ -102,7 +102,7 @@
     "sort":"#"
   },
   "election_current":{
-
+    "boolean":true
   },
   "_byelection":{
     "display":"By",
@@ -150,13 +150,14 @@
     "link":"/election/@@election@@/post/@@post_id@@/"
   },
   "party_lists_in_use":{
-
+    "boolean":true
   },
   "party_list_position":{
     "display":"Pos",
     "sort":"#"
   },
   "elected":{
+    "boolean":true,
     "abbr":"\u2605",
     "icon":true
   },
