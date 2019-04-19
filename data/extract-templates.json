@@ -60,7 +60,8 @@
       "_age_at_election_min",
       "_gender_icon",
       "has:image_url",
-      "has:elected"
+      "has:elected",
+      "cancelled_poll"
     ]
   },
   "euro":{

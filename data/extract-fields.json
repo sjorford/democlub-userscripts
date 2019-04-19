@@ -277,6 +277,8 @@
     "display":"Biography"
   },
   "cancelled_poll":{
-
+    "boolean":true,
+    "abbr":"\u{1F6AB}",
+    "icon":true
   }
 }
