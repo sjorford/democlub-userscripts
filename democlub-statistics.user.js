@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2019.03.04.0
+// @version     2019.04.20.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -49,7 +49,7 @@ function onready() {
 			var id = div.attr('id');
 			id = id == 'statistics-election-2010' ? 'statistics-election-parl-2010-05-06' : id == 'statistics-election-2015' ? 'statistics-election-parl-2015-05-07' : id;
 			
-			var matchId = id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
+			var matchId = id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local|europarl)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
 			
 			var headerText = div.find('h4').text();
 			var matchHeader = headerText.match(/^Statistics for the (\d{4} )?(.+?)( (local|[Mm]ayoral))?( [Ee]lection|by-election: (.*) (ward|constituency))?( \((.+)\))?$/, '');
