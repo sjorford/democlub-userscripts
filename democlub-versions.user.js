@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.03.08.0
+// @version     2019.04.22.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -194,7 +194,7 @@ function onready() {
 	
 	// Clean white space and non-printing chars
 	function cleanChars(text) {
-		return text.replace(/[\s\u200f]+/g, ' ').replace(/’/g, "'").trim();
+		return text.replace(/[\s\u200F\u200B]+/g, ' ').replace(/’/g, "'").trim();
 	}
 	
 }
