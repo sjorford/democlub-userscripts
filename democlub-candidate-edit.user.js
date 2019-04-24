@@ -4,8 +4,9 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
+// @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.04.15.0
+// @version     2019.04.24.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -72,6 +73,11 @@ function onready() {
 		'id_biography':						'Statement',
 		'id_favourite_biscuit':				'Biscuit \u{1F36A}',
 		'add_more_elections':				'Election',
+		
+		// Additional fields for /other-names page
+		'id_note':							'Note',
+		'id_start_date':					'Start date',
+		'id_end_date':						'End date',
 	};
 	
 	var electionFields = {
