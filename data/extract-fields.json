@@ -208,16 +208,10 @@
     "validate":"wp",
     "group":"links"
   },
-  "wikidata_url":{
+  "wikidata_id":{
     "display":"Wikidata",
     "abbr":"wd",
-    "link":"@@wikidata_url@@",
-    "group":"links"
-  },
-  "_wikidata":{
-    "display":"Wikidata",
-    "abbr":"wd",
-    "link":"@@wikidata_url@@",
+    "link":"https://www.wikidata.org/wiki/@@wikidata_id@@",
     "group":"links"
   },
   "linkedin_url":{
