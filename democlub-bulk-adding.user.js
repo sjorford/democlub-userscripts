@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/*
-// @version     2019.01.16.0
+// @version     2019.04.25.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -15,6 +15,22 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
+	// Sort europarl candidates by party
+	if (window.location.href.indexOf('/europarl.') >= 0) {
+		var table = $('.bulk-add__known-people .sopn_adding_table');
+		var sections = table.find('tbody');
+		var sectionElementsSorted = sections.toArray().sort((a, b) => {
+			var partyA = $(a).find('tr').first().find('td').eq(2).text();
+			var partyB = $(b).find('tr').first().find('td').eq(2).text();
+			return partyA > partyB ? 1 : partyA < partyB ? -1 : 0;
+		});
+		console.log(sectionElementsSorted);
+		table.append(sectionElementsSorted);
+	}
+	
+	$('summary:contains("How to add or check candidates")').parent('details').hide();
+	
+	/*
 	$(`<style>
 		#bulk_add_form .form_group {display: none;}
 		#bulk_add_form .form_group h3 {display: none;}
@@ -44,5 +60,6 @@ function onready() {
 	var heading = $('h3:contains("How to add or check candidates")');
 	heading.next('ol').addClass('sjo-bulkadd-instructions').hide();
 	$('<a role="button" style="font-size: small;">Show</a>').click(event => $('.sjo-bulkadd-instructions').toggle()).appendTo(heading).before(' ');
+	*/
 	
 }
