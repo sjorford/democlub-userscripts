@@ -2,7 +2,7 @@
 // @name           Democracy Club extract flat
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.22.0
+// @version        2019.04.27.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          none
 // ==/UserScript==
@@ -58,7 +58,12 @@ $(function() {
 		var bodyHtml = [];
 		
 		$.each(data, function(index, dataRow) {
-			bodyHtml.push(buildRawOutputRow(dataRow).join('\t'));
+			
+			// Sort candidacies
+			var dataRowSorted = dataRow.sort((a, b) => a.election_date < b.election_date ? 1 : a.election_date > b.election_date ? -1 : 0);
+			
+			bodyHtml.push(buildRawOutputRow(dataRowSorted).join('\t'));
+			
 		});
 		
 		return bodyHtml;
