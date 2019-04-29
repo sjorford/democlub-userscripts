@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.28.0
+// @version        2019.04.29.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -606,10 +606,25 @@ function cleanData(index, candidate) {
 	
 	// Name parts
 	var trimmedName = candidate.name.replace(/\s+/g, ' ').trim();
-	candidate._last_name = (trimmedName.match(/ (van de|van der|van den|van|von|de la|de|la|le|di|al) [^ ]+$/i) || trimmedName.match(/[^ ]+$/))[0].trim();
-	var forenamesMatch = trimmedName.substring(0, trimmedName.length - candidate._last_name.length).trim().match(/^([^\s]+)( (.*))?$/);
-	candidate._first_name = forenamesMatch ? forenamesMatch[1] : '';
-	candidate._middle_names = forenamesMatch ? forenamesMatch[3] : '';
+	
+	var suffixMatch = trimmedName.match(/^(.*?) ((J|S)n?r\.?|MBE)$/i);
+	if (suffixMatch) {
+		candidate._suffix = suffixMatch[2];
+		trimmedName = suffixMatch[1];
+	}
+	
+	var surnameMatch = trimmedName.match(/^(.*?) ((van de|van der|van den|van|von|de la|de|la|le|di|al) [^ ]+)$/i);
+	if (!surnameMatch) surnameMatch = trimmedName.match(/^(.*?) ([^ ]+)$/);
+	
+	if (surnameMatch) {
+		var forenames = surnameMatch[1];
+		var forenamesMatch = forenames.match(/^([^\s]+)( (.*))?$/);
+		candidate._first_name = forenamesMatch[1];
+		candidate._middle_names = forenamesMatch[3];
+		candidate._last_name = surnameMatch[2];
+	} else {
+		candidate._last_name = trimmedName;
+	}
 	
 	return candidate;
 	
