@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.04.24.0
+// @version     2019.05.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -266,4 +266,20 @@ function onready() {
 		
 	}
 	
+	// Warn on unload
+	var initialFormData = JSON.stringify(getFormData('#person-details'));
+	$(window).on("beforeunload", function(event) {
+		if (event.target.activeElement.type == "submit") return;
+		var currentFormData = JSON.stringify(getFormData('#person-details'));
+		if (currentFormData != initialFormData)
+			return "Are you sure?";
+	});
+	
+	function getFormData(selector) {
+		var form = $(selector).first();
+		if (!form.is('form')) return null;
+		var formData = {};
+		$.each(form[0].elements, (i, e) => formData[e.name] = e.value);
+		return formData;
+	}
 }
