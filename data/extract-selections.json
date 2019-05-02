@@ -62,6 +62,22 @@
       ]
     }
   },
+  "local1920":{
+    "text":"LE 19-20",
+    "template":"le1819",
+    "urls":[
+      "/media/candidates-all.csv"
+    ],
+    "limits":{
+      "election_date":{
+        "from":"2019-05-03",
+        "to":"2020-05-06"
+      },
+      "_election_type":[
+        "local"
+      ]
+    }
+  },
   "local18":{
     "text":"LE 18",
     "template":"le",
