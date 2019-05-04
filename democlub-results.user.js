@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.05.04.0
+// @version        2019.05.04.1
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -36,8 +36,7 @@ $(function() {
 	$('<textarea placeholder="Paste results table here"></textarea>').insertBefore(form).on('paste', event => setTimeout(() => {
 		var inputs = firstBody.find('input');
 		var data = event.target.value.split('\n').map(a => a.split('\t').map(b => b.trim()));
-		console.log(data);
-		$.each(data, (i,a) => inputs.eq(i).val($.grep(a, b => b.match(/^\d{1,3}(,\d{3})?$/))[0].replace(/,/, '')))
+		$.each(data, (i,a) => inputs.eq(i).val($.grep(a, b => b.match(/^\d{1,3}(,?\d{3})?( \(E\))?$/))[0].replace(/[^\d]/g, '')))
 	}, 0));
 	
 	$('body').on('submit', event => localStorage.setItem('sjo-result-source', $('#id_source').val()));
