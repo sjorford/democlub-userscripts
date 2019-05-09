@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.05.08.0
+// @version        2019.05.09.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -34,15 +34,21 @@ $(function() {
 		.first().focus();
 	
 	$('<textarea placeholder="Paste results table here"></textarea>').insertBefore(form).on('paste', event => setTimeout(() => {
+		
 		var inputs = firstBody.find('input');
 		var data = event.target.value.split('\n').map(a => a.split('\t').map(b => b.trim()));
-		var fieldsFound = 0;
+		var fieldsFound = 0, numbersFound = 0;
 		$.each(data, (rowIndex, rowValues) => {
+			
 			var nameValues = $.grep(rowValues, value => value.match(/[A-Z]{3}/i));
-			var numberValues = $.grep(rowValues, value => value.match(/^\d{1,3}(,?\d{3})?(\s+\(?E(lected)?\)?)?$/));
+			var numberValues = $.grep(rowValues, value => value.match(/\d{1,3}(,?\d{3})?/));
 			if (nameValues.length > 0 && numberValues.length > 0) {
+				numbersFound++;
+				
 				var firstName = nameValues[0].match(/^[^\s]+/)[0].toLowerCase();
 				var lastName = nameValues[0].match(/[^\s]+$/)[0].toLowerCase();
+				console.log(firstName, lastName, numberValues[0]);
+				
 				inputs.each((inputIndex, element) => {
 					var input = $(element);
 					if (!input.val()) {
@@ -53,9 +59,14 @@ $(function() {
 						}
 					}
 				});
+				
 			}
+			
 		});
-		if (fieldsFound != inputs.length) alert (fieldsFound + ' != ' + inputs.length);
+		
+		if (fieldsFound != inputs.length || numbersFound != inputs.length) 
+			alert (fieldsFound + ' != ' + numbersFound + ' != ' + inputs.length);
+		
 	}, 0));
 	
 	var prevSource = localStorage.getItem('sjo-result-source');
