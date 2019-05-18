@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.05.18.0
+// @version        2019.05.18.1
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -45,9 +45,10 @@ $(function() {
 			if (nameValues.length > 0 && numberValues.length > 0) {
 				numbersFound++;
 				
-				var firstName = nameValues[0].match(/^[^\s]+/)[0].toLowerCase();
-				var lastName = nameValues[0].match(/[^\s]+$/)[0].toLowerCase();
-				console.log(firstName, lastName, numberValues[0]);
+				var nameMatch = nameValues[0].match(/^([^,]+)(,(.*?))?$/);
+				var name = (nameMatch[3] + ' ' + nameMatch[1]).trim();
+				var firstName = name.match(/^[^\s]+/)[0].toLowerCase().trim();
+				var lastName = name.match(/[^\s]+$/)[0].toLowerCase().trim();
 				
 				inputs.each((inputIndex, element) => {
 					var input = $(element);
@@ -74,7 +75,7 @@ $(function() {
 	if (prevSource) {
 		var sourceWrapper = $(`<div>Previous source: <a href="${prevSource}" target="_blank">${prevSource}</a></div>`)
 			.insertAfter(form.find('table'));
-		$('<button>Use same source</button>').appendTo(sourceWrapper).wrap('<div></div>').click(event => $('#id_source').val(prevSource));
+		$('<button type="button">Use same source</button>').appendTo(sourceWrapper).wrap('<div></div>').click(event => $('#id_source').val(prevSource));
 	}
 	
 	$('body').on('submit', event => localStorage.setItem('sjo-result-source', $('#id_source').val()));
