@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.05.18.1
+// @version        2019.05.19.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -46,9 +46,10 @@ $(function() {
 				numbersFound++;
 				
 				var nameMatch = nameValues[0].match(/^([^,]+)(,(.*?))?$/);
-				var name = (nameMatch[3] + ' ' + nameMatch[1]).trim();
+				var name = ((nameMatch[3] || '') + ' ' + nameMatch[1]).trim();
 				var firstName = name.match(/^[^\s]+/)[0].toLowerCase().trim();
 				var lastName = name.match(/[^\s]+$/)[0].toLowerCase().trim();
+				console.log(name, firstName, lastName, numberValues[0]);
 				
 				inputs.each((inputIndex, element) => {
 					var input = $(element);
