@@ -236,7 +236,8 @@
       "party_id",
       "party_name",
       "has:twitter_username",
-      "twitter_username"
+      "twitter_username",
+      "has:elected"
     ]
   },
   "names":{
