@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.04.24.0
+// @version     2019.06.07.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -117,6 +117,29 @@ function onready() {
 				} else if (dt.text() == 'Source') {
 					dd.html(dd.text().replace(/(https?:[^\s]+)/g, '<a href="$1">$1</a>'));
 				}
+			}
+			
+			// Format age and dates of birth/death
+			if (dt.text() == 'Age') {
+				
+				var age = dd.first().text().match(/[-\d]+/)[0];
+				var dob = dd.first().find('.dob').text().match(/\(Date of birth: (.*)\)/)[1];
+				var dodMatch = dd.last().text().match(/Date of death: (.*)/);
+				var dod = dodMatch ? dodMatch[1] : '';
+				
+				dob = dob.replace(/(\d+)(st|nd|rd|th)/, '$1');
+				dod = dod.replace(/(\d+)(st|nd|rd|th)/, '$1');
+				
+				dt.text('Date of birth');
+				
+				if (dod) {
+					// TODO: recalculate age at death
+					dd.first().text(`${dob}`);
+					dd.last().text(`${dod}`).before('<dt class="sjo-list-dt">Date of death</dt>');
+				} else {
+					dd.first().text(`${dob} (age ${age})`);
+				}
+				
 			}
 			
 			// Hide blank fields
