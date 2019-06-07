@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.06.07.0
+// @version     2019.06.07.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -122,22 +122,36 @@ function onready() {
 			// Format age and dates of birth/death
 			if (dt.text() == 'Age') {
 				
-				var age = dd.first().text().match(/[-\d]+/)[0];
-				var dob = dd.first().find('.dob').text().match(/\(Date of birth: (.*)\)/)[1];
+				var dobMatch = dd.first().find('.dob').text().match(/\(Date of birth: (.*)\)/);
+				if (dobMatch) {
+					var dob = dobMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
+					var age = dd.first().text().match(/[-\d]+/)[0];
+					dt.text('Date of birth');
+				}
+                
 				var dodMatch = dd.last().text().match(/Date of death: (.*)/);
-				var dod = dodMatch ? dodMatch[1] : '';
+                if (dodMatch) {
+                    var dod = dodMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
+					dd.last().before('<dt class="sjo-list-dt">Date of death</dt>');
+				}
 				
-				dob = dob.replace(/(\d+)(st|nd|rd|th)/, '$1');
-				dod = dod.replace(/(\d+)(st|nd|rd|th)/, '$1');
-				
-				dt.text('Date of birth');
-				
-				if (dod) {
-					// TODO: recalculate age at death
+				if (dob && dod) {
+					
+                    // Recalculate age at death
+                    age = dod.substr(-4) - dob.substr(-4);
+                    if (dod.length > 4 && dob.length > 4) {
+                        if (moment(dob).add(age, 'years').isAfter(dod)) age--;
+                    }
+                    
 					dd.first().text(`${dob}`);
-					dd.last().text(`${dod}`).before('<dt class="sjo-list-dt">Date of death</dt>');
-				} else {
+					dd.last().text(`${dod} (age ${age})`);
+					
+				} else if (dob) {
 					dd.first().text(`${dob} (age ${age})`);
+				} else if (dod) {
+					dt.hide();
+					dd.first().hide();
+					dd.last().text(`${dod}`);
 				}
 				
 			}
