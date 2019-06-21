@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.04.22.0
+// @version     2019.06.21.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -69,7 +69,7 @@ function onready() {
 			
 			var changeRows = [];
 			var span = $(element);
-			var spanText = span.text().replace(/\n|\r/g, ' ');
+			var spanText = span.text().replace(/\n|\r/g, ' ').trim();
 			
 			// Data added
 			if (span.hasClass('version-op-add')) {
