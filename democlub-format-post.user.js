@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.01.21.0
+// @version     2019.06.24.0
 // @grant       none
 // ==/UserScript==
 
@@ -56,6 +56,8 @@ function onready() {
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
+	
+	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
 	
 	// Convert the timeline to a breadcrumb type thing
 	var timeline = $('<div class="sjo-api-timeline"></div>').prependTo('.content .container');
