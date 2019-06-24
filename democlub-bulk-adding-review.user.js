@@ -2,7 +2,7 @@
 // @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.04.03.2
+// @version     2018.06.24.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -19,6 +19,7 @@ function onready() {
 		.sjo-bulkadd-listitem input {margin-bottom: 0 !important}
 		.sjo-bulkadd-data {font-size: 0.75rem; xxxcolor: #aaa; margin-bottom: 0rem !important; list-style-type: none;}
 		.sjo-bulkadd-link {font-weight: bold;}
+		.multiple-choice {width: auto !important;} /* FIXME */
 	</style>`).appendTo('head');
 	
 	$('form h2').each((index, element) => {
