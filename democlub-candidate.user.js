@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.06.07.1
+// @version     2019.07.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -128,21 +128,21 @@ function onready() {
 					var age = dd.first().text().match(/[-\d]+/)[0];
 					dt.text('Date of birth');
 				}
-                
+				
 				var dodMatch = dd.last().text().match(/Date of death: (.*)/);
-                if (dodMatch) {
-                    var dod = dodMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
+				if (dodMatch) {
+					var dod = dodMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
 					dd.last().before('<dt class="sjo-list-dt">Date of death</dt>');
 				}
 				
 				if (dob && dod) {
 					
-                    // Recalculate age at death
-                    age = dod.substr(-4) - dob.substr(-4);
-                    if (dod.length > 4 && dob.length > 4) {
-                        if (moment(dob).add(age, 'years').isAfter(dod)) age--;
-                    }
-                    
+					// Recalculate age at death
+					age = dod.substr(-4) - dob.substr(-4);
+					if (dod.length > 4 && dob.length > 4) {
+						if (moment(dob).add(age, 'years').isAfter(dod)) age--;
+					}
+					
 					dd.first().text(`${dob}`);
 					dd.last().text(`${dod} (age ${age})`);
 					
