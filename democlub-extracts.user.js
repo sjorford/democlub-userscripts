@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.05.0
+// @version        2019.07.05.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -141,15 +141,19 @@ function initialize() {
 	});
 	*/
 	
+	// Add button to extract all
+	$(`<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">`).appendTo(wrapper);
+	
 	// Add extract dropdown
-	var dropdown = $('<select id="sjo-api-select-election"></select>').appendTo(wrapper)
-			.before(`<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">`);
-	buildDownloadList(dropdown);
-	dropdown.change(event => $('#sjo-api-option-extract-other').click());
+	var electionDropdown = $('<select id="sjo-api-select-election"></select>').appendTo(wrapper)
+			.before(`<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">`)
+			.change(event => $('#sjo-api-option-extract-election').click());
+	buildDownloadList(electionDropdown);
 	
 	// Add date dropdown
 	var dateDropdown = $('<select id="sjo-api-select-date"></select>').appendTo(wrapper)
-			.before(`<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">`);
+			.before(`<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">`)
+			.change(event => $('#sjo-api-option-extract-date').click());
 	$.each(Object.keys(electionDates).sort((a, b) => a < b), (index, value) => {
 		dateDropdown.append(`<option value="${value}">${moment(value).format('D MMM YYYY')} (${electionDates[value].join(', ')})</option>`);
 	});
@@ -189,13 +193,20 @@ function initialize() {
 	$('<input type="button" id="sjo-api-button-truncate" value="Truncate">').insertAfter('#sjo-api-status').hide().click(truncateDataTable);
 	$('<div class="sjo-api-wrapper" id="sjo-api-error"></div>').appendTo(wrapper).hide();
 	
-	// Select defaults
+	// Get previously selected values from local storage
 	var lastExtract = localStorage.getItem('sjo-api-extract');
 	var lastUrl = localStorage.getItem('sjo-api-url');
-	console.log('localStorage', lastExtract, lastUrl);
+	var lastDate = localStorage.getItem('sjo-api-date');
+	console.log('localStorage', lastExtract, lastUrl, lastDate);
+	
+	// Set previously selected values
 	if (lastUrl) {
-		console.log(dropdown.find(`option[value="${lastUrl}"]`).first().prop({selected: true})); // FIXME
-		dropdown.trigger('change');
+		electionDropdown.val(lastUrl);
+		electionDropdown.trigger('chosen:updated');
+	}
+	if (lastDate) {
+		dateDropdown.val(lastDate);
+		dateDropdown.trigger('chosen:updated');
 	}
 	if (lastExtract) {
 		$(`#sjo-api-option-extract-${lastExtract}`).click();
@@ -385,16 +396,27 @@ function startDownload(event) {
 	
 	var extract = {}
 	var selectedButton = $('.sjo-api-option-extract-selected');
+	
 	if (selectedButton.is('#sjo-api-option-extract-election')) {
-		extract.urls = [$('#sjo-api-select-election').val()];
-		localStorage.setItem('sjo-api-url', extract.urls[0]);
+		
+		var extractURL = $('#sjo-api-select-election').val();
+		extract.urls = [extractURL];
+		localStorage.setItem('sjo-api-extract', 'election');
+		localStorage.setItem('sjo-api-url', extractURL);
+		
 	} else if (selectedButton.is('#sjo-api-option-extract-date')) {
+		
 		var extractDate = $('#sjo-api-select-date').val();
-		console.log(extractDate);
-		extract.urls = [`https://candidates.democracyclub.org.uk/media/candidates-${extractDate}.csv`];
+		extract.urls = [`/media/candidates-${extractDate}.csv`];
+		localStorage.setItem('sjo-api-extract', 'date');
+		localStorage.setItem('sjo-api-date', extractDate);
+		
+	} else if (selectedButton.is('#sjo-api-option-extract-all')) {
+		
+		extract.urls = [allCandidatesUrl];
+		localStorage.setItem('sjo-api-extract', 'all');
+		
 	}
-	localStorage.setItem('sjo-api-url', extract.urls[0]);
-	console.log(extract.urls);
 	
 	currentExtract = extract;
 	console.log('startDownload', currentExtract);
