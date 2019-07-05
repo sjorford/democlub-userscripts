@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.05.1
+// @version        2019.07.05.2
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -345,7 +345,7 @@ function buildDownloadList(dropdown) {
 			electionName = Utils.shortOrgName(electionName);
 			electionName = electionName.replace(/\s+by-election.*$/, '');
 			if (electionId.startsWith('parl.') && electionName != 'General Election') {
-				electionName = 'UK Parliament elections';
+				electionName = 'UK Parliament';
 			} else if (electionId.startsWith('mayor.') && !electionName.startsWith('Mayor of ')) {
 				electionName = 'Mayor of ' + electionName;
 			}
