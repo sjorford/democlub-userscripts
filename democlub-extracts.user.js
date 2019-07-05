@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.29.0
+// @version        2019.07.05.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -21,6 +21,7 @@ var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
 var electionMappings = {};
 var templateDropdown;
+var electionDates = {};
 
 // Styles
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
@@ -30,7 +31,9 @@ $(`<style>
 	.sjo-api-wrapper {margin-top: 0.5rem;}
 	.sjo-api-option-extract {background-color: white; margin-right: 0.5rem; border: 1px solid black; padding: 1px 3px;}
 	.sjo-api-option-extract-selected {background-color: #77f; color: white;}
-	#sjo-api-select-extract {width: 30rem;}
+	#sjo-api-select-election {width: 30rem;}
+	#sjo-api-select-date {width: 20rem;}
+	#sjo_api_select_election_chosen {margin-right: 0.5rem;}
 	#sjo-api-select-template {width: 15rem;}
 	#sjo-api-status {font-style: italic; margin-right: 1rem;}
 	#sjo-api-error {font-weight: bold; color: red;}
@@ -65,7 +68,7 @@ $(`<style>
 var dataFields = {};
 
 // Download buttons
-var buttonSpecs = {};
+//var buttonSpecs = {};
 
 // Fields to be displayed
 var templates = {};
@@ -79,10 +82,12 @@ var configList = [
 		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-fields.json',
 		callback: response => dataFields = response
 	},
+	/*
 	{
 		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-selections.json',
 		callback: response => buttonSpecs = response
 	},
+	*/
 	{
 		url: 'https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/data/extract-templates.json',
 		callback: response => templates = response
@@ -115,7 +120,7 @@ function initialize() {
 	console.log('initialize');
 	
 	console.log('fields', dataFields);
-	console.log('extracts', buttonSpecs);
+	//console.log('extracts', buttonSpecs);
 	console.log('templates', templates);
 	
 	// Put data in page so it can be shared between userscripts
@@ -127,26 +132,40 @@ function initialize() {
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
 	
 	// Add extract options
+	/*
 	var extractWrapper = $('<div class="sjo-api-wrapper"></div>').appendTo(wrapper);
 	$.each(buttonSpecs, (key, extract) => {
 		extract.key = key;
 		var button = $(`<input type="button" id="sjo-api-option-extract-${key}" class="sjo-api-option-extract" value="${extract.text}">`).data('sjo-api-extract', JSON.stringify(extract)).appendTo(extractWrapper);
 		if (key == 'other') button.wrap('<div class="sjo-api-wrapper"></div>');
 	});
+	*/
+	
+	// Add extract dropdown
+	var dropdown = $('<select id="sjo-api-select-election"></select>').appendTo(wrapper)
+			.before(`<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">`);
+	buildDownloadList(dropdown);
+	dropdown.change(event => $('#sjo-api-option-extract-other').click());
+	
+	// Add date dropdown
+	var dateDropdown = $('<select id="sjo-api-select-date"></select>').appendTo(wrapper)
+			.before(`<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">`);
+	$.each(Object.keys(electionDates).sort((a, b) => a < b), (index, value) => {
+		dateDropdown.append(`<option value="${value}">${moment(value).format('D MMM YYYY')} (${electionDates[value].join(', ')})</option>`);
+	});
+	dateDropdown.chosen();
 	
 	$('.sjo-api-option-extract').click(event => {
+		console.log(event);
 		var button = $('.sjo-api-option-extract').removeClass('sjo-api-option-extract-selected').filter(event.target).addClass('sjo-api-option-extract-selected');
+		/*
 		var extract = JSON.parse(button.data('sjo-api-extract'));
 		console.log('click', button, extract);
 		if (event.target.value != 'Other') {
 			$('#sjo-api-select-template').val(extract.template).trigger('chosen:updated');
 		}
+		*/
 	});
-	
-	// Add extract dropdown
-	var dropdown = $('<select id="sjo-api-select-extract"></select>').insertAfter('#sjo-api-option-extract-other');
-	buildDownloadList(dropdown);
-	dropdown.change(event => $('#sjo-api-option-extract-other').click());
 	
 	// Add template dropdown
 	templateDropdown = $('<select id="sjo-api-select-template"></select>')
@@ -304,6 +323,12 @@ function buildDownloadList(dropdown) {
 			var electionIdMatch = element.href.match(/\/candidates-(.+)\.csv$/);
 			var electionId = electionIdMatch ? electionIdMatch[1] : '';
 			
+			// Add date to list
+			var electionDate = electionId.match(/\d{4}-\d{2}-\d{2}$/)[0];
+			var electionType = electionId.match(/^([^\.]+)./)[1];
+			if (!electionDates[electionDate]) electionDates[electionDate] = [];
+			if (electionDates[electionDate].indexOf(electionType) < 0) electionDates[electionDate].push(electionType);
+			
 			// Parse election name
 			var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
 			electionName = Utils.shortOrgName(electionName);
@@ -349,12 +374,28 @@ function gotoPage(newPageNo) {
 
 function startDownload(event) {
 	
+	/*
 	var extract = JSON.parse($('.sjo-api-option-extract-selected').data('sjo-api-extract'));
 	localStorage.setItem('sjo-api-extract', extract.key);
 	if (!extract.urls) {
-		extract.urls = [$('#sjo-api-select-extract').val()];
+		extract.urls = [$('#sjo-api-select-election').val()];
 		localStorage.setItem('sjo-api-url', extract.urls[0]);
 	}
+	*/
+	
+	var extract = {}
+	var selectedButton = $('.sjo-api-option-extract-selected');
+	if (selectedButton.is('#sjo-api-option-extract-election')) {
+		extract.urls = [$('#sjo-api-select-election').val()];
+		localStorage.setItem('sjo-api-url', extract.urls[0]);
+	} else if (selectedButton.is('#sjo-api-option-extract-date')) {
+		var extractDate = $('#sjo-api-select-date').val();
+		console.log(extractDate);
+		extract.urls = [`https://candidates.democracyclub.org.uk/media/candidates-${extractDate}.csv`];
+	}
+	localStorage.setItem('sjo-api-url', extract.urls[0]);
+	console.log(extract.urls);
+	
 	currentExtract = extract;
 	console.log('startDownload', currentExtract);
 	
