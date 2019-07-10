@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2019.07.01.0
+// @version     2019.07.10.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -114,7 +114,12 @@ function onready() {
 	
 	$('.statistics-elections').each((index, element) => {
 		var wrapper = $(element);
-		Utils.collapseSection(wrapper.find('.sjo-stats'), wrapper.find('h2'), wrapper.hasClass('current') || wrapper.hasClass('sjo-future'));
+		var table = wrapper.find('.sjo-stats');
+		if (table.find('tr').length == 0) {
+			wrapper.hide();
+		} else {
+			table.collapsible(wrapper.find('h2'), wrapper.is('.current, .sjo-future'));
+		}
 	});
 	
 	$('body').on('click', '.sjo-stats', event => {
@@ -131,7 +136,5 @@ function onready() {
 			$('.sjo-stats tr').show()
 				.not((index, element) => $(element).find('td:nth-of-type(2)').text().toLowerCase().indexOf(filter.val().toLowerCase().trim()) >= 0).hide();
 		});
-	
-	
 	
 }
