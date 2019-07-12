@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.12.0
+// @version        2019.07.12.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -19,10 +19,11 @@ var currentExtract, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
-var electionMappings = {};
+//var electionMappings = {};
 var templateDropdown;
-var electionDates = {};
-var electionUrls = [];
+//var electionDates = {};
+//var electionUrls = [];
+var electionsList = {};
 
 // External stylesheets
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
@@ -68,8 +69,10 @@ $(`<style>
 	
 	.sjo-api-params-wrapper {height: 3rem; padding-top: 1rem;}
 	input.sjo-api-date {width: 100px; display: inline-block; margin-right: 1rem; height: auto; padding: 0.25rem;}
-	.sjo-api-date-normal a {background-color: #7eeab5 !important;}
+	.sjo-api-date-normal a {background-color: #2ad581 !important;}
+	.sjo-api-date-weird  a {background-color: #7eeab5 !important;}
 	.sjo-api-date-normal a.ui-state-active {background-color: #007fff !important;}
+	.sjo-api-date-weird  a.ui-state-active {background-color: #007fff !important;}
 	
 </style>`).appendTo('head');
 
@@ -161,14 +164,16 @@ function initialize() {
 			.before('Election: ').change(event => $('#sjo-api-option-extract-election').click());
 	buildDownloadList();
 	
-	// Highlight Thursdays in date picker
+	// Highlight elections in date picker
 	var datePickerOptions = {
 			dateFormat: 'yy-mm-dd',
 			showOtherMonths: true,
 			selectOtherMonths: true,
 			beforeShowDay: date => {
 				var _date = moment(date);
-				return [true, _date.day() == 4 ? 'sjo-date-normal' : '', ''];
+				var elections = $.grep(Object.values(electionsList), element => element.date == _date.format('YYYY-MM-DD'));
+				var className = elections.length == 0 ? '' : (_date.day() == 4 ? 'sjo-api-date-normal' : 'sjo-api-date-weird');
+				return [true, className, ''];
 			},
 		};
 	
@@ -348,13 +353,13 @@ function buildDownloadList() {
 			// Parse election ID
 			var electionIdMatch = element.href.match(/\/candidates-(.+)\.csv$/);
 			var electionId = electionIdMatch ? electionIdMatch[1] : '';
-			
-			// Add date to list
 			var electionDate = electionId.match(/\d{4}-\d{2}-\d{2}$/)[0];
 			var electionType = electionId.match(/^([^\.]+)./)[1];
+			/*
 			if (!electionDates[electionDate]) electionDates[electionDate] = [];
 			if (electionDates[electionDate].indexOf(electionType) < 0) electionDates[electionDate].push(electionType);
 			electionUrls.push({date: electionDate, url: element.href});
+			*/
 			
 			// Parse election name
 			var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
@@ -371,11 +376,21 @@ function buildDownloadList() {
 			// Add option to group
 			groupHtml += `<option value="${element.href}">${electionName}</option>`;
 			
-			// Add election to mapping table
+			/*
 			if (electionId && !electionMappings[electionId]) {
 				electionMappings[electionId] = electionName;
 			}
-
+			*/
+			
+			// Add election to list
+			electionsList[electionId] = {
+				id: electionId,
+				date: electionDate,
+				type: electionType,
+				name: electionName,
+				url: element.href,
+			};
+			
 		});
 		
 		// Add group to dropdown
@@ -383,7 +398,7 @@ function buildDownloadList() {
 		dropdownHtml += groupHtml;
 		
 	});
-	console.log('buildDownloadList', electionMappings);
+	console.log('buildDownloadList', electionsList);
 	
 	// Add all downloads to dropdown
 	$('#sjo-api-select-election').html(dropdownHtml).chosen();
@@ -429,9 +444,8 @@ function startDownload(event) {
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
 		//extract.urls = [`/media/candidates-${startDate}.csv`];
-		console.log(startDate, endDate, electionUrls);
-		extract.urls = $.grep(electionUrls, element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
-		console.log(extract.urls);
+		extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		console.log(startDate, endDate, extract.urls);
 		localStorage.setItem('sjo-api-extract', 'date');
 		localStorage.setItem('sjo-api-date-start', startDate);
 		localStorage.setItem('sjo-api-date-end', endDate);
@@ -640,7 +654,7 @@ function cleanData(index, candidate) {
 	var electionMatch = candidate.election.match(/^((parl|nia|pcc|mayor|europarl)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
 	candidate._election_type = electionMatch[2] || electionMatch[3] || electionMatch[6] || null;
 	candidate._election_area = electionMatch[1];
-	candidate._election_name = electionMappings[candidate.election];
+	candidate._election_name = electionsList[candidate.election].name;
 	
 	// Tweak ward names
 	candidate._post_label = candidate.post_label;
