@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.11.0
+// @version        2019.07.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -66,7 +66,7 @@ $(`<style>
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
 	
-	#sjo-api-params-wrapper-date {margin-top: 1rem;}
+	.sjo-api-params-wrapper {height: 3rem; padding-top: 1rem;}
 	input.sjo-api-date {width: 100px; display: inline-block; margin-right: 1rem; height: auto; padding: 0.25rem;}
 	.sjo-api-date-normal a {background-color: #7eeab5 !important;}
 	.sjo-api-date-normal a.ui-state-active {background-color: #007fff !important;}
@@ -155,14 +155,13 @@ function initialize() {
 	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
 	
 	// Extract single election
-	$('<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">').appendTo(buttonsWrapper)
-			.click(event => $('.sjo-api-params-wrapper').hide().filter('#sjo-api-params-wrapper-election').show());
+	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">');
 	var electionWrapper = $('<div id="sjo-api-params-wrapper-election" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
 	var electionDropdown = $('<select id="sjo-api-select-election"></select>').appendTo(electionWrapper)
-			.change(event => $('#sjo-api-option-extract-election').click());
+			.before('Election: ').change(event => $('#sjo-api-option-extract-election').click());
 	buildDownloadList();
-	electionWrapper.hide();
 	
+	// Highlight Thursdays in date picker
 	var datePickerOptions = {
 			dateFormat: 'yy-mm-dd',
 			showOtherMonths: true,
@@ -174,43 +173,23 @@ function initialize() {
 		};
 	
 	// Extract by date range
-	$('<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">').appendTo(buttonsWrapper)
-			.click(event => $('.sjo-api-params-wrapper').hide().filter('#sjo-api-params-wrapper-date').show());
-	var dateWrapper = $('<div id="sjo-api-params-wrapper-date" class="sjo-api-params-wrapper"></div>').appendTo(wrapper).hide();
-	
-	// Start date
+	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">');
+	var dateWrapper = $('<div id="sjo-api-params-wrapper-date" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
 	var startDate = $('<input type="text" id="sjo-api-date-start" class="sjo-api-date">').appendTo(dateWrapper)
-		.before('From: ').datepicker(datePickerOptions);
+			.before('From: ').datepicker(datePickerOptions);
 	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">').appendTo(dateWrapper)
-		.before('To: ').datepicker(datePickerOptions);
+			.before('To: ').datepicker(datePickerOptions);
 	
-	
-	
-	
-	
-	
-	
-	
-	/*
-	var dateDropdown = $('<select id="sjo-api-select-date"></select>').appendTo(wrapper)
-			.change(event => $('#sjo-api-option-extract-date').click());
-	$.each(Object.keys(electionDates).sort((a, b) => a < b), (index, value) => {
-		dateDropdown.append(`<option value="${value}">${moment(value).format('D MMM YYYY')} (${electionDates[value].join(', ')})</option>`);
-	});
-	dateDropdown.chosen();
-	*/
-	
+	// Highlight selected option
 	$('.sjo-api-option-extract').click(event => {
-		console.log(event);
-		var button = $('.sjo-api-option-extract').removeClass('sjo-api-option-extract-selected').filter(event.target).addClass('sjo-api-option-extract-selected');
-		/*
-		var extract = JSON.parse(button.data('sjo-api-extract'));
-		console.log('click', button, extract);
-		if (event.target.value != 'Other') {
-			$('#sjo-api-select-template').val(extract.template).trigger('chosen:updated');
-		}
-		*/
+		var option = event.target.id.match(/[^-]+$/)[0];
+		$('.sjo-api-params-wrapper').hide().filter(`#sjo-api-params-wrapper-${option}`).show();
+		$('.sjo-api-option-extract').removeClass('sjo-api-option-extract-selected').filter(event.target).addClass('sjo-api-option-extract-selected');
 	});
+	
+	
+	
+	
 	
 	// Add template dropdown
 	templateDropdown = $('<select id="sjo-api-select-template"></select>')
@@ -242,15 +221,9 @@ function initialize() {
 	console.log('localStorage', lastExtract, lastUrl, lastStartDate, lastEndDate);
 	
 	// Set previously selected values
-	if (lastExtract) {
-		$(`#sjo-api-option-extract-${lastExtract}`).click();
-	}
-	
-	if (lastUrl) {
-		electionDropdown.val(lastUrl);
-		electionDropdown.trigger('chosen:updated');
-	}
-	
+	$('.sjo-api-params-wrapper').hide();
+	if (lastExtract) $(`#sjo-api-option-extract-${lastExtract}`).click();
+	if (lastUrl) electionDropdown.val(lastUrl).trigger('chosen:updated');
 	if (lastStartDate) startDate.val(lastStartDate);
 	if (lastEndDate) endDate.val(lastEndDate);
 	
@@ -441,6 +414,7 @@ function startDownload(event) {
 	
 	if (selectedButton.is('#sjo-api-option-extract-election')) {
 		
+		// Extract a single election
 		var extractURL = $('#sjo-api-select-election').val();
 		extract.urls = [extractURL];
 		localStorage.setItem('sjo-api-extract', 'election');
@@ -448,6 +422,10 @@ function startDownload(event) {
 		
 	} else if (selectedButton.is('#sjo-api-option-extract-date')) {
 		
+		// Extract all elections in date range
+		// TODO: download date files instead of election files?
+		// empty date files are 304?
+		// but for May elections there could be hundreds of individual election files
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
 		//extract.urls = [`/media/candidates-${startDate}.csv`];
