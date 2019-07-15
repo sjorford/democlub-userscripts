@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.06.24.0
+// @version     2019.07.14.0
 // @grant       none
 // ==/UserScript==
 
@@ -73,6 +73,22 @@ function onready() {
 			.appendTo(timeline);
 	});
 	items.closest('.columns').hide();
+	
+	// Sort candidates
+	if (document.title.match(/Known candidates for each ballot/)) {
+		
+		$('.container table tbody').each((index, element) => {
+			var tbody = $(element);
+			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
+				var nameA = a.cells[0].innerText.trim();
+				var nameB = b.cells[0].innerText.trim();
+				var surnameA = nameA.match(/\w+$/)[0];
+				var surnameB = nameB.match(/\w+$/)[0];
+				return surnameA > surnameB ? 1 : surnameA < surnameB ? -1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
+			}));
+		});
+		
+	}
 	
 	function polyfill() {
 			
