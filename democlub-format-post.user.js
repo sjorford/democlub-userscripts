@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.14.0
+// @version     2019.07.15.0
 // @grant       none
 // ==/UserScript==
 
@@ -53,6 +53,10 @@ function onready() {
 			margin-top: -15px;
 		}
 		
+		.sjo-election-summary-table tr > *:nth-of-type(1) {width: 250px;}
+		.sjo-election-summary-table tr > *:nth-of-type(2) {width: 300px;}
+		.sjo-election-summary-table tr > *:nth-of-type(3) {width: 100px; text-align: right;}
+		
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
@@ -74,11 +78,15 @@ function onready() {
 	});
 	items.closest('.columns').hide();
 	
-	// Sort candidates
+	// Election summary pages
 	if (document.title.match(/Known candidates for each ballot/)) {
 		
-		$('.container table tbody').each((index, element) => {
-			var tbody = $(element);
+		$('.container table').each((index, element) => {
+			
+			var table = $(element).addClass('sjo-election-summary-table');
+			var tbody = table.find('tbody');
+			
+			// Sort candidates
 			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
 				var nameA = a.cells[0].innerText.trim();
 				var nameB = b.cells[0].innerText.trim();
@@ -86,6 +94,17 @@ function onready() {
 				var surnameB = nameB.match(/\w+$/)[0];
 				return surnameA > surnameB ? 1 : surnameA < surnameB ? -1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
 			}));
+			
+			// Highlight elected candidates
+			table.find('th:nth-of-type(4)').html('');
+			tbody.find('tr td:nth-of-type(4)').each((index, element) => {
+				if (element.innerHTML == 'Yes') {
+					element.innerHTML = '★';
+				} else if (element.innerHTML == 'No') {
+					element.innerHTML = '';
+				}
+			});
+			
 		});
 		
 	}
