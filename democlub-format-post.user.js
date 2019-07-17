@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.17.0
+// @version     2019.07.17.1
 // @grant       none
 // ==/UserScript==
 
@@ -63,24 +63,11 @@ function onready() {
 	
 	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
 	
-	// Convert the timeline to a breadcrumb type thing
-	var timeline = $('<div class="sjo-api-timeline"></div>').prependTo('.content .container');
-	var items = $('.timeline_item div');
-	items.each((index, element) => {
-		var item = $(element);
-		var text = item.find('strong').text().replace(/"|\.$/g, '');
-		$('<div class="sjo-api-timeline-item"></div>')
-			.text(text)
-			.addClass(index == items.length - 1 ? '' : 'sjo-api-timeline-arrow')
-			.addClass('sjo-api-timeline-' + item.attr('class'))
-			.css({'zIndex': 99 - index})
-			.appendTo(timeline);
-	});
-	items.closest('.columns').hide();
-	
-	// Election summary pages
 	if (document.title.match(/Known candidates for each ballot/)) {
-		
+
+		// Election summary pages
+		// ================================
+
 		$('.container table').each((index, element) => {
 			
 			var table = $(element).addClass('sjo-election-summary-table');
@@ -105,6 +92,38 @@ function onready() {
 				}
 			});
 			
+		});
+		
+	} else {
+		
+		// Post pages
+		// ================================
+		
+		// Convert the timeline to a breadcrumb type thing
+		var timeline = $('<div class="sjo-api-timeline"></div>').prependTo('.content .container');
+		var items = $('.timeline_item div');
+		items.each((index, element) => {
+			var item = $(element);
+			var text = item.find('strong').text().replace(/"|\.$/g, '');
+			$('<div class="sjo-api-timeline-item"></div>')
+				.text(text)
+				.addClass(index == items.length - 1 ? '' : 'sjo-api-timeline-arrow')
+				.addClass('sjo-api-timeline-' + item.attr('class'))
+				.css({'zIndex': 99 - index})
+				.appendTo(timeline);
+		});
+		items.closest('.columns').hide();
+		
+		// Add missing parties to results table
+		$('.vote_result tbody tr').each((index, element) => {
+			var cells = $('td', element);
+			var link = cells.eq(0).find('a');
+			if (link.length > 0 && cells.eq(1).text().trim() == '') {
+				var id = link.attr('href').match(/\/person\/(\d+)/)[1];
+				var partyName = $('a.candidate-name').filter((index, element) => element.href.indexOf(`/${id}/`) >=0)
+					.closest('.person-name-and-party').find('.party').text();
+				cells.eq(1).text(partyName);
+			}
 		});
 		
 	}
