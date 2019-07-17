@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.05.19.0
+// @version        2019.07.17.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -72,6 +72,7 @@ $(function() {
 		
 	}, 0));
 	
+	/*
 	var prevSource = localStorage.getItem('sjo-result-source');
 	if (prevSource) {
 		var sourceWrapper = $(`<div>Previous source: <a href="${prevSource}" target="_blank">${prevSource}</a></div>`)
@@ -80,5 +81,6 @@ $(function() {
 	}
 	
 	$('body').on('submit', event => localStorage.setItem('sjo-result-source', $('#id_source').val()));
+	*/
 	
 });
