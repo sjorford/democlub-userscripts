@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.17.1
+// @version     2019.07.17.2
 // @grant       none
 // ==/UserScript==
 
@@ -113,18 +113,6 @@ function onready() {
 				.appendTo(timeline);
 		});
 		items.closest('.columns').hide();
-		
-		// Add missing parties to results table
-		$('.vote_result tbody tr').each((index, element) => {
-			var cells = $('td', element);
-			var link = cells.eq(0).find('a');
-			if (link.length > 0 && cells.eq(1).text().trim() == '') {
-				var id = link.attr('href').match(/\/person\/(\d+)/)[1];
-				var partyName = $('a.candidate-name').filter((index, element) => element.href.indexOf(`/${id}/`) >=0)
-					.closest('.person-name-and-party').find('.party').text();
-				cells.eq(1).text(partyName);
-			}
-		});
 		
 	}
 	
