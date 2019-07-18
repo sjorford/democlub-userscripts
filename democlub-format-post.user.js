@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.17.2
+// @version     2019.07.18.0
 // @grant       none
 // ==/UserScript==
 
@@ -56,6 +56,15 @@ function onready() {
 		.sjo-election-summary-table tr > *:nth-of-type(1) {width: 250px;}
 		.sjo-election-summary-table tr > *:nth-of-type(2) {width: 300px;}
 		.sjo-election-summary-table tr > *:nth-of-type(3) {width: 100px; text-align: right;}
+		
+		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 0.25rem; background-color: lightgrey;}
+		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
+		.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
+		.sjo-party-bar.sjo-party-liberal-democrats               {background-color: orange;}
+		.sjo-party-bar.sjo-party-green-party                     {background-color: green;}
+		.sjo-party-bar.sjo-party-uk-independence-party-ukip      {background-color: purple;}
+		.sjo-party-bar.sjo-party-the-brexit-party                {background-color: turquoise;}
+		.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
 		
 	</style>`).appendTo('head');
 	
@@ -113,6 +122,12 @@ function onready() {
 				.appendTo(timeline);
 		});
 		items.closest('.columns').hide();
+		
+		// Add colour bar to photos
+		$('.candidates-list__person').each((index, element) => {
+			var partySlug = $('.party', element).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
+			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
+		});
 		
 	}
 	
