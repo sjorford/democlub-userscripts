@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.18.0
+// @version     2019.07.18.1
 // @grant       none
 // ==/UserScript==
 
@@ -60,10 +60,13 @@ function onready() {
 		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 0.25rem; background-color: lightgrey;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
 		.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
+		.sjo-party-bar.sjo-party-labour-and-co-operative-party   {background-color: red;}
 		.sjo-party-bar.sjo-party-liberal-democrats               {background-color: orange;}
-		.sjo-party-bar.sjo-party-green-party                     {background-color: green;}
+		.sjo-party-bar.sjo-party-green-party                     {background-color: #00ea4b;}
+		.sjo-party-bar.sjo-party-scottish-green-party            {background-color: #00ea4b;}
 		.sjo-party-bar.sjo-party-uk-independence-party-ukip      {background-color: purple;}
-		.sjo-party-bar.sjo-party-the-brexit-party                {background-color: turquoise;}
+		.sjo-party-bar.sjo-party-the-brexit-party                {background-color: #41e7ff;}
+		.sjo-party-bar.sjo-party-scottish-national-party-snp     {background-color: yellow;}
 		.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
 		
 	</style>`).appendTo('head');
