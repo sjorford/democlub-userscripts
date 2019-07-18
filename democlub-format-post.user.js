@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.18.1
+// @version     2019.07.18.2
 // @grant       none
 // ==/UserScript==
 
@@ -53,9 +53,14 @@ function onready() {
 			margin-top: -15px;
 		}
 		
-		.sjo-election-summary-table tr > *:nth-of-type(1) {width: 250px;}
-		.sjo-election-summary-table tr > *:nth-of-type(2) {width: 300px;}
-		.sjo-election-summary-table tr > *:nth-of-type(3) {width: 100px; text-align: right;}
+		.sjo-election-summary tr > *:nth-of-type(1) {width: 250px;}
+		.sjo-election-summary tr > *:nth-of-type(2) {width: 300px;}
+		.sjo-election-summary tr > *:nth-of-type(3) {width: 100px; text-align: right;}
+		
+		.sjo-election-summary-lists tr > *:nth-of-type(1) {width: 250px;}
+		.sjo-election-summary-lists tr > *:nth-of-type(2) {text-align: center;}
+		.sjo-election-summary-lists tr > *:nth-of-type(3) {width: 300px;}
+		.sjo-election-summary-lists tr > *:nth-of-type(4) {width: 100px; text-align: right;}
 		
 		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 0.25rem; background-color: lightgrey;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
@@ -82,8 +87,14 @@ function onready() {
 
 		$('.container table').each((index, element) => {
 			
-			var table = $(element).addClass('sjo-election-summary-table');
+			var table = $(element);
 			var tbody = table.find('tbody');
+			if (table.find('th:nth-of-type(2)').text().trim() == 'List position') {
+				table.find('th:nth-of-type(2)').text('Pos');
+				table.addClass('sjo-election-summary-lists');
+			} else {
+				table.addClass('sjo-election-summary');
+			}
 			
 			// Sort candidates
 			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
