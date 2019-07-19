@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.19.0
+// @version     2019.07.19.1
 // @grant       none
 // ==/UserScript==
 
@@ -143,6 +143,25 @@ function onready() {
 		$('.candidates-list__person').each((index, element) => {
 			var partySlug = $('.party', element).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
 			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
+		});
+		
+		// Click to sort candidates ascending
+		$('.vote_result th:contains("Candidate")').click(event => {
+			var tbody = $('.vote_result tbody:first-of-type');
+			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
+				var aName = a.cells[0].innerText.trim();
+				var bName = b.cells[0].innerText.trim();
+				var aSurname = aName.match(/[^\s]+$/)[0];
+				var bSurname = bName.match(/[^\s]+$/)[0];
+				return aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
+				       aName > bName ? 1 : aName < bName ? -1 : 0;
+			}));
+		});
+		
+		// Click to sort candidates by votes
+		$('.vote_result th:contains("Votes")').click(event => {
+			var tbody = $('.vote_result tbody:first-of-type');
+			tbody.append(tbody.find('tr').toArray().sort((a, b) => b.cells[2].innerText - a.cells[2].innerText));
 		});
 		
 	}
