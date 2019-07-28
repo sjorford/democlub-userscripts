@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.24.0
+// @version        2019.07.28.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // ==/UserScript==
@@ -16,10 +16,9 @@ $(function() {
 		var cells = $(element).find('td');
 
 		if (cells.closest('tbody').is(firstBody)) {
-			
-			var candMatch = cells.first().text().match(/^(.*?)([^\s]+)\s+\((.*)\)$/);
+			var candMatch = cells.first().text().match(/^(.*?)((\s+(von der|von de|von|van der|van de|van|de la|de|la)\s+)?([^\s]+))\s+\((.*)\)$/i);
 			cells.first().text(candMatch[1])
-				.after(`<td><strong>${candMatch[2]}</strong></td><td>${candMatch[3]}</td>`);
+				.after(`<td><strong>${candMatch[2].trim()}</strong></td><td>${candMatch[6]}</td>`);
 		} else if (cells.find('#id_source').length > 0) {
 			cells.last().attr('colspan', '3');
 		} else {
@@ -27,6 +26,17 @@ $(function() {
 		}
 		
 	});
+	
+	// Re-sort names
+	firstBody.append(firstBody.find('tr').toArray().sort((a, b) => {
+		var surnameA = a.cells[1].innerText.toLowerCase();
+		var surnameB = b.cells[1].innerText.toLowerCase();
+		var forenamesA = a.cells[0].innerText.toLowerCase();
+		var forenamesB = b.cells[0].innerText.toLowerCase();
+		return
+			surnameA > surnameB ? 1 : surnameA < surnameB ? -1 : 
+			forenamesA > forenamesB ? 1 : forenamesA < forenamesB ? -1 : 0;
+	}));
 	
 	$('.ballot_paper_results_form input[type="number"]')
 		.each((index, element) => element.type = 'text')
