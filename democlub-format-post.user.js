@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.07.19.1
+// @version     2019.08.01.0
 // @grant       none
 // ==/UserScript==
 
@@ -88,35 +88,7 @@ function onready() {
 		// ================================
 
 		$('.container table').each((index, element) => {
-			
-			var table = $(element);
-			var tbody = table.find('tbody');
-			if (table.find('th:nth-of-type(2)').text().trim() == 'List position') {
-				table.find('th:nth-of-type(2)').text('Pos');
-				table.addClass('sjo-election-summary-lists');
-			} else {
-				table.addClass('sjo-election-summary');
-			}
-			
-			// Sort candidates
-			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
-				var nameA = a.cells[0].innerText.trim();
-				var nameB = b.cells[0].innerText.trim();
-				var surnameA = nameA.match(/[^\s]+$/)[0];
-				var surnameB = nameB.match(/[^\s]+$/)[0];
-				return surnameA > surnameB ? 1 : surnameA < surnameB ? -1 : nameA > nameB ? 1 : nameA < nameB ? -1 : 0;
-			}));
-			
-			// Highlight elected candidates
-			table.find('th:nth-of-type(4)').html('');
-			tbody.find('tr td:nth-of-type(4)').each((index, element) => {
-				if (element.innerHTML == 'Yes') {
-					element.innerHTML = '★';
-				} else if (element.innerHTML == 'No') {
-					element.innerHTML = '';
-				}
-			});
-			
+			formatResultsTable(element);
 		});
 		
 	} else {
@@ -145,24 +117,58 @@ function onready() {
 			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
 		});
 		
-		// Click to sort candidates ascending
-		$('.vote_result th:contains("Candidate")').click(event => {
-			var tbody = $('.vote_result tbody:first-of-type');
-			tbody.append(tbody.find('tr').toArray().sort((a, b) => {
-				var aName = a.cells[0].innerText.trim();
-				var bName = b.cells[0].innerText.trim();
-				var aSurname = aName.match(/[^\s]+$/)[0];
-				var bSurname = bName.match(/[^\s]+$/)[0];
-				return aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
-				       aName > bName ? 1 : aName < bName ? -1 : 0;
-			}));
-		});
+		formatResultsTable('.vote_result table');
 		
+	}
+	
+	function formatResultsTable(selector) {
+		
+		var surnameRegex = /((de|de la|la|le|von|van|van der) )?[^\s]+$/i;
+		
+		// Add table classes
+		var table = $(selector);
+		var tbody = table.find('tbody:first-of-type');
+		if (table.find('th:nth-of-type(2)').text().trim() == 'List position') {
+			table.find('th:nth-of-type(2)').text('Pos');
+			table.addClass('sjo-election-results sjo-election-results-lists');
+		} else {
+			table.addClass('sjo-election-results');
+		}
+		
+		// Sort candidates by name
+		tbody.append(tbody.find('tr').toArray().sort(nameSort));
+		
+		// Highlight elected candidates
+		if (table.find('th:last-of-type').text().trim() == 'Elected?') {
+			table.find('th:last-of-type').empty();
+			tbody.find('tr td:last-of-type').each((index, element) => {
+				if (element.innerHTML == 'Yes') {
+					element.innerHTML = '★';
+				} else if (element.innerHTML == 'No') {
+					element.innerHTML = '';
+				}
+			});
+		}
+		
+		// Click to sort candidates by name
+		table.find('th:contains("Candidate")').click(event => {
+			tbody.append(tbody.find('tr').toArray().sort(nameSort));
+		});
+
 		// Click to sort candidates by votes
-		$('.vote_result th:contains("Votes")').click(event => {
-			var tbody = $('.vote_result tbody:first-of-type');
+		table.find('th:contains("Votes")').click(event => {
 			tbody.append(tbody.find('tr').toArray().sort((a, b) => b.cells[2].innerText - a.cells[2].innerText));
 		});
+		
+		function nameSort(a, b) {
+			var aName = a.cells[0].innerText.trim();
+			var bName = b.cells[0].innerText.trim();
+			var aSurname = aName.match(surnameRegex)[0];
+			var bSurname = bName.match(surnameRegex)[0];
+			return
+				aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
+				aName > bName ? 1 : aName < bName ? -1 : 0;
+		}
 		
 	}
 	
