@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.07.01.0
+// @version     2019.08.05.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -28,6 +28,7 @@ function onready() {
 		.sjo-heading-note {font-weight: normal; font-size: small;}
 		.person__versions {padding-top: 0;}
 		.candidate-result-confirmed {font-weight: normal;}
+		.person__actions__action p {font-size: 0.8em;}
 		
 		.sjo-marker {
 			font-size: 66%;
@@ -171,21 +172,5 @@ function onready() {
 	// Add link to alt names
 	$(`<a href="/person/${personID}/other-names" class="button">Manage alternative names</a>`)
 		.insertAfter('.person__actions a:contains("Edit candidate")');
-	
-	// Add link to WCIVF
-	$(`
-		<div class="person__actions__action">
-			<h2>On other sites</h2>
-			<p>View on <a href="https://whocanivotefor.co.uk/person/${personID}/">Who Can I Vote For?</a></p>
-		</div>`).appendTo('.person__actions');
-	
-	// Remove blah
-	var blah = [
-		'Our database is built by people like you.',
-		'Please do add extra details about this candidate – it only takes a moment.',
-		'Open data JSON API:',
-		'More details about getting <a href="/help/api">the data</a> and <a href="/help/about">its licence</a>.',
-	];
-	$('.person__actions__action p').filter((index, element) => blah.indexOf(element.innerHTML) >= 0).hide();
 	
 }
