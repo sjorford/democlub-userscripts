@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.08.01.0
+// @version     2019.08.07.0
 // @grant       none
 // ==/UserScript==
 
@@ -165,9 +165,9 @@ function onready() {
 			var bName = b.cells[0].innerText.trim();
 			var aSurname = aName.match(surnameRegex)[0];
 			var bSurname = bName.match(surnameRegex)[0];
-			return
+			return (
 				aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
-				aName > bName ? 1 : aName < bName ? -1 : 0;
+				aName > bName ? 1 : aName < bName ? -1 : 0);
 		}
 		
 	}
