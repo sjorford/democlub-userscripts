@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.08.05.0
+// @version     2019.08.19.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -172,5 +172,11 @@ function onready() {
 	// Add link to alt names
 	$(`<a href="/person/${personID}/other-names" class="button">Manage alternative names</a>`)
 		.insertAfter('.person__actions a:contains("Edit candidate")');
+	
+	// Add link to photo
+	var avatar = $('.person-avatar');
+	if (!avatar.attr('src').match(/blank-person/)) {
+		avatar.wrap(`<a href="//static-candidates.democracyclub.org.uk/media/images/images/${personID}.png"></a>`);
+	}
 	
 }
