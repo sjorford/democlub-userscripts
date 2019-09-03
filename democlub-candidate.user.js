@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.08.19.0
+// @version     2019.09.03.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -29,6 +29,7 @@ function onready() {
 		.person__versions {padding-top: 0;}
 		.candidate-result-confirmed {font-weight: normal;}
 		.person__actions__action p {font-size: 0.8em;}
+		.person__photo a:hover {border: none;}
 		
 		.sjo-marker {
 			font-size: 66%;
