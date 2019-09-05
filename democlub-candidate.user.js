@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.09.03.0
+// @version     2019.09.05.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -30,6 +30,7 @@ function onready() {
 		.candidate-result-confirmed {font-weight: normal;}
 		.person__actions__action p {font-size: 0.8em;}
 		.person__photo a:hover {border: none;}
+		.sjo-watchlist {float: right; font-size: x-large;}
 		
 		.sjo-marker {
 			font-size: 66%;
@@ -179,5 +180,13 @@ function onready() {
 	if (!avatar.attr('src').match(/blank-person/)) {
 		avatar.wrap(`<a href="//static-candidates.democracyclub.org.uk/media/images/images/${personID}.png"></a>`);
 	}
+	
+	// Check vandalism list
+	$.get('https://raw.githubusercontent.com/DemocracyClub/yournextrepresentative/master/ynr/settings/constants/needs_review.py', (data, status, xhr) => {
+		var list = data.replace(/#.*\n/g, '').replace(/\s/g, '').match(/{(.*)}/)[1].split(',');
+		if (list.indexOf(personID) >= 0) {
+			$('<span class="sjo-watchlist">⚠️</span>').prependTo('.person__hero');
+		}
+	});
 	
 }
