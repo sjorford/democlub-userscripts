@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.08.07.0
+// @version     2019.09.12.0
 // @grant       none
 // ==/UserScript==
 
@@ -11,6 +11,10 @@
 window.setTimeout(onready, 0);
 
 function onready() {
+	
+	// ficks Upload SOPN button
+	// TODO: also ficks the ecks key on this keyboard
+	$('a[href=""]:contains("Upload SOPN")').attr('href', $('.timeline_item a:contains("Upload SOPN")').attr('href'));
 	
 	polyfill();
 	
