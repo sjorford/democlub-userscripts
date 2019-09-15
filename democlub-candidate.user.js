@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.09.05.0
+// @version     2019.09.15.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -82,8 +82,8 @@ function onready() {
 			// Add markers for current elections and by-elections
 			if (link.attr('href').match(/\.by\./)) {
 				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
-			} else if (date.year() >= today.year()) {
-				dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
+			//} else if (date.year() >= today.year()) {
+			//	dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
 			}
 			
 			// Highlight future elections
