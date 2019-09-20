@@ -3,7 +3,8 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
-// @version     2019.04.18.3
+// @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
+// @version     2019.09.20.0
 // @grant       none
 // ==/UserScript==
 
