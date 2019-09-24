@@ -228,6 +228,23 @@
     "validate":"ppc",
     "group":"links"
   },
+  "blog_url":{
+    "display":"Blog",
+    "abbr":"blog",
+    "link":"@@blog_url@@",
+    "group":"links"
+  },
+  "instagram_url":{
+    "display":"Instagram",
+    "abbr":"ig",
+    "link":"@@instagram_url@@",
+    "group":"links"
+  },
+  "youtube_profile":{
+    "display":"YouTube",
+    "abbr":"yt",
+    "group":"links"
+  },
   "twitter_user_id":{
 
   },
