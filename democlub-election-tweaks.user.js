@@ -2,7 +2,7 @@
 // @name        Democracy Club Elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2019.01.18.0
+// @version     2019.09.24.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -61,7 +61,8 @@ function displaySubIDs() {
 		
 		var key = $('a', element).attr('href').match(/\/elections\/([^\/]+)\//)[1];
 		var date = key.split('.')[1];
-		if (date == '2019-05-02') return; // TODO
+		var dateMoment = moment(date, 'yyyy-MM-dd');
+		if (dateMoment.month() == 4 && dateMoment.date() <= 7) return; // month() is zero-indexed
 		
 		// Get data for this key
 		if (!elections[date]) {
