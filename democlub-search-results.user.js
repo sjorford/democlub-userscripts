@@ -2,12 +2,16 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.05.0
+// @version        2019.09.20.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
 // ==/UserScript==
 
 $(`<style>
+	.search_results li {height: 68px;}
+	.search_results li + li {height: 68px; margin-top: 1em;}
+	.search_results li img {max-height: 64px; object-fit: contain;}
+	.search_results li .button.secondary.small {margin-bottom: 0;}
 	.sjo-search-exact {border: 2px solid gold; padding: 5px; margin-left: -7px; border-radius: 4px; background-color: #fff3b1;}
 </style>`).appendTo('head');
 
