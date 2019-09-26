@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.03.06.0
+// @version     2019.09.26.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -10,86 +10,86 @@
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js
 // ==/UserScript==
 
+// TODO:
+// split out different elections
+// sort posts alphabetically
+// fix names of elections/posts for mayor/pcc etc
+
 $(`<style>
 	.sjo-posts td {padding: .25rem; vertical-align: top;}
 	.sjo-post-incomplete {background-color: #fdd !important;}
 	.sjo-post-complete {background-color: #ffb !important;}
 	.sjo-post-verified {background-color: #bbf7bb !important;}
-	.content h2 {border-bottom: 1px solid #aaa;}
-	.sjo-posts-may-button {font-size: 0.875rem; margin-left: 1rem;}
-	xxx.sjo-slug {font-size: 0.65rem;}
+	
+	.ballot_table th, .ballot_table td {padding: 0.25rem;}
+	.sjo-posts-heading-main {
+		border: 1px solid #222;
+		border-radius: 7px;
+		padding: 0.25rem 0.5rem;
+		width: 18rem;
+	}
+	.sjo-posts-heading-main {
+		background-color: hsl(195, 80%, 60%);
+		color: black;
+		cursor: pointer;
+	}
+
+
 </style>`).appendTo('head');
 
-// temporary fix due to c.dc script errors
-// $(onready);
-window.setTimeout(onready, 0);
-
-function onready() {
+$(function() {
 	
-	var byTable;
-	
-	var dateHeadings = $('.content h2');
-	dateHeadings.each((index, element) => {
+	$('.ballot_table').each((i,e) => {
 		
-		var h2 = $(element);
-		var date = moment(h2.text(), 'Do MMM YYYY');
+		var table = $(e);
+		table.find('th:contains("Candidates known")').text('Known');
 		
-		// Find ballots on this date
-		var lists = h2.nextUntil('h2', 'ul');
-		if (lists.find('li').length > 50) {
-			
-			// Separate out big election days
-			var wrapper = $('<div class="sjo-posts-may"></div>').append(h2.nextUntil('h2').hide()).insertAfter(h2);
-			var expandButton = $(`<a class="sjo-posts-may-button">[Expand]</a>`).appendTo(h2).click(toggleMayElections);
-			var collapseButton = $(`<a class="sjo-posts-may-button">[Collapse]</a>`).appendTo(h2).click(toggleMayElections).hide();
-			showMayElections();
-			
-			function toggleMayElections() {
-				
-				wrapper.toggle();
+		// Collapse May elections
+		var heading = table.prev('h3').addClass('sjo-posts-heading');
+		console.log(heading.text());
+		var date = moment(heading.text(), 'Do MMM YYYY');
+		heading.html(date.format('D MMMM YYYY') 
+				+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
+		if (date.month() == 4 && date.date() <= 7) {
+			table.hide();
+			heading.addClass('sjo-posts-heading-main').html(`<span class="sjo-posts-may-heading">${heading.html()}</span>`).click(function() {
+				table.toggle();
 				expandButton.toggle();
 				collapseButton.toggle();
-				showMayElections();
-				
-			}
-			
-			function showMayElections() {
-				
-				if (wrapper.is(':visible') && !wrapper.is('.sjo-processed')) {
-					
-					var localTable = $('<table class="sjo-posts"></table>').prependTo(wrapper);
-					var mayorTable = $('<table class="sjo-posts"></table>').insertAfter(localTable);
-					processLists(lists, localTable, mayorTable, date);
-					wrapper.addClass('sjo-processed');
-					
-					var numMayors = mayorTable.find('tr').length;
-					if (numMayors > 0) {
-						mayorTable.before(`<h3>Mayoral elections (${numMayors})</h3>`);
-					}
-					
-				}
-				
-			}
-			
-		} else {
-			
-			// Otherwise, add to main table
-			byTable = byTable || $('<table class="sjo-posts"></table>').insertBefore(dateHeadings.first());
-			
-			processLists(lists, byTable, null, date);
-			
-			h2.hide();
-			h2.nextUntil('h2', 'h3').hide();
-			
+			});
 		}
+		
+		table.find('td:first-of-type a').each((i,e) => {
+			
+			var electionLink = $(e);
+			electionLink.text(Utils.shortOrgName(electionLink.text()));
+			
+			
+			
+		});
+		
+		
+		
+		
+		
+		
+		
 		
 	});
 	
-	byTable.before(`<h2>By-elections (${byTable.find('tr').length})</h2>`);
 	
-	$('body').on('click', '.sjo-posts', event => {
-		if (!$(event.target).is('a')) $(event.currentTarget).selectRange();
-	});
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	/*
 	
 	function processLists(lists, localTable, mayorTable, date) {
 		
@@ -113,13 +113,6 @@ function onready() {
 				var postSlug = postUrl.match(/^\/elections\/(.+?)(\.by)?\.\d{4}-\d{2}-\d{2}\/$/)[1];
 				var lock = listItem.find('abbr').text();
 				
-				if (mayorTable && postUrl.match(/\/elections\/mayor\./)) {
-					post = Utils.shortOrgName(post);
-					table = mayorTable;
-				} else {
-					table = localTable;
-				}
-				
 				$('<tr></tr>')
 					.addCell(lock)
 					.addCell(date.format('YYYY-MM-DD'))
@@ -138,5 +131,6 @@ function onready() {
 		});
 		
 	}
+	*/
 	
-}
+});
