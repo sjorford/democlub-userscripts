@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.09.26.0
+// @version     2019.09.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -11,7 +11,6 @@
 // ==/UserScript==
 
 // TODO:
-// split out different elections
 // sort posts alphabetically
 // fix names of elections/posts for mayor/pcc etc
 
@@ -39,55 +38,45 @@ $(`<style>
 
 $(function() {
 	
+	var electionTypes = 'parl,sp,naw,nia,pcc,gla,mayor,local'.split(',');
+	
 	$('.ballot_table').each((i,e) => {
 		
 		var table = $(e);
 		table.find('th:contains("Candidates known")').text('Known');
 		
+		table.find('td:first-of-type a').each((i,e) => {
+			var electionLink = $(e);
+			electionLink.text(Utils.shortOrgName(electionLink.text()));
+		});
+		
 		// Collapse May elections
 		var heading = table.prev('h3').addClass('sjo-posts-heading');
-		console.log(heading.text());
 		var date = moment(heading.text(), 'Do MMM YYYY');
 		heading.html(date.format('D MMMM YYYY') 
 				+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
 		if (date.month() == 4 && date.date() <= 7) {
-			table.hide();
+			
+			// Auto collapse
+			var wrapper = $('<div></div>').insertBefore(table).append(table).hide();
 			heading.addClass('sjo-posts-heading-main').html(`<span class="sjo-posts-may-heading">${heading.html()}</span>`).click(function() {
-				table.toggle();
-				expandButton.toggle();
-				collapseButton.toggle();
+				wrapper.toggle();
 			});
+			
+			// Create a table for each election type
+			$.each(electionTypes, (i, electionType) => {
+				var links = table.find(`td:first-of-type a[href*="/${electionType}."]`);
+				if (links.length > 0) {
+					var newTable = $(`<table class="ballot_table sjo-table-${electionType}"></table>`).appendTo(wrapper);
+					table.find('thead').clone().appendTo(newTable);
+					var rows = links.closest('tr');
+					rows.nextUntil('tr:has(td:first-of-type a)').add(rows).appendTo(newTable)
+				}
+			});
+			
 		}
 		
-		table.find('td:first-of-type a').each((i,e) => {
-			
-			var electionLink = $(e);
-			electionLink.text(Utils.shortOrgName(electionLink.text()));
-			
-			
-			
-		});
-		
-		
-		
-		
-		
-		
-		
-		
 	});
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	/*
 	
