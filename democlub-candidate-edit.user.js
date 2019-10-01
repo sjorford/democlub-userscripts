@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.05.01.0
+// @version     2019.10.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -102,7 +102,8 @@ function onready() {
 	// Format current election headings
 	heading.closest('div').find('h3').each((index, element) => {
 		var subHeading = $(element);
-		var electionName = Utils.shortOrgName(subHeading.text());
+		var slug = subHeading.next('.form-item').find('.standing-select').attr('name').replace(/^standing_/, '');
+		var electionName = Utils.shortOrgName(subHeading.text(), slug);
 		subHeading.text(electionName);
 	});
 	
@@ -239,7 +240,7 @@ function onready() {
 		var elections = $.map(data, (value, key) => {
 			return {
 				id: key,
-				name: Utils.shortOrgName(value.name.replace(/ local election$/, '')),
+				name: Utils.shortOrgName(value.name.replace(/ local election$/, ''), key),
 				election_date: value.election_date
 			};
 		});
