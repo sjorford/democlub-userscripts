@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.09.20.0
+// @version     2019.10.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -73,10 +73,14 @@ function onready() {
 			var headingText = dt.html().trim();
 			headingText = headingText.replace(/^Contest(ed|ing) the (\d{4} )?/, '');
 			headingText = headingText.replace(/ \([^\(\)]+ \d{4}\)$/, '');
-			var council = Utils.shortOrgName(headingText);
+			var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
+			var council = Utils.shortOrgName(headingText, slug);
+			
+			// TODO: move this to Utils
 			if (link.attr('href').match(/\/elections\/mayor\./) && !council.startsWith('Mayor of ')) {
 				council = 'Mayor of ' + council;
 			}
+			
 			dt.html(`${council} <span class="sjo-heading-note">(${date.format("D MMM YYYY")})</span>`);
 			link.text(Utils.shortPostName(link.text()));
 			
