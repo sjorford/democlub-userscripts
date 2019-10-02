@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.09.30.0
+// @version     2019.10.02.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -38,16 +38,79 @@ $(`<style>
 
 $(function() {
 	
-	var electionTypes = 'parl,sp,naw,nia,pcc,gla,mayor,local'.split(',');
+	var electionTypes = [
+		{type: 'parl',     description: 'UK Parliament'},
+		{type: 'europarl', description: 'European Parliament'},
+		{type: 'sp',       description: 'Scottish Parliament'},
+		{type: 'naw',      description: 'Welsh Assembly'},
+		{type: 'nia',      description: 'Northern Ireland Assembly'},
+		{type: 'pcc',      description: 'Police and Crime Commissioner'},
+		{type: 'gla',      description: 'Greater London Assembly'},
+		{type: 'mayor',    description: 'Mayoral elections'},
+		{type: 'local',    description: 'Local elections'},
+	];
 	
 	$('.ballot_table').each((i,e) => {
 		
 		var table = $(e);
 		table.find('th:contains("Candidates known")').text('Known');
+		var wrapper = $('<div></div>').insertBefore(table).append(table);
+		
+		// Create a table for each election type
+		$.each(electionTypes, (index, electionType) => {
+			var links = table.find(`td:first-of-type a[href*="/${electionType.type}."]`);
+			if (links.length > 0) {
+				
+				var subTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
+				table.find('thead').clone().appendTo(subTable);
+				$('<h4></h4>').text(electionType.description).insertBefore(subTable);
+				
+				// Find all rows for this election
+				links.each((index, element) => {
+					
+					var link = $(element);
+					var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
+					var electionName = Utils.shortOrgName(link.text(), slug);
+					link.text(electionName);
+					
+					var firstRow = $(element).closest('tr');
+					var rows = firstRow.nextUntil('tr:has(td:first-of-type a)').add(firstRow);
+					if (rows.length > 5) {
+						
+						// Sort posts
+						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
+						
+						// Separate out whole elections
+						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
+						table.find('thead').clone().appendTo(electionTable);
+						electionTable.append(sortedRows);
+						$('<h4></h4>').text(electionType.description + ' - ' + electionName).insertBefore(electionTable);
+						
+					} else {
+						
+						// Put all other elections in a catch-all table
+						subTable.append(rows);
+						
+					}
+					
+				});
+				
+				if (subTable.find('tbody tr').length == 0) {
+					subTable.prev('h4').remove();
+					subTable.remove();
+				}
+				
+			}
+			
+		});
+		
+		return;
 		
 		table.find('td:first-of-type a').each((i,e) => {
 			var electionLink = $(e);
-			electionLink.text(Utils.shortOrgName(electionLink.text()));
+			var slug = electionLink.attr('href').match(/\/elections\/(.*)\//)[1];
+			electionLink.text(Utils.shortOrgName(electionLink.text(), slug));
+			//var postLink = $(e).next('td'
 		});
 		
 		// Collapse May elections
@@ -63,6 +126,7 @@ $(function() {
 				wrapper.toggle();
 			});
 			
+		
 			// Create a table for each election type
 			$.each(electionTypes, (i, electionType) => {
 				var links = table.find(`td:first-of-type a[href*="/${electionType}."]`);
@@ -74,52 +138,9 @@ $(function() {
 				}
 			});
 			
+		
 		}
 		
 	});
-	
-	/*
-	
-	function processLists(lists, localTable, mayorTable, date) {
-		
-		lists.each((index, element) => {
-			
-			var table;
-			var list = $(element).hide();
-			var items = list.find('li');
-			
-			var h4 = list.prev('h4').hide();
-			var a = h4.find('a');
-			
-			var election = Utils.shortOrgName(h4.text());
-			var electionUrl = h4.find('a').attr('href');
-			
-			items.each((index, element) => {
-				var listItem = $(element);
-				
-				var post = listItem.find('a').text();
-				var postUrl = listItem.find('a').attr('href');
-				var postSlug = postUrl.match(/^\/elections\/(.+?)(\.by)?\.\d{4}-\d{2}-\d{2}\/$/)[1];
-				var lock = listItem.find('abbr').text();
-				
-				$('<tr></tr>')
-					.addCell(lock)
-					.addCell(date.format('YYYY-MM-DD'))
-					.addCellHTML(`<a href="${electionUrl}">${election}</a>`)
-					.addCellHTML(`<a href="${postUrl}">${post}</a>`)
-					.addCellHTML(`${postSlug}`, 'sjo-slug')
-					.addClass(
-						date.format('YYYY-MM-DD') == '2019-05-02' ? '' : 
-						lock == Unicode.OPEN_LOCK ? 'sjo-post-complete' : 
-						lock == Unicode.CLOSED_LOCK_WITH_KEY ? 'sjo-post-verified' : 
-						'sjo-post-incomplete')
-					.appendTo(table);
-				
-			});
-			
-		});
-		
-	}
-	*/
 	
 });
