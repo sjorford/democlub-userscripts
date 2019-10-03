@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.03.1
+// @version     2019.10.03.2
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -91,7 +91,7 @@ $(function() {
 						// Separate out whole elections
 						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 						table.find('thead').clone().appendTo(electionTable);
-						$('<h4></h4>').text(electionType.description + (electionType == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
+						$('<h4></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
 						
 						// Sort posts
 						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
