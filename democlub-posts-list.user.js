@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.02.0
+// @version     2019.10.03.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -22,10 +22,8 @@ $(`<style>
 	
 	.ballot_table th, .ballot_table td {padding: 0.25rem;}
 	.sjo-posts-heading-main {
-		border: 1px solid #222;
-		border-radius: 7px;
+		border: 2px solid #222;
 		padding: 0.25rem 0.5rem;
-		width: 18rem;
 	}
 	.sjo-posts-heading-main {
 		background-color: hsl(195, 80%, 60%);
@@ -54,7 +52,21 @@ $(function() {
 		
 		var table = $(e);
 		table.find('th:contains("Candidates known")').text('Known');
+		
+		// Format heading
+		var heading = table.prev('h3').addClass('sjo-posts-heading');
+		var date = moment(heading.text(), 'Do MMM YYYY');
+		heading.html(date.format('D MMMM YYYY') 
+			+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
+		
+		// Wrap table
 		var wrapper = $('<div></div>').insertBefore(table).append(table);
+		heading.click(() => wrapper.toggle());
+		
+		// Split May elections
+		if (!(date.month() == 4 && date.date() <= 7 && date.day() == 4)) return;
+
+		heading.addClass('sjo-posts-heading-main');
 		
 		// Create a table for each election type
 		$.each(electionTypes, (index, electionType) => {
@@ -103,6 +115,8 @@ $(function() {
 			}
 			
 		});
+		
+		if (table.find('tbody tr').length == 0) table.remove();
 		
 		return;
 		
