@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.03.0
+// @version     2019.10.03.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -63,9 +63,8 @@ $(function() {
 		var wrapper = $('<div></div>').insertBefore(table).append(table);
 		heading.click(() => wrapper.toggle());
 		
-		// Split May elections
+		// Split May elections only
 		if (!(date.month() == 4 && date.date() <= 7 && date.day() == 4)) return;
-
 		heading.addClass('sjo-posts-heading-main');
 		
 		// Create a table for each election type
@@ -89,14 +88,15 @@ $(function() {
 					var rows = firstRow.nextUntil('tr:has(td:first-of-type a)').add(firstRow);
 					if (rows.length > 5) {
 						
-						// Sort posts
-						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
-						
 						// Separate out whole elections
 						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 						table.find('thead').clone().appendTo(electionTable);
+						$('<h4></h4>').text(electionType.description + (electionType == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
+						
+						// Sort posts
+						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
 						electionTable.append(sortedRows);
-						$('<h4></h4>').text(electionType.description + ' - ' + electionName).insertBefore(electionTable);
+						electionTable.find('tbody tr:first-of-type td:first-of-type').append(firstRow.find('td:first-of-type').contents());
 						
 					} else {
 						
@@ -117,43 +117,6 @@ $(function() {
 		});
 		
 		if (table.find('tbody tr').length == 0) table.remove();
-		
-		return;
-		
-		table.find('td:first-of-type a').each((i,e) => {
-			var electionLink = $(e);
-			var slug = electionLink.attr('href').match(/\/elections\/(.*)\//)[1];
-			electionLink.text(Utils.shortOrgName(electionLink.text(), slug));
-			//var postLink = $(e).next('td'
-		});
-		
-		// Collapse May elections
-		var heading = table.prev('h3').addClass('sjo-posts-heading');
-		var date = moment(heading.text(), 'Do MMM YYYY');
-		heading.html(date.format('D MMMM YYYY') 
-				+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
-		if (date.month() == 4 && date.date() <= 7) {
-			
-			// Auto collapse
-			var wrapper = $('<div></div>').insertBefore(table).append(table).hide();
-			heading.addClass('sjo-posts-heading-main').html(`<span class="sjo-posts-may-heading">${heading.html()}</span>`).click(function() {
-				wrapper.toggle();
-			});
-			
-		
-			// Create a table for each election type
-			$.each(electionTypes, (i, electionType) => {
-				var links = table.find(`td:first-of-type a[href*="/${electionType}."]`);
-				if (links.length > 0) {
-					var newTable = $(`<table class="ballot_table sjo-table-${electionType}"></table>`).appendTo(wrapper);
-					table.find('thead').clone().appendTo(newTable);
-					var rows = links.closest('tr');
-					rows.nextUntil('tr:has(td:first-of-type a)').add(rows).appendTo(newTable)
-				}
-			});
-			
-		
-		}
 		
 	});
 	
