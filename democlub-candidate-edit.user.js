@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.10.06.0
+// @version     2019.10.06.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -58,15 +58,7 @@ function onready() {
 	var candidateFields = {
 		'id_honorific_prefix':				'Title',
 		'id_name':							'Name',
-		'id_honorific_suffix':				'Honours',
-		'id_email':							'Email',
-		'id_twitter_username':				'Twitter',
-		'id_facebook_personal_url':			'FB profile',
-		'id_facebook_page_url':				'FB page',
-		'id_homepage_url':					'Homepage',
-		'id_wikipedia_url':					'Wikipedia',
-		'id_linkedin_url':					'LinkedIn',
-		'id_party_ppc_page_url':			'Party page',
+		'id_honorific_suffix':				'Suffix',
 		'id_gender':						'Gender',
 		'id_birth_date':					'Date of birth',
 		'id_death_date':					'Date of death',
