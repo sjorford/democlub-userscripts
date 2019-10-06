@@ -2,7 +2,7 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.10.06.1
+// @version     2019.10.06.2
 // @grant       none
 // ==/UserScript==
 
@@ -102,7 +102,7 @@ function onready() {
 		
 		// Add election link
 		var electionName = $('#new-candidate-form h3').text();
-		var electionSlug = $('.show-new-candidate-form').attr('href').match(/\/election\/(.*)\//)[1];
+		var electionSlug = $('.show-new-candidate-form').attr('href').match(/\/election\/(.*?)\//)[1];
 		var electionLink = $('<a></a>').text(electionName).attr('href', `/elections/${electionSlug}`)
 				.prependTo($('.candidates-list').closest('.columns')).wrap('<h3></h3>');
 		
