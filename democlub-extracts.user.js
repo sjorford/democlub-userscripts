@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.07.12.1
+// @version        2019.10.06.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -24,6 +24,7 @@ var templateDropdown;
 //var electionDates = {};
 //var electionUrls = [];
 var electionsList = {};
+var datesList = {};
 
 // External stylesheets
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
@@ -391,6 +392,13 @@ function buildDownloadList() {
 				url: element.href,
 			};
 			
+			if (!datesList[electionDate]) {
+				datesList[electionDate] = {
+					date: electionDate,
+					url: `/media/candidates-${electionDate}.csv`,
+				};
+			}
+			
 		});
 		
 		// Add group to dropdown
@@ -398,7 +406,7 @@ function buildDownloadList() {
 		dropdownHtml += groupHtml;
 		
 	});
-	console.log('buildDownloadList', electionsList);
+	console.log('buildDownloadList', electionsList, datesList);
 	
 	// Add all downloads to dropdown
 	$('#sjo-api-select-election').html(dropdownHtml).chosen();
@@ -438,13 +446,11 @@ function startDownload(event) {
 	} else if (selectedButton.is('#sjo-api-option-extract-date')) {
 		
 		// Extract all elections in date range
-		// TODO: download date files instead of election files?
-		// empty date files are 304?
-		// but for May elections there could be hundreds of individual election files
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
 		//extract.urls = [`/media/candidates-${startDate}.csv`];
-		extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		//extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
 		console.log(startDate, endDate, extract.urls);
 		localStorage.setItem('sjo-api-extract', 'date');
 		localStorage.setItem('sjo-api-date-start', startDate);
@@ -496,6 +502,7 @@ function doDownload() {
 		'quoteChar': '"',
 		'skipEmptyLines': true,
 		'complete': parseComplete,
+		'error': parseError,
 	});
 	
 }
@@ -529,17 +536,25 @@ function parseComplete(results) {
 	
 	nextDownload();
 	
-	function nextDownload() {
-		
-		// Do the next download, or render the data if no more downloads
-		currentSet++;
-		currentIndex = 0;
-		if (currentSet < currentExtract.urls.length) {
-			doDownload();
-		} else {
-			prepareRender();
-		}
-		
+}
+
+function parseError(error, file) {
+	console.log('parseError', error, file);
+	
+	// If error is 403 Forbidden, assume there are no candidates for this date
+	if (error == 'Forbidden') nextDownload();
+	
+}
+
+function nextDownload() {
+	
+	// Do the next download, or render the data if no more downloads
+	currentSet++;
+	currentIndex = 0;
+	if (currentSet < currentExtract.urls.length) {
+		doDownload();
+	} else {
+		prepareRender();
 	}
 	
 }
