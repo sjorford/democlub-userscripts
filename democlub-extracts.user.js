@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.06.0
+// @version        2019.10.06.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -19,10 +19,7 @@ var currentExtract, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
-//var electionMappings = {};
 var templateDropdown;
-//var electionDates = {};
-//var electionUrls = [];
 var electionsList = {};
 var datesList = {};
 
@@ -356,11 +353,6 @@ function buildDownloadList() {
 			var electionId = electionIdMatch ? electionIdMatch[1] : '';
 			var electionDate = electionId.match(/\d{4}-\d{2}-\d{2}$/)[0];
 			var electionType = electionId.match(/^([^\.]+)./)[1];
-			/*
-			if (!electionDates[electionDate]) electionDates[electionDate] = [];
-			if (electionDates[electionDate].indexOf(electionType) < 0) electionDates[electionDate].push(electionType);
-			electionUrls.push({date: electionDate, url: element.href});
-			*/
 			
 			// Parse election name
 			var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
@@ -376,12 +368,6 @@ function buildDownloadList() {
 			
 			// Add option to group
 			groupHtml += `<option value="${element.href}">${electionName}</option>`;
-			
-			/*
-			if (electionId && !electionMappings[electionId]) {
-				electionMappings[electionId] = electionName;
-			}
-			*/
 			
 			// Add election to list
 			electionsList[electionId] = {
@@ -423,15 +409,6 @@ function gotoPage(newPageNo) {
 
 function startDownload(event) {
 	
-	/*
-	var extract = JSON.parse($('.sjo-api-option-extract-selected').data('sjo-api-extract'));
-	localStorage.setItem('sjo-api-extract', extract.key);
-	if (!extract.urls) {
-		extract.urls = [$('#sjo-api-select-election').val()];
-		localStorage.setItem('sjo-api-url', extract.urls[0]);
-	}
-	*/
-	
 	var extract = {}
 	var selectedButton = $('.sjo-api-option-extract-selected');
 	
@@ -448,8 +425,6 @@ function startDownload(event) {
 		// Extract all elections in date range
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
-		//extract.urls = [`/media/candidates-${startDate}.csv`];
-		//extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
 		extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
 		console.log(startDate, endDate, extract.urls);
 		localStorage.setItem('sjo-api-extract', 'date');
