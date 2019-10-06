@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.10.01.0
+// @version     2019.10.06.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -205,6 +205,14 @@ function onready() {
 	
 	// Hide extra buttons
 	$('#id_name + button:contains("Title Case")').hide();
+	
+	// Sort social media types
+	$('select[id^="id_tmp_person_identifiers-"]').each((i,e) => {
+		var select = $(e);
+		var value = select.val();
+		var sortedOptions = select.find('option').toArray().sort((a,b) => a.innerText < b.innerText ? -1 : 1);
+		select.append(sortedOptions).val(value);
+	});
 	
 	// ================================================================
 	// Format list of elections
