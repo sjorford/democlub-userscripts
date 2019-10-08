@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.03.2
+// @version     2019.10.08.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -63,6 +63,15 @@ $(function() {
 		var wrapper = $('<div></div>').insertBefore(table).append(table);
 		heading.click(() => wrapper.toggle());
 		
+		// Format election names
+		var links = table.find(`td:first-of-type a`);
+		links.each((index, element) => {
+			var link = $(element);
+			var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
+			var electionName = Utils.shortOrgName(link.text(), slug);
+			link.text(electionName);
+		});
+		
 		// Split May elections only
 		if (!(date.month() == 4 && date.date() <= 7 && date.day() == 4)) return;
 		heading.addClass('sjo-posts-heading-main');
@@ -82,7 +91,6 @@ $(function() {
 					var link = $(element);
 					var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
 					var electionName = Utils.shortOrgName(link.text(), slug);
-					link.text(electionName);
 					
 					var firstRow = $(element).closest('tr');
 					var rows = firstRow.nextUntil('tr:has(td:first-of-type a)').add(firstRow);
