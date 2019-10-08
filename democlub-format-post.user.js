@@ -2,7 +2,8 @@
 // @name        Democracy Club format election
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2019.10.06.2
+// @exclude     https://candidates.democracyclub.org.uk/elections/
+// @version     2019.10.08.0
 // @grant       none
 // ==/UserScript==
 
