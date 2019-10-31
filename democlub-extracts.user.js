@@ -2,8 +2,9 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.31.1
+// @version        2019.10.31.2
 // @match          https://candidates.democracyclub.org.uk/help/api
+// @match          https://candidates.democracyclub.org.uk/api/docs/
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js
