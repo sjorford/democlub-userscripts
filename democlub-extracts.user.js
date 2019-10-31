@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.06.1
+// @version        2019.10.31.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -221,7 +221,8 @@ function initialize() {
 	var lastUrl = localStorage.getItem('sjo-api-url');
 	var lastStartDate = localStorage.getItem('sjo-api-date-start');
 	var lastEndDate = localStorage.getItem('sjo-api-date-end');
-	console.log('localStorage', lastExtract, lastUrl, lastStartDate, lastEndDate);
+	var lastTemplate = localStorage.getItem('sjo-api-template');
+	console.log('localStorage', lastExtract, lastUrl, lastStartDate, lastEndDate, lastTemplate);
 	
 	// Set previously selected values
 	$('.sjo-api-params-wrapper').hide();
@@ -229,6 +230,7 @@ function initialize() {
 	if (lastUrl) electionDropdown.val(lastUrl).trigger('chosen:updated');
 	if (lastStartDate) startDate.val(lastStartDate);
 	if (lastEndDate) endDate.val(lastEndDate);
+	if (lastTemplate) templateDropdown.val(lastTemplate);
 	
 	
 	
@@ -437,6 +439,8 @@ function startDownload(event) {
 		localStorage.setItem('sjo-api-extract', 'all');
 		
 	}
+	
+	localStorage.setItem('sjo-api-template', $('#sjo-api-select-template').val());
 	
 	currentExtract = extract;
 	console.log('startDownload', currentExtract);
