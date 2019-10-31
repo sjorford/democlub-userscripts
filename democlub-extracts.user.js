@@ -2,9 +2,9 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.31.2
+// @version        2019.10.31.3
 // @match          https://candidates.democracyclub.org.uk/help/api
-// @match          https://candidates.democracyclub.org.uk/api/docs/
+// @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.17.1/moment.min.js
@@ -323,11 +323,11 @@ function buildDownloadList() {
 	
 	// Loop through groups of elections
 	var dropdownHtml = '';
-	$('a[href$=".csv"]').closest('ul').each(function(index, element) {
+	$('a[href$=".csv"]').closest('table').each(function(index, element) {
 		var list = $(element);
 		
 		// Get CSV links
-		var links = list.find('a');
+		var links = list.find('a[href$=".csv"]');
 		//console.log(links.length, links.attr('href'));
 		if (links.length == 1 && links.attr('href') == allCandidatesUrl) return;
 		
@@ -358,7 +358,8 @@ function buildDownloadList() {
 			var electionType = electionId.match(/^([^\.]+)./)[1];
 			
 			// Parse election name
-			var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
+			//var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
+			var electionName = $(element).closest('td').prev('td').text();
 			electionName = Utils.shortOrgName(electionName);
 			electionName = electionName.replace(/\s+by-election.*$/, '');
 			if (electionId.startsWith('parl.') && electionName != 'General Election') {
