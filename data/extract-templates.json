@@ -167,8 +167,12 @@
       "has:wikipedia_url",
       "has:linkedin_url",
       "has:party_ppc_page_url",
+      "has:blog_url",
+      "has:instagram_url",
+      "has:youtube_profile",
+      "wikidata_id",
       "birth_date",
-      "_age_at_election",
+      "_age_at_election_min",
       "_gender_icon",
       "has:image_url",
       "has:elected"

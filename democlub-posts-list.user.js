@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.08.1
+// @version     2019.10.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -72,8 +72,9 @@ $(function() {
 			link.text(electionName);
 		});
 		
-		// Split May elections only
-		if (!(date.month() == 4 && date.date() <= 7 && date.day() == 4)) return;
+		// Split large elections only
+		//if (!(date.month() == 4 && date.date() <= 7 && date.day() == 4)) return;
+		if (table.find('tr').length < 50) return;
 		heading.addClass('sjo-posts-heading-main');
 		
 		// Create a table for each election type
