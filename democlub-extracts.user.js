@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.31.0
+// @version        2019.10.31.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @grant          GM_xmlhttpRequest
 // @connect        raw.githubusercontent.com
@@ -230,7 +230,7 @@ function initialize() {
 	if (lastUrl) electionDropdown.val(lastUrl).trigger('chosen:updated');
 	if (lastStartDate) startDate.val(lastStartDate);
 	if (lastEndDate) endDate.val(lastEndDate);
-	if (lastTemplate) templateDropdown.val(lastTemplate);
+	if (lastTemplate) templateDropdown.val(lastTemplate).trigger('chosen:updated');
 	
 	
 	
