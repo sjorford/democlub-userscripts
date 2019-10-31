@@ -319,5 +319,25 @@
         "order":1
       }
     ]
+  },
+  "links":{
+    "display":"URLs",
+    "columns":[
+      "id",
+      "name",
+      "election_date",
+      "_election_name",
+      "_post_label",
+      "party_name",
+      "has:facebook_personal_url",
+      "has:facebook_page_url",
+      "has:homepage_url",
+      "has:wikipedia_url",
+      "has:linkedin_url",
+      "has:party_ppc_page_url",
+      "has:blog_url",
+      "has:instagram_url",
+      "has:youtube_profile"
+    ]
   }
 }
