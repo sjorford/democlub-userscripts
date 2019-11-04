@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.10.08.0
+// @version     2019.11.04.0
 // @grant       none
 // ==/UserScript==
 
@@ -79,6 +79,8 @@ function onready() {
 		.sjo-party-bar.sjo-party-scottish-national-party-snp     {background-color: yellow;}
 		.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
 		
+		.sjo-election-link-next, .sjo-election-link-next * {color: lightgrey;}
+		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
 	</style>`).appendTo('head');
@@ -106,6 +108,12 @@ function onready() {
 		var electionSlug = $('.show-new-candidate-form').attr('href').match(/\/election\/(.*?)\//)[1];
 		var electionLink = $('<a></a>').text(electionName).attr('href', `/elections/${electionSlug}`)
 				.prependTo($('.candidates-list').closest('.columns')).wrap('<h3></h3>');
+		
+		// Add link to current general election
+		if (electionSlug.match(/^parl\./) && electionSlug != 'parl.2019-12-12') {
+			$('<a></a>').text('2019').attr('href', location.href.replace(/\d{4}-\d{2}-\d{2}/, '2019-12-12'))
+				.insertAfter(electionLink).wrap('<span class="sjo-election-link-next"></span>').before(' • ');
+		}
 		
 		// Convert the timeline to a breadcrumb type thing
 		var timeline = $('<div class="sjo-api-timeline"></div>').prependTo('.content .container');
