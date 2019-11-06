@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.10.01.0
+// @version     2019.11.06.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -64,20 +64,23 @@ function onready() {
 		
 		var dt = $(element);
 		var dd = dt.nextUntil(':not(dd)', 'dd');
+		var heading = dt.parent('dl').prev('h2');
 		
-		var link = $('a', dd);
-		if (link.parents().is('.constituency-value-standing-link')) {
-			
+		if (heading.text() == 'Candidacies:') {
+		
 			// Format election headers
-			var date = moment(link.attr('href').match(/\.(\d{4}-\d{2}-\d{2})\//)[1]);
 			var headingText = dt.html().trim();
+			var date = moment(headingText.match(/\((.*?)\)$/)[1], 'Do MMMM YYYY');
 			headingText = headingText.replace(/^Contest(ed|ing) the (\d{4} )?/, '');
 			headingText = headingText.replace(/ \([^\(\)]+ \d{4}\)$/, '');
-			var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
+			
+			var link = dd.find('a');
+			var href = link.attr('href') || '';
+			var slug = (href.match(/\/elections\/(.*)\//) || [])[1];
 			var council = Utils.shortOrgName(headingText, slug);
 			
 			// TODO: move this to Utils
-			if (link.attr('href').match(/\/elections\/mayor\./) && !council.startsWith('Mayor of ')) {
+			if (href.match(/\/elections\/mayor\./) && !council.startsWith('Mayor of ')) {
 				council = 'Mayor of ' + council;
 			}
 			
@@ -85,7 +88,7 @@ function onready() {
 			link.text(Utils.shortPostName(link.text()));
 			
 			// Add markers for current elections and by-elections
-			if (link.attr('href').match(/\.by\./)) {
+			if (href.match(/\.by\./)) {
 				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
 			//} else if (date.year() >= today.year()) {
 			//	dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
@@ -116,8 +119,7 @@ function onready() {
 			
 			// Add links
 			if (dd.find('a').length == 0) {
-				var headingText = dt.parent('dl').prev('h2').text();
-				if (headingText == 'Links and social media:') {
+				if (heading.text() == 'Links and social media:') {
 					var linkText = dd.text().trim();
 					if (dt.text() == 'Twitter' && linkText.match(/[a-z0-9_]{1,15}/i)) {
 						dd.html(`<a href="https://twitter.com/${linkText}">${linkText}</a>`);
