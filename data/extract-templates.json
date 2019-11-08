@@ -329,6 +329,7 @@
       "_election_name",
       "_post_label",
       "party_name",
+      "twitter_username",
       "facebook_personal_url",
       "facebook_page_url",
       "homepage_url",
