@@ -339,5 +339,15 @@
       "instagram_url",
       "youtube_profile"
     ]
+  },
+  "polimonitor":{
+    "display":"polimonitor.com",
+    "columns":[
+      "_post_label",
+      "party_name",
+      "name",
+      "twitter_username",
+      "gender"
+    ]
   }
 }
