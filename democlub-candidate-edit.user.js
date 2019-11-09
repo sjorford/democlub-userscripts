@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.10.06.1
+// @version     2019.11.09.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -247,6 +247,8 @@ function onready() {
 		//console.log(elections);
 		
 		elections = elections.sort((a, b) => 
+			a.id.match(/^parl\./) && !b.id.match(/^parl\./) ? -1 : 
+			!a.id.match(/^parl\./) && b.id.match(/^parl\./) ? 1 : 
 			a.election_date < b.election_date ? -1 : 
 			a.election_date > b.election_date ? +1 : 
 			a.name < b.name ? -1 : 
