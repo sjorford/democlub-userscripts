@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2019.04.15.1
+// @version     2019.11.11.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -25,6 +25,16 @@ function cleanInputValue(input) {
 	
 	// Trim all values
 	var value = input.value.trim().replace(/\s+/g, ' ');
+	
+	// Replace Greek/Cyrillic characters
+	// c.f. https://twitter.com/NicolaFR_
+	var nonLatin = 'ΑΒΕΖΗΙΚΜΝΟΡΤΥΧ' + 'АВЕЅІЈМНОРСТХ';
+	var latin    = 'ABEZHIKMNOPTYX' + 'ABESIJMHOPCTX';
+	var charArray = value.split(''); // string type is immutable, so use array instead
+	for (var pos = 0; pos < charArray.length; pos++) {
+		charArray[pos] = latin[nonLatin.indexOf(charArray[pos])] || charArray[pos];
+	}
+	value = charArray.join('');
 	
 	// Reformat names
 	if (input.name == 'q' || input.id == 'id_name' || input.id == 'alt-name' 
