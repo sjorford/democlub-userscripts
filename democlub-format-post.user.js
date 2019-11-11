@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.11.04.0
+// @version     2019.11.11.0
 // @grant       none
 // ==/UserScript==
 
@@ -79,7 +79,7 @@ function onready() {
 		.sjo-party-bar.sjo-party-scottish-national-party-snp     {background-color: yellow;}
 		.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
 		
-		.sjo-election-link-next, .sjo-election-link-next * {color: lightgrey;}
+		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
