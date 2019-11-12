@@ -55,10 +55,6 @@
     "icon":true,
     "validate":"gender"
   },
-  "_maleness":{
-    "display":"M",
-    "dp":2
-  },
   "birth_date":{
     "display":"DOB",
     "width":"5em"
