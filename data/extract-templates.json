@@ -338,7 +338,7 @@
       "party_ppc_page_url",
       "blog_url",
       "instagram_url",
-      "youtube_profile"
+      "youtube_profile",
       "url:wikidata_id"
     ]
   },
