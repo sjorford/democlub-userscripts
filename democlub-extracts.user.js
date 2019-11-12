@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.31.3
+// @version        2019.11.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -569,10 +569,13 @@ function prepareRender() {
 	var currentTemplate = templates[$('#sjo-api-select-template').val()];
 	console.log('prepareRender', 'currentTemplate', currentTemplate);
 	tableColumns = currentTemplate.columns.map(fieldName => {
-		var column = {'name': fieldName, 'has': false};
+		var column = {name: fieldName, has: false, url: false};
 		if (column.name.substr(0, 4) == 'has:') {
 			column.name = column.name.slice(4);
 			column.has = true;
+		} else if (column.name.substr(0, 4) == 'url:') {
+			column.name = column.name.slice(4);
+			column.url = true;
 		}
 		return column;
 	});
@@ -1116,8 +1119,9 @@ function buildTableRowCells(record) {
 		// TODO: add popups for has: values
 		var content = '', title = '';
 		if (record && record[column.name] !== null && record[column.name] !== false && record[column.name] !== '') {
-			var value = column.has ? (field.abbr ? field.abbr : 'Y') : field.dp ? record[column.name].toFixed(field.dp) : Utils.escapeHtml(record[column.name]);
-			content = field.link ? `<a href="${Utils.getLinkAddress(field, record)}">${value}</a>` : value;
+			var valueURL = field.link ? Utils.getLinkAddress(field, record) : '';
+			var value = column.has ? (field.abbr ? field.abbr : 'Y') : column.url ? valueURL : Utils.escapeHtml(record[column.name]);
+			content = field.link ? `<a href="${valueURL}">${value}</a>` : value;
 			title = column.has ? Utils.escapeHtml(record[column.name]) : '';
 		}
 		
@@ -1241,7 +1245,7 @@ function buildRawOutputRow(dataRow) {
 			return '';
 		} else {
 			return column.has ? field.abbr : 
-				   field.dp ? dataRow[column.name].toFixed(field.dp) : 
+				   column.url ? Utils.getLinkAddress(field, dataRow) :
 				   typeof dataRow[column.name] == 'string' ? dataRow[column.name].replace(/\s+/g, ' ') : 
 				   dataRow[column.name];
 		}
