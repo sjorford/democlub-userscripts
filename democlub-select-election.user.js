@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.10.01.0
+// @version        2019.11.11.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -93,7 +93,7 @@ function onready() {
 			.before(`<h3>${moment(parts[0], "YYYY-MM-DD").format("D MMM YYYY")}</h3>`);
 		
 		// Add alphabetic index
-		if (listitems.length > 20) {
+		if (listitems.length > 50) {
 			listitems.filter((i, e) => i == 0 || e.innerText[0] != listitems.get(i - 1).innerText[0])
 				.each((i, e) => $(`<h4>${e.innerText[0]}</h4>`).insertBefore(e));
 		}
