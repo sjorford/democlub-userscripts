@@ -170,7 +170,7 @@
   "twitter_username":{
     "display":"Twitter",
     "abbr":"tw",
-    "link":"//twitter.com/@@twitter_username@@",
+    "link":"https://twitter.com/@@twitter_username@@",
     "group":"links"
   },
   "facebook_personal_url":{
