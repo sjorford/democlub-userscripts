@@ -2,7 +2,8 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.02.05.0
+// @version        2019.11.14.0
+// @message        Happy SOPN Day!
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -40,13 +41,16 @@ function onready() {
 		var cells = row.find('td');
 		if (cells.length === 0) return;
 		
+		/*
 		// Reformat dates
 		var dateCell = cells.eq(headings['Date and time']);
 		var time = moment(dateCell.html().replace(/\./g, ''), 'MMMM D, YYYY, h:mm a');
 		dateCell.html(time.format('D MMM' + (time.year() == now.year() ? '' : ' YYYY') + ' HH:mm'));
-			
+		*/
+		
 		// Stop columns wrapping
-		dateCell.add(cells.eq(headings['Action'])).addClass('sjo-nowrap');
+		//dateCell.add(cells.eq(headings['Action'])).addClass('sjo-nowrap');
+		cells.eq(headings['Action']).addClass('sjo-nowrap');
 		
 		// Add links
 		var sourceCell = cells.eq(headings['Information source']);
