@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.09.20.1
+// @version     2019.11.15.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -74,7 +74,7 @@ function onready() {
 			
 			// Data added
 			if (span.hasClass('version-op-add')) {
-				var matchAdd = spanText.match(/^Added: (.+) => (.+)$/);
+				var matchAdd = spanText.match(/^Added: (.+) => ([\s\S]+)$/);
 				if (matchAdd) {
 					$.each(parseValue(matchAdd[1], matchAdd[2]), (key, newValue) => {
 						changeRows.push({fieldName: key, 
@@ -86,7 +86,7 @@ function onready() {
 				
 			// Data replaced
 			} else if (span.hasClass('version-op-replace')) {
-				var matchReplace = spanText.match(/^At (.+) replaced ("(.*)"|null) with ("(.*)"|null)$/);
+				var matchReplace = spanText.match(/^At (.+) replaced ("([\s\S]*)"|null) with ("([\s\S]*)"|null)$/);
 				if (matchReplace) {
 					changeRows.push({fieldName: matchReplace[1], 
 									 oldValue: matchReplace[3], 
@@ -96,7 +96,7 @@ function onready() {
 				
 			// Data removed
 			} else if (span.hasClass('version-op-remove')) {
-				var matchDelete = spanText.match(/^Removed: (.+) \(previously it was (.*)\)$/);
+				var matchDelete = spanText.match(/^Removed: (.+) \(previously it was ([\s\S]*)\)$/);
 				if (matchDelete) {
 					$.each(parseValue(matchDelete[1], matchDelete[2]), (key, oldValue) => {
 						changeRows.push({fieldName: key, 
