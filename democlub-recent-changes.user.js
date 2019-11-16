@@ -2,8 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.11.14.0
-// @message        Happy SOPN Day!
+// @version        2019.11.16.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -57,7 +56,7 @@ function onready() {
 		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
 		
 		// Highlight my changes
-		if (cells.eq(headings['User']).text() == username) {
+		if (cells.eq(headings['User']).text().trim() == username) {
 			row.addClass('sjo-mychanges');
 		}
 		
