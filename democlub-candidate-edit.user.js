@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.11.09.0
+// @version     2019.11.17.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -44,6 +44,14 @@ function onready() {
 		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
 		[id^="id_standing_"], label[for^="id_standing_"] {display: none;}
+
+		.sjo-link-wrapper {
+    		position: absolute;
+    		margin-left: 0.5rem;
+    		padding-top: 0.5rem;
+    		font-size: .875rem;
+    		font-weight: bold;
+		}
 		
 	</style>`).appendTo('head');
 	
@@ -204,6 +212,38 @@ function onready() {
 		var value = select.val();
 		var sortedOptions = select.find('option').toArray().sort((a,b) => a.innerText < b.innerText ? -1 : 1);
 		select.append(sortedOptions).val(value);
+	});
+	
+	$('input[id^="id_tmp_person_identifiers-"]').each((i,e) => {
+		
+		var input = $(e).change(updateLink);
+		var row = input.closest('.row');
+		var select = row.find('[id^="id_tmp_person_identifiers-"][id$="-value_type"]')
+				.change(updateLink);
+		
+		var link = $('<a class="sjo-link" target="_blank">Open</a>')
+			.appendTo(row)
+			.wrap('<span class="sjo-link-wrapper"></span>')
+			.hide();
+		
+		updateLink();
+		
+		function updateLink() {
+			
+			var href = input.val();
+			var valueType = select.val();
+			
+			if (href == '' || valueType == 'email') {
+				link.hide();
+				return;
+			}
+			
+			if (valueType == 'wikidata_id') href = `https://www.wikidata.org/wiki/${href}`;
+			if (valueType == 'twitter_username') href = `https://twitter.com/${href}`;
+			link.attr('href', href).show();
+			
+		}
+		
 	});
 	
 	// ================================================================
