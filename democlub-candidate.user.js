@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.11.06.0
+// @version     2019.11.22.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -164,6 +164,17 @@ function onready() {
 					dd.last().text(`${dod}`);
 				}
 				
+			}
+			
+			// Link usernames
+			if (dt.text().trim() == 'Username') {
+				dd.html(`<a href="/recent-changes?username=${dd.text().trim()}">${dd.text()}</a>`);
+			}
+			
+			// Format timestamps
+			if (dt.text().trim() == 'Timestamp') {
+				var timestampMoment = moment(dd.text());
+				dd.text(timestampMoment.format('YYYY-MM-DD HH:mm:ss'));
 			}
 			
 			// Hide blank fields
