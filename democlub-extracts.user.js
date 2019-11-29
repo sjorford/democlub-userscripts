@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.11.12.0
+// @version        2019.11.15.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -39,6 +39,7 @@ $(`<style>
 	#sjo-api-select-date {width: 20rem;}
 	#sjo_api_select_election_chosen {margin-right: 0.5rem;}
 	#sjo-api-select-template {width: 15rem;}
+	#sjo-api-select-type {width: 15rem;}
 	#sjo-api-status {font-style: italic; margin-right: 1rem;}
 	#sjo-api-error {font-weight: bold; color: red;}
 	#sjo-api-button-truncate {margin-right: 1rem;}
@@ -183,6 +184,12 @@ function initialize() {
 			.before('From: ').datepicker(datePickerOptions);
 	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">').appendTo(dateWrapper)
 			.before('To: ').datepicker(datePickerOptions);
+	
+	var electionTypes = 'all,parl,local,mayor,europarl,sp,naw,nia,gla,pcc'.split(',');
+	var typeSelect = $('<select id="sjo-api-select-type"></select>')
+			.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').before('Type: ');
+	$.each(electionTypes, (i,e) => $('<option></option>').val(e).text(e).appendTo(typeSelect));
+	typeSelect.chosen();
 	
 	// Highlight selected option
 	$('.sjo-api-option-extract').click(event => {
@@ -429,7 +436,12 @@ function startDownload(event) {
 		// Extract all elections in date range
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
-		extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		var electionType = $('#sjo-api-select-type').val();
+		if (electionType == 'all') {
+			extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		} else {
+			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && element.type == electionType).map(element => element.url);
+		}
 		console.log(startDate, endDate, extract.urls);
 		localStorage.setItem('sjo-api-extract', 'date');
 		localStorage.setItem('sjo-api-date-start', startDate);
