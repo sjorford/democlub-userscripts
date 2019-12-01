@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.11.17.1
+// @version     2019.12.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -29,17 +29,15 @@ function onready() {
 		.sjo-label {float: left; width: 125px; margin-top: 4px; margin-bottom: 0px; font-weight: bold;}
 		.sjo-label[for="id_biography"] {float: none;}
 		
-		input.sjo-input {height: 2rem; padding: 0.25rem 0.5rem;}
+		input.sjo-input {height: 2rem; margin: 0 0 0.25em 0; padding: 0.25rem 0.5rem;}
 		input.sjo-input[type="url"],
 		input.sjo-input[type="text"],
 		input.sjo-input[type="email"],
 		input.sjo-input[type="number"] {width: 390px; display: inline-block;}
 		
-		input.sjo-input-empty {background-color: #ffc;}
 		input.sjo-input-invalid {background-color: #fcc;}
 		
-		.sjo-input#id_twitter_username {width: 360px; margin-left: -4px; display: inline-block;}
-		.sjo-prefix {display: inline-block; width: 30px; position: relative; top: 1px; height: 2rem; line-height: 2rem;}
+		select[id^="id_tmp_person_identifiers-"] {height: 2rem; margin-bottom: 0.25em; padding: 0.25rem;}
 		
 		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
@@ -78,6 +76,9 @@ function onready() {
 		'id_note':							'Note',
 		'id_start_date':					'Start date',
 		'id_end_date':						'End date',
+		
+		'id_tmp_person_identifiers-0-value': 'hello world',
+		
 	};
 	
 	var electionFields = {
@@ -90,7 +91,8 @@ function onready() {
 	};
 	
 	// Format general candidate fields
-	$.each(candidateFields, (key, value) => formatField(key, value, null));
+	//$.each(candidateFields, (key, value) => formatField(key, value, null));
+	$('input[type="text"], textarea', '#person-details').each((i,e) => formatField(e.id));
 	
 	// Find heading of candidacy section
 	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
@@ -149,27 +151,25 @@ function onready() {
 	// Format an input field
 	function formatField(id, labelText, slug) {
 		if (slug) id = id.replace('{slug}', slug);
+		if (!labelText) labelText = candidateFields[id];
 		//console.log('formatField', id, labelText, slug);
 		
 		// Find wrapper and label
 		var input = $(`[id="${id}"]`);
-		var formItem = input.closest('.form-item');
-		if (formItem.length === 0) formItem = input.closest('p');
+		var formItem = input.closest('.form-item, .row');
+		//if (formItem.length === 0) formItem = input.closest('p');
 		var label = $('label', formItem).first();
 		
 		// Reformat field
 		formItem.addClass('sjo-formitem');
-		label.text(labelText + ':');
-		label.addClass('sjo-label');
+		label.addClass('sjo-label').text(labelText + ':');
 		input.addClass('sjo-input');
-		if (input.val() === '') input.addClass('sjo-input-empty');
-		$('.columns', formItem).addClass('sjo-form-columns');
+		if (formItem.parent().is('.columns')) formItem.unwrap();
+		formItem.find('select[id^="id_tmp_person_identifiers-"]').unwrap();
 		
-		// Format Twitter prefix
-		var prefix = $('.prefix', formItem);
-		if (input.parent().hasClass('columns') && input.parent().parent().hasClass('row') && prefix.parent().hasClass('columns')) {
-			prefix.unwrap().addClass('sjo-prefix');
-			input.unwrap().unwrap();
+		// Add placeholder
+		if (input.val() != '') {
+			input.attr('placeholder', input.val());
 		}
 		
 		// Trim party selection
