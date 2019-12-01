@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.11.22.0
+// @version     2019.12.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -23,7 +23,7 @@ function onready() {
 		.person__details dl {margin-bottom: 1em;}
 		.sjo-list-dt {float: left; width: 9rem;}
 		.sjo-list-dt, .sjo-list-dd {margin-bottom: 0px !important;}
-		.sjo-list-dd::after {content: "\\a"; white-space: pre-line;}
+		/* .sjo-list-dd::after {content: "\\a"; white-space: pre-line;} */
 		.sjo-list-dd {overflow: hidden; margin-left: 9rem;}
 		.sjo-list-dd:first-of-type {margin-left: 0;}
 		.sjo-heading-note {font-weight: normal; font-size: small;}
