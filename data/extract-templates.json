@@ -342,6 +342,19 @@
       "url:wikidata_id"
     ]
   },
+  "party_ppc_page_url":{
+    "display":"Party PPC page",
+    "columns":[
+      "id",
+      "name",
+      "election_date",
+      "_election_name",
+      "_post_label",
+      "party_name",
+      "has:party_ppc_page_url",
+      "party_ppc_page_url"
+    ]
+  },
   "polimonitor":{
     "display":"polimonitor.com",
     "columns":[
