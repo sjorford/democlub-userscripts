@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.12.10.0
+// @version     2019.12.10.1
 // @grant       none
 // ==/UserScript==
 
@@ -99,6 +99,7 @@ function onready() {
 		// Post pages
 		// ================================
 		
+		/*
 		// Add election link
 		var electionName = $('#new-candidate-form h3').text();
 		var electionSlug = $('.show-new-candidate-form').attr('href').match(/\/election\/(.*?)\//)[1];
@@ -110,6 +111,7 @@ function onready() {
 			$('<a></a>').text('2019').attr('href', location.href.replace(/\d{4}-\d{2}-\d{2}/, '2019-12-12'))
 				.insertAfter(electionLink).wrap('<span class="sjo-election-link-next"></span>').before(' • ');
 		}
+		*/
 		
 		// Convert the timeline to a breadcrumb type thing
 		var timeline = $('<div class="sjo-api-timeline"></div>').prependTo('.content .container');
