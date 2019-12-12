@@ -2,7 +2,8 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.11.29.0
+// @version        2019.12.12.0
+// @whatdayisit    ELECTION DAY!
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -20,6 +21,7 @@ var currentExtract, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
+var resultsGE2019Url = '/media/csv-archives/results-2019-05-02.csv';
 var templateDropdown;
 var electionsList = {};
 var datesList = {};
@@ -154,6 +156,37 @@ function initialize() {
 	});
 	*/
 	
+	// ******************************** GE2019 RESULTS ******************************** //
+
+	templates.results_ge2019 = {
+		display: "GE 2019 results",
+		columns: [
+			"election_id",
+			"ballot_paper_id",
+			"person_id",
+			"party_id",
+			"party_name",
+			"ballots_cast",
+			"is_winner",
+		]};
+	
+	dataFields.election_id 		= {display: "Election"};
+	dataFields.ballot_paper_id 	= {display: "Ballot"};
+	dataFields.person_id 		= {display: "ID"};
+	dataFields.person_name 		= {display: "Name"};
+	dataFields.ballots_cast 	= {display: "Votes"};
+	dataFields.is_winner 		= {display: "Winner"};
+	dataFields.spoilt_ballots 	= {display: "Spoilt"};
+	dataFields.turnout 			= {display: "Turnout"};
+	dataFields.source 			= {display: "Source"};
+	
+	// Extract GE2019 results
+	$('<input type="button" id="sjo-api-option-extract-results_ge2019" class="sjo-api-option-extract" value="GE2019 results">')
+		.click(event => templateDropdown.val('results_ge2019').trigger('chosen:updated'))
+		.appendTo(buttonsWrapper);
+	
+	// ******************************************************************************** //
+
 	// Extract all
 	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
 	
@@ -452,6 +485,11 @@ function startDownload(event) {
 		extract.urls = [allCandidatesUrl];
 		localStorage.setItem('sjo-api-extract', 'all');
 		
+	} else if (selectedButton.is('#sjo-api-option-extract-results_ge2019')) {
+		
+		extract.urls = [resultsGE2019Url];
+		localStorage.setItem('sjo-api-extract', 'results_ge2019');
+		
 	}
 	
 	localStorage.setItem('sjo-api-template', $('#sjo-api-select-template').val());
@@ -516,11 +554,14 @@ function parseComplete(results) {
 		}
 	}
 	
+	
+	var selectedButton = $('.sjo-api-option-extract-selected');
+	var isResults = selectedButton.is('#sjo-api-option-extract-results_ge2019');
 	if (results.data && results.data.length > 0) {
 		
 		// Clean data
 		console.log('parseComplete', results.data.length);
-		$.each(results.data, (index, candidate) => cleanData(index, candidate));
+		$.each(results.data, (index, candidate) => cleanData(index, candidate, isResults));
 		console.log('parseComplete', results.data);
 		
 	}
@@ -642,10 +683,12 @@ function prepareRender() {
 }
 
 // TODO: make a class
-function cleanData(index, candidate) {
+function cleanData(index, candidate, isResults) {
 	
 	candidate._row = index + 1;
 	candidate.__filters = [];
+	
+	if (isResults) return candidate;
 	
 	// Parse integer values
 	candidate.id = candidate.id === '' ? '' : parseInt(candidate.id);
