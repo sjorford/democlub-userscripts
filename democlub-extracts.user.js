@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.12.12.0
+// @version        2019.12.12.1
 // @whatdayisit    ELECTION DAY!
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
@@ -161,24 +161,30 @@ function initialize() {
 	templates.results_ge2019 = {
 		display: "GE 2019 results",
 		columns: [
-			"election_id",
 			"ballot_paper_id",
 			"person_id",
+			"person_name",
 			"party_id",
 			"party_name",
 			"ballots_cast",
 			"is_winner",
 		]};
 	
-	dataFields.election_id 		= {display: "Election"};
-	dataFields.ballot_paper_id 	= {display: "Ballot"};
-	dataFields.person_id 		= {display: "ID"};
-	dataFields.person_name 		= {display: "Name"};
-	dataFields.ballots_cast 	= {display: "Votes"};
-	dataFields.is_winner 		= {display: "Winner"};
-	dataFields.spoilt_ballots 	= {display: "Spoilt"};
-	dataFields.turnout 			= {display: "Turnout"};
-	dataFields.source 			= {display: "Source"};
+	var resultsDataFields = {
+		election_id:     {display: "Election"},
+		ballot_paper_id: {display: "Ballot"},
+		person_id:       {display: "ID"},
+		party_id:        {display: "ID"},
+		party_name:      {display: "Party"},
+		person_name:     {display: "Name"},
+		ballots_cast:    {display: "Votes"},
+		is_winner:       {display: "Winner"},
+		spoilt_ballots:  {display: "Spoilt"},
+		turnout:         {display: "Turnout"},
+		source:          {display: "Source"},
+	};
+	
+	dataFields = $.extend({}, resultsDataFields, dataFields);
 	
 	// Extract GE2019 results
 	$('<input type="button" id="sjo-api-option-extract-results_ge2019" class="sjo-api-option-extract" value="GE2019 results">')
