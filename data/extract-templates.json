@@ -39,6 +39,15 @@
       }
     ]
   },
+  "wikidata":{
+    "display":"Wikidata",
+    "columns":[
+      "id",
+      "name",
+      "wikipedia_url",
+      "wikidata_id"
+    ]
+  },
   "le":{
     "display":"Local elections",
     "columns":[
