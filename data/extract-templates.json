@@ -1,12 +1,16 @@
 {
-  "le1819":{
-    "display":"Local elections 2018-19",
+  "standard":{
+    "display":"Standard",
     "columns":[
       "id",
       "name",
+      "election",
       "election_date",
+      "_election_type",
       "_election_name",
       "_post_label",
+      "party_list_position",
+      "party_id",
       "party_name",
       "has:email",
       "has:twitter_username",
@@ -14,6 +18,7 @@
       "has:facebook_page_url",
       "has:homepage_url",
       "has:wikipedia_url",
+      "has:wikidata_id",
       "has:linkedin_url",
       "has:party_ppc_page_url",
       "has:blog_url",
@@ -22,7 +27,8 @@
       "birth_date",
       "_gender_icon",
       "has:image_url",
-      "has:elected"
+      "has:elected",
+      "has:cancelled_poll"
     ],
     "sort":[
       {
@@ -48,164 +54,6 @@
       "wikidata_id"
     ]
   },
-  "le":{
-    "display":"Local elections",
-    "columns":[
-      "id",
-      "name",
-      "_last_name",
-      "_election_type",
-      "_country",
-      "_election_name",
-      "_post_label",
-      "party_id",
-      "party_name",
-      "has:email",
-      "has:twitter_username",
-      "has:facebook_personal_url",
-      "has:facebook_page_url",
-      "has:homepage_url",
-      "has:wikipedia_url",
-      "has:wikidata_id",
-      "has:linkedin_url",
-      "has:party_ppc_page_url",
-      "birth_date",
-      "_age_at_election_min",
-      "_gender_icon",
-      "has:image_url",
-      "has:elected",
-      "has:cancelled_poll"
-    ]
-  },
-  "euro":{
-    "display":"Standard",
-    "columns":[
-      "id",
-      "name",
-      "_post_label",
-      "party_list_position",
-      "party_id",
-      "party_name",
-      "has:email",
-      "has:twitter_username",
-      "has:facebook_personal_url",
-      "has:facebook_page_url",
-      "has:homepage_url",
-      "has:wikipedia_url",
-      "has:wikidata_id",
-      "has:linkedin_url",
-      "has:party_ppc_page_url",
-      "birth_date",
-      "_age_at_election",
-      "_gender_icon",
-      "has:image_url",
-      "has:elected"
-    ]
-  },
-  "standard":{
-    "display":"Standard",
-    "columns":[
-      "id",
-      "name",
-      "election_date",
-      "_election_year",
-      "_country",
-      "_election_type",
-      "_election_name",
-      "_post_label",
-      "has:_byelection",
-      "party_list_position",
-      "party_id",
-      "party_name",
-      "has:email",
-      "has:twitter_username",
-      "has:facebook_personal_url",
-      "has:facebook_page_url",
-      "has:homepage_url",
-      "has:wikipedia_url",
-      "has:linkedin_url",
-      "has:party_ppc_page_url",
-      "birth_date",
-      "_age_at_election",
-      "_gender_icon",
-      "has:image_url",
-      "has:elected"
-    ]
-  },
-  "brief":{
-    "display":"Brief",
-    "columns":[
-      "id",
-      "name",
-      "election_date",
-      "_election_year",
-      "_country",
-      "_election_type",
-      "_election_name",
-      "_post_label",
-      "party_id",
-      "party_name",
-      "has:elected"
-    ]
-  },
-  "superbrief":{
-    "display":"Superbrief",
-    "columns":[
-      "id",
-      "name",
-      "_election_type",
-      "_election_name",
-      "_post_label",
-      "party_name"
-    ]
-  },
-  "ge":{
-    "display":"General Election",
-    "columns":[
-      "id",
-      "name",
-      "_country",
-      "_post_label",
-      "party_id",
-      "party_name",
-      "has:email",
-      "has:twitter_username",
-      "has:facebook_personal_url",
-      "has:facebook_page_url",
-      "has:homepage_url",
-      "has:wikipedia_url",
-      "has:linkedin_url",
-      "has:party_ppc_page_url",
-      "has:blog_url",
-      "has:instagram_url",
-      "has:youtube_profile",
-      "wikidata_id",
-      "birth_date",
-      "_age_at_election_min",
-      "_gender_icon",
-      "has:image_url",
-      "has:elected"
-    ]
-  },
-  "county":{
-    "display":"Counties",
-    "columns":[
-      "id",
-      "name",
-      "election_date",
-      "_election_year",
-      "_country",
-      "_election_type",
-      "_election_name",
-      "_post_label",
-      "_county",
-      "has:_byelection",
-      "party_list_position",
-      "party_id",
-      "party_name",
-      "has:elected"
-    ]
-  },
   "wp":{
     "display":"Wikipedia",
     "columns":[
@@ -219,19 +67,6 @@
       "_post_label",
       "has:_byelection",
       "party_list_position",
-      "party_id",
-      "party_name",
-      "_wikipedia",
-      "has:elected"
-    ]
-  },
-  "wpge":{
-    "display":"Wikipedia (GE)",
-    "columns":[
-      "id",
-      "name",
-      "_country",
-      "_post_label",
       "party_id",
       "party_name",
       "_wikipedia",
@@ -254,52 +89,6 @@
       "has:twitter_username",
       "twitter_username",
       "has:elected"
-    ]
-  },
-  "names":{
-    "display":"Name split",
-    "columns":[
-      "id",
-      "name",
-      "honorific_prefix",
-      "_first_name",
-      "_middle_names",
-      "_last_name",
-      "honorific_suffix",
-      "_short_name"
-    ]
-  },
-  "gender":{
-    "display":"Name split with gender",
-    "columns":[
-      "id",
-      "name",
-      "honorific_prefix",
-      "_first_name",
-      "_middle_names",
-      "_last_name",
-      "honorific_suffix",
-      "_short_name",
-      "_gender"
-    ]
-  },
-  "type":{
-    "display":"Election type",
-    "columns":[
-      "id",
-      "_election_year",
-      "election_date",
-      "_election_type",
-      "_election",
-      "_election_name",
-      "_election_area",
-      "_post_label"
-    ]
-  },
-  "id":{
-    "display":"ID only",
-    "columns":[
-      "id"
     ]
   },
   "idmap":{
@@ -330,7 +119,7 @@
     ]
   },
   "links":{
-    "display":"URLs",
+    "display":"Link URLs",
     "columns":[
       "id",
       "name",
@@ -338,30 +127,28 @@
       "_election_name",
       "_post_label",
       "party_name",
+      "has:twitter_username",
       "url:twitter_username",
+      "has:facebook_personal_url",
       "facebook_personal_url",
+      "has:facebook_page_url",
       "facebook_page_url",
+      "has:homepage_url",
       "homepage_url",
+      "has:wikipedia_url",
       "wikipedia_url",
+      "has:wikidata_id",
+      "url:wikidata_id",
+      "has:linkedin_url",
       "linkedin_url",
-      "party_ppc_page_url",
-      "blog_url",
-      "instagram_url",
-      "youtube_profile",
-      "url:wikidata_id"
-    ]
-  },
-  "party_ppc_page_url":{
-    "display":"Party PPC page",
-    "columns":[
-      "id",
-      "name",
-      "election_date",
-      "_election_name",
-      "_post_label",
-      "party_name",
       "has:party_ppc_page_url",
-      "party_ppc_page_url"
+      "party_ppc_page_url",
+      "has:blog_url",
+      "blog_url",
+      "has:instagram_url",
+      "instagram_url",
+      "has:youtube_profile",
+      "youtube_profile"
     ]
   }
 }
