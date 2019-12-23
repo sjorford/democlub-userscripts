@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.12.23.0
+// @version     2019.12.23.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -118,6 +118,7 @@ function onready() {
 	// Detect new election
 	var refreshTimerChange;
 	$('body').on('change', '#add_more_elections', electionChanged);
+	$('body').on('click', '#add_election_button', () => formatField('add_more_elections', 'Election'));
 	
 	function electionChanged(event) {
 		var slug = event.target.value;
@@ -157,7 +158,9 @@ function onready() {
 		// Find wrapper and label
 		var input = $(`[id="${id}"]`);
 		var formItem = input.closest('.form-item, .row');
-		//if (formItem.length === 0) formItem = input.closest('p');
+		if (formItem.length == 0 && input.closest('.extra_elections_forms').length > 0) {
+			formItem = input.closest('p');
+		}
 		var label = $('label', formItem).first();
 		
 		// Reformat field
