@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.12.01.0
+// @version     2019.12.23.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -173,10 +173,8 @@ function onready() {
 		}
 		
 		// Trim party selection
-		// FIXME: not working any more?
-		// FIXME: hide this since the party lists no longer contain numbers of candidates
 		if (input.is('select.party-select')) {
-			//Utils.formatPartySelects(input);
+			Utils.formatPartySelects(input);
 		}
 		
 		// Hide date of death field
