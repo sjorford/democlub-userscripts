@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.02.24.0
+// @version     2019.12.23.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -58,11 +58,29 @@ function onready() {
 		if (candidates.length === 0) {
 			block.append('<p>There are currently no candidates for this post</p>');
 		} else {
+			
 			var match = location.href.match(/\/person\/(\d+)\//);
 			var currentID = match ? match[1] : '';
-			block.append(candidates.map(candidate => 
-				`<p>` + (candidate.person.id == currentID ? `<span class="sjo-is-current"> ${candidate.person.name}</span>` : `<a href="/person/${candidate.person.id}">${candidate.person.name}</a>`) + 
-				` (${Utils.shortPartyName(candidate.on_behalf_of)})</p>`).join(''));
+			var parties = [];
+			var partyListsInUse = (electionID.match(/^(europarl|sp\.r|naw\.r|gla\.a)\./) != null);
+			$.each(candidates, (i, candidate) => {
+				
+				// Add party heading
+				if (partyListsInUse && parties.indexOf(candidate.on_behalf_of.name) < 0) {
+					$('<h3></h3>').text(candidate.on_behalf_of.name).appendTo(block);
+					parties.push(candidate.on_behalf_of.name);
+				}
+				
+				var item = $('<p></p>').appendTo(block);
+				if (candidate.person.id == currentID) {
+					$('<span class="sjo-is-current"></span>').text(candidate.person.name).appendTo(item);
+				} else {
+					$(`<a href="/person/${candidate.person.id}"></a>`).text(candidate.person.name).appendTo(item);
+				}
+				if (!partyListsInUse) item.append(` (${Utils.shortPartyName(candidate.on_behalf_of)})`);
+				
+			});
+			
 		}
 		
 	}
