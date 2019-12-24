@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.12.01.0
+// @version     2019.12.24.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -32,6 +32,7 @@ function onready() {
 		.person__actions__action p {font-size: 0.8em;}
 		.person__photo a:hover {border: none;}
 		.sjo-watchlist {float: right; font-size: x-large;}
+		.sjo-duplicate-aka {background-color: lightgray;}
 		
 		.sjo-marker {
 			font-size: 66%;
@@ -127,6 +128,11 @@ function onready() {
 				} else if (dt.text() == 'Source') {
 					dd.html(dd.text().replace(/(https?:[^\s]+)/g, '<a href="$1">$1</a>'));
 				}
+			}
+			
+			// Highlight duplicate AKAs
+			if (dt.text().trim() == 'Also known as') {
+				dd.addClass(i => ((dd.eq(i).text().trim() == $('.person__hero h1').text().trim()) ? 'sjo-duplicate-aka' : ''));
 			}
 			
 			// Format age and dates of birth/death
