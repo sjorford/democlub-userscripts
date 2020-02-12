@@ -2,8 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.12.12.1
-// @whatdayisit    ELECTION DAY!
+// @version        2020.02.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -21,7 +20,6 @@ var currentExtract, currentSet, currentIndex; // TODO: singletonize this
 var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
-var resultsGE2019Url = '/media/csv-archives/results-2019-05-02.csv';
 var templateDropdown;
 var electionsList = {};
 var datesList = {};
@@ -156,43 +154,6 @@ function initialize() {
 	});
 	*/
 	
-	// ******************************** GE2019 RESULTS ******************************** //
-
-	templates.results_ge2019 = {
-		display: "GE 2019 results",
-		columns: [
-			"ballot_paper_id",
-			"person_id",
-			"person_name",
-			"party_id",
-			"party_name",
-			"ballots_cast",
-			"is_winner",
-		]};
-	
-	var resultsDataFields = {
-		election_id:     {display: "Election"},
-		ballot_paper_id: {display: "Ballot"},
-		person_id:       {display: "ID"},
-		party_id:        {display: "ID"},
-		party_name:      {display: "Party"},
-		person_name:     {display: "Name"},
-		ballots_cast:    {display: "Votes"},
-		is_winner:       {display: "Winner"},
-		spoilt_ballots:  {display: "Spoilt"},
-		turnout:         {display: "Turnout"},
-		source:          {display: "Source"},
-	};
-	
-	dataFields = $.extend({}, resultsDataFields, dataFields);
-	
-	// Extract GE2019 results
-	$('<input type="button" id="sjo-api-option-extract-results_ge2019" class="sjo-api-option-extract" value="GE2019 results">')
-		.click(event => templateDropdown.val('results_ge2019').trigger('chosen:updated'))
-		.appendTo(buttonsWrapper);
-	
-	// ******************************************************************************** //
-
 	// Extract all
 	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
 	
