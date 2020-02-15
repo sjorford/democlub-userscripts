@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.02.15.0
+// @version     2020.02.15.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -41,6 +41,7 @@ function onready() {
 		
 		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
+		[id^="id_standing_"], label[for^="id_standing_"] {display: none;}
 		.sjo-candidacy-clear {margin-left: 0.5em; font-weight: bold; color: red;}
 
 		.sjo-link-wrapper {
