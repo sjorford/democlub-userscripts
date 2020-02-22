@@ -2,7 +2,7 @@
 // @name        Democracy Club Elections tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2019.09.24.0
+// @version     2020.02.22.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -150,7 +150,7 @@ function trimCouncilNames() {
 	var wrapper = labels.first().parent().addClass('sjo-columns').append(sortedElements);
 	
 	// Add filter
-	wrapper.find('legend').append('<label for="sjo-filter">Filter: <input class="sjo-filter" id="sjo-filter"></label>');
+	wrapper.find('legend').append('<label for="sjo-filter">Filter: <input class="sjo-filter" id="sjo-filter" autocomplete="off"></label>');
 	var filter = $('.sjo-filter').focus().on('change keyup', event => {
 		console.log(event.originalEvent, filter.val());
 		var filterText = filter.val().trim().toLowerCase();
