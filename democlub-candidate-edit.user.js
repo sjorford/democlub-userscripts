@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.02.15.1
+// @version     2020.02.28.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -333,4 +333,9 @@ function onready() {
 		$.each(form[0].elements, (i, e) => formData[e.name] = e.value);
 		return formData;
 	}
+	
+	// Add link to heading
+	var personID = window.location.pathname.match(/\/person\/(\d+)/)[1];
+	$('.person__hero h1').html((i, html) => html.replace(/: (.*)/, `: <a href="person/${personID}">$1</a>`));
+	
 }
