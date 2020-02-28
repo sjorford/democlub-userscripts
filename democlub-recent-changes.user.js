@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.12.04.0
+// @version        2020.02.28.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -68,11 +68,6 @@ function onready() {
 			row.addClass('sjo-changes-bot');
 		}
 		
-		
 	});
-	
-	// Collapse filters by default
-	// https://github.com/DemocracyClub/yournextrepresentative/issues/1119
-	$('.advance_filters').removeAttr('open');
 	
 }
