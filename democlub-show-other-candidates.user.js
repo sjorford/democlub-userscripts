@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2019.12.23.0
+// @version     2020.03.07.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -21,6 +21,16 @@ function onready() {
 		.sjo-post-candidates {background-color: #ff9;}
 		.sjo-post-candidates p {margin-bottom: 0.25em;}
 		.sjo-is-current {font-weight: bold;}
+		.sjo-ballot-link {
+			position: absolute;
+			margin-left: 0.5em;
+			padding: 0.2em 0.5em;
+			border-radius: 0.5em;
+			background-color: steelblue;
+			color: white;
+			font-size: small;
+			font-weight: bold;
+		}
 	</style>`).appendTo('head');
 	
 	$('select.post-select').each((index, element) => getPostCandidates(element));
@@ -35,10 +45,17 @@ function onready() {
 		if (selected.length === 0) return;
 		var postName = selected.text();
 		var postID = selected.val();
+		if (!postID) return;
 		
 		// Call API
-		$.getJSON(`/api/v0.9/posts/${postID}/`, data => renderPostCandidates(electionID, postID, postName, data));
-
+		// FIXME: post ID in dropdown no longer matches API
+		//$.getJSON(`/api/v0.9/posts/${postID}/`, data => renderPostCandidates(electionID, postID, postName, data));
+		
+		var ballotID = electionID.replace(/^(.*)\.(.*)$/, `$1.${postID}.$2`);
+		var wrapper = $(input).closest('.form-item p');
+		wrapper.find('.sjo-ballot-link').remove();
+		$(`<a class="sjo-ballot-link" target="_blank" href="/elections/${ballotID}/">View ballot</a>`).appendTo(wrapper);
+		
 	}
 	
 	function renderPostCandidates(electionID, postID, postName, data) {
