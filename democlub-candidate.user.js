@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2020.03.07.0
+// @version     2020.03.08.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -17,7 +17,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	var mainDate = moment().startOf('year').month(5);
+	var mainDate = moment().startOf('year').month(4); // month is 0-based
 	while (mainDate.day() != 4) mainDate.add(1, 'day');
 	
 	$(`<style>
@@ -95,7 +95,7 @@ function onready() {
 			// Add markers for current elections and by-elections
 			if (href.match(/\.by\./)) {
 				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
-			} else if (date.isSame(mainDate), 'day') {
+			} else if (date.isSame(mainDate, 'day')) {
 				dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
 			}
 			
