@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.07.0
+// @version     2020.03.09.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -38,6 +38,7 @@ function onready() {
 		input.sjo-input-invalid {background-color: #fcc;}
 		
 		select[id^="id_tmp_person_identifiers-"] {height: 2rem; margin-bottom: 0.25em; padding: 0.25rem;}
+		.sjo-linktype-duplicate {background-color: #fcc;}
 		
 		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
 		
@@ -222,12 +223,14 @@ function onready() {
 		select.append(sortedOptions).val(value);
 	});
 	
-	$('input[id^="id_tmp_person_identifiers-"]').each((i,e) => {
+	var linkInputs = $('input[id^="id_tmp_person_identifiers-"][id$="-value"]');
+	var linkSelects = $('select[id^="id_tmp_person_identifiers-"][id$="-value_type"]');
+	
+	linkInputs.each((i,e) => {
 		
 		var input = $(e).change(updateLink);
 		var row = input.closest('.row');
-		var select = row.find('[id^="id_tmp_person_identifiers-"][id$="-value_type"]')
-				.change(updateLink);
+		var select = row.find(linkSelects).change(updateLink);
 		
 		var link = $('<a class="sjo-link" target="_blank">Open</a>')
 			.appendTo(row)
@@ -241,14 +244,19 @@ function onready() {
 			var href = input.val();
 			var valueType = select.val();
 			
-			if (href == '' || valueType == 'email') {
+			if (href == '' || valueType == '' || valueType == 'email') {
 				link.hide();
-				return;
+			} else {
+				if (valueType == 'wikidata_id') href = `https://www.wikidata.org/wiki/${href}`;
+				if (valueType == 'twitter_username') href = `https://twitter.com/${href}`;
+				link.attr('href', href).show();
 			}
 			
-			if (valueType == 'wikidata_id') href = `https://www.wikidata.org/wiki/${href}`;
-			if (valueType == 'twitter_username') href = `https://twitter.com/${href}`;
-			link.attr('href', href).show();
+			linkSelects.each((i,e) => {
+				var testType = e.value;
+				var same = linkSelects.filter((i,e) => e.value == testType);
+				same.toggleClass('sjo-linktype-duplicate', testType != '' && same.length > 1);
+			});
 			
 		}
 		
