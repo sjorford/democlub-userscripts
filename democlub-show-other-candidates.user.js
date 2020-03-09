@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.07.1
+// @version     2020.03.09.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -51,7 +51,8 @@ function onready() {
 		// FIXME: post ID in dropdown no longer matches API
 		//$.getJSON(`/api/v0.9/posts/${postID}/`, data => renderPostCandidates(electionID, postID, postName, data));
 		
-		var ballotID = electionID.replace(/^(.*)\.(.*)$/, `$1.${postID}.$2`);
+		var ballotID = electionID;
+		if (electionID.match(/^local\./)) ballotID = ballotID.replace(/^(.*)\.(.*)$/, `$1.${postID}.$2`);
 		var wrapper = $(input).closest('p');
 		wrapper.find('.sjo-ballot-link').remove();
 		$(`<a class="sjo-ballot-link" target="_blank" href="/elections/${ballotID}/">View ballot</a>`).appendTo(wrapper);
