@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.09.0
+// @version     2020.03.10.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -145,6 +145,11 @@ function onready() {
 				select.val('standing').change().closest('p').hide();
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
 				updateElectionsWarning();
+				
+				// If there is only one post, select it automatically
+				var postSelect = $(`[id="id_constituency_${slug}"]`);
+				var options = postSelect.find('option[value!=""]');
+				if (options.length == 1) postSelect.val(options.val()).change();
 				
 			}
 		}
