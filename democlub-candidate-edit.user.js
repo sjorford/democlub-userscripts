@@ -6,7 +6,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.10.0
+// @version     2020.03.10.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -146,14 +146,22 @@ function onready() {
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
 				updateElectionsWarning();
 				
-				// If there is only one post, select it automatically
-				var postSelect = $(`[id="id_constituency_${slug}"]`);
-				var options = postSelect.find('option[value!=""]');
-				if (options.length == 1) postSelect.val(options.val()).change();
+				selectSinglePost(slug);
 				
 			}
 		}
 		
+	}
+	
+	var newElectionID = location.pathname.match(/(\/election\/(.+?)\/person\/create\/)?/)[2];
+	if (newElectionID) selectSinglePost(newElectionID);
+	
+	// If there is only one post, select it automatically
+	function selectSinglePost(id) {
+		console.log('selectSinglePost', id);
+		var postSelect = $(`[id="id_constituency_${id}"]`);
+		var options = postSelect.find('option[value!=""]');
+		if (options.length == 1) postSelect.val(options.val()).change();
 	}
 	
 	// Format an input field
