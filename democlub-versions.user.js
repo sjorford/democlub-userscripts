@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2019.11.15.0
+// @version     2020.04.28.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -31,6 +31,28 @@ function onready() {
 		.sjo-former-name        {color: red; border: solid red; border-width: 1px 0;}
 		.sjo-name-suffix        {font-size: 75%;}
 	</style>`).appendTo('head');
+	
+	var partyList = {
+		'PP52': 'Conservative and Unionist Party',
+		'PP53': 'Labour Party',
+		'joint-party:53-119': 'Labour and Co-operative Party',
+		'PP90': 'Liberal Democrats',
+		'PP63': 'Green Party',
+		'PP130': 'Scottish Green Party',
+		'PP85': 'UK Independence Party (UKIP)',
+		'PP7931': 'The Brexit Party',
+		'PP102': 'Scottish National Party (SNP)',
+		'PP77': 'Plaid Cymru - The Party of Wales',
+		'PP83': 'Ulster Unionist Party',
+		'PP70': 'Democratic Unionist Party - D.U.P.',
+		'PP55': 'SDLP (Social Democratic & Labour Party)',
+		'PP39': 'Sinn Féin',
+		'PP103': 'Alliance - Alliance Party of Northern Ireland',
+		'PP804': 'Trade Unionist and Socialist Coalition',
+		'PP106': 'British National Party',
+		'PP17': 'English Democrats',
+		'ynmp-party:2': 'Independent',
+	};
 	
 	var oldNames = [];
 	
@@ -174,6 +196,11 @@ function onready() {
 			var cleanData = data.replace(/\\"/g, '"').replace(/\\r\\n/g, '<br>');
 			if (fieldName == 'twitter_username') {
 				cleanData = `<a href="https://twitter.com/${cleanData}">${cleanData}</a>`;
+			}
+			var partyMatch = cleanData.match(/^stood for (\S+)$/);
+			console.log(partyMatch);
+			if (partyMatch && partyList[partyMatch[1]]) {
+				cleanData += ` (${partyList[partyMatch[1]]})`;
 			}
 			return cleanData;
 		}
