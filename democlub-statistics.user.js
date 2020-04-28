@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/*
-// @version     2020.04.28.0
+// @version     2020.04.28.1
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -25,11 +25,12 @@ function onready() {
 		.sjo-number-zero {background-color: rgb(255, 230, 153);}
 		.sjo-collapsiblesection-buttons {font-size: small;}
 		.sjo-nowrap {white-space: nowrap;}
-		.sjo-filter {display: inline-block;}
+		input.sjo-filter {display: inline-block; width: 30ex; padding: 5px; height: auto;}
+		.sjo-hidden {display: none;}
 	</style>`).appendTo('head');
 	
 	// New version - produce raw HTML for speed
-	$('.statistics-elections').each(function(index, element) {
+	var sections = $('.statistics-elections').each(function(index, element) {
 		
 		var html = element.innerHTML;
 		var htmlSplit = html.match(/([\s\S]+)(<h3>[\s\S]+)/);
@@ -78,6 +79,20 @@ ${items}
 		html = '<table class="sjo-stats">' + blocks.join('') + '</table>';
 		element.innerHTML = html;
 	});
+	
+	// Add filter
+	var filter = $('<input class="sjo-filter" id="sjo-filter" autocomplete="off">')
+		.insertBefore(sections.first())
+		.wrap('<label for="sjo-filter"></label>')
+		.before('Filter: ')
+		.focus().on('change keyup', event => {
+			console.log(event.originalEvent, filter.val());
+			var filterText = filter.val().trim().toLowerCase();
+			$('.sjo-stats tr').each((i,e) => {
+				var row = $(e);
+				row.toggleClass('sjo-hidden', !row.text().trim().toLowerCase().match(filterText));
+			});
+		});
 	
 	// Sort lists of posts
 	var postsTableBody = $('.counts_table tbody');
