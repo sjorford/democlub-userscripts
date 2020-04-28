@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
-// @include     https://candidates.democracyclub.org.uk/numbers/
-// @version     2020.01.30.0
+// @include     https://candidates.democracyclub.org.uk/numbers/*
+// @version     2020.04.28.0
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -78,5 +78,11 @@ ${items}
 		html = '<table class="sjo-stats">' + blocks.join('') + '</table>';
 		element.innerHTML = html;
 	});
+	
+	// Sort lists of posts
+	var postsTableBody = $('.counts_table tbody');
+	postsTableBody.append(
+		postsTableBody.find('tr').toArray()
+			.sort((a,b) => a.innerText < b.innerText ? -1 : a.innerText > b.innerText ? 1 : 0));
 	
 }
