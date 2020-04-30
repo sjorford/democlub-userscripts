@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/europarl*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2019.04.20.0
+// @version     2020.04.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -16,7 +16,8 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style>
-		.sjo-table td, .sjo-table th {padding: 0.25rem; vertical-align: middle;}
+		.sjo-table td, .sjo-table th {padding: 0.25rem;}
+		.sjo-middle {vertical-align: middle;}
 		.sjo-table h4 {font-size: 1rem; font-weight: bold; margin: 0;}
 		.sjo-table input {margin: 0; padding: 0.25rem; height: auto;}
 		.sjo-nowrap {white-space: nowrap;}
@@ -28,11 +29,18 @@ function onready() {
 	form.find('div').each((index, element) => {
 		var div = $(element);
 		var row = $('<tr></tr>').appendTo(table);
-		$('<th></th>').appendTo(row).append(div.find('h4').text());
-		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
-		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a').first());
-		$('<td></td>').appendTo(row).append(div.find('input[type="text"], li a'));
-		$('<td class="sjo-nowrap"></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
+		$('<th class="sjo-middle"></th>').appendTo(row)
+			.append(div.find('h4').text());
+		$('<td></td>').appendTo(row)
+			.append(div.find('input[type="text"]').first())
+			.append(div.find('li a').first());
+		$('<td></td>').appendTo(row)
+			.append(div.find('input[type="text"]').first())
+			.append(div.find('li a').first());
+		$('<td></td>').appendTo(row)
+			.append(div.find('input[type="text"]'))
+			.append(div.find('li a'));
+		$('<td class="sjo-nowrap sjo-middle"></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
 		div.hide();
 	});
 	
