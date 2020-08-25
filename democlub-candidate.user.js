@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2020.03.08.0
+// @version     2020.08.25.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -143,17 +143,17 @@ function onready() {
 			// Format age and dates of birth/death
 			if (dt.text() == 'Age') {
 				
-				var dobMatch = dd.first().find('.dob').text().match(/\(Date of birth: (.*)\)/);
+				var dobMatch = dd.first().find('.dob').text().match(/\(Born: (.*)\)/);
 				if (dobMatch) {
 					var dob = dobMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
 					var age = dd.first().text().match(/[-\d]+/)[0];
-					dt.text('Date of birth');
+					dt.text('Born');
 				}
 				
-				var dodMatch = dd.last().text().match(/Date of death: (.*)/);
+				var dodMatch = dd.last().text().match(/Died: (.*)/);
 				if (dodMatch) {
 					var dod = dodMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
-					dd.last().before('<dt class="sjo-list-dt">Date of death</dt>');
+					dd.last().before('<dt class="sjo-list-dt">Died</dt>');
 				}
 				
 				if (dob && dod) {
