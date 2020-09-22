@@ -1,12 +1,12 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
+// @version     2020.09.22.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
 // @include     https://candidates.democracyclub.org.uk/person/*/other-names/create
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.10.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -254,7 +254,27 @@ function onready() {
 		
 		function updateLink() {
 			
-			var href = input.val();
+			var href = input.val().trim();
+			input.val(href);
+			
+			// Detect link types
+			if (href.match(/^[-_\.a-z0-9]+@[-_\.a-z0-9]+$/i)) {
+				select.val('email');
+			} else if (href.match(/facebook.com/)) {
+				if (!select.val().match(/facebook/))
+					select.val('facebook_page_url');
+			} else if (href.match(/instagram.com/)) {
+				select.val('instagram_url');
+			} else if (href.match(/wikipedia.org/)) {
+				select.val('wikipedia_url');
+			} else if (href.match(/youtube.com/)) {
+				select.val('youtube_profile');
+			} else if (href.match(/^Q[0-9]+$/)) {
+				select.val('wikidata_id');
+			} else if (href.match(/^[_a-z0-9]{1,14}$/i)) {
+				select.val('twitter_username');
+			}
+			
 			var valueType = select.val();
 			
 			if (href == '' || valueType == '' || valueType == 'email') {
