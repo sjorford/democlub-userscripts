@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.02.12.1
+// @version        2020.09.23.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -1248,7 +1248,7 @@ function buildRawOutput() {
 		numRowsMatched++;
 		
 		// Add row to table body
-		bodyHtml.push(buildRawOutputRow(dataRow).join('\t'));
+		bodyHtml.push(buildRawOutputRow(dataRow).join('\t').replace(/\t+$/, ''));
 		numRowsDisplayed++;
 		
 	});
