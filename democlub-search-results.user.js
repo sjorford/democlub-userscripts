@@ -2,7 +2,7 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.09.20.0
+// @version        2019.10.03.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
 // ==/UserScript==
@@ -13,6 +13,7 @@ $(`<style>
 	.search_results li img {max-height: 64px; object-fit: contain;}
 	.search_results li .button.secondary.small {margin-bottom: 0;}
 	.sjo-search-exact {border: 2px solid gold; padding: 5px; margin-left: -7px; border-radius: 4px; background-color: #fff3b1;}
+	.sjo-search-id {float: right; padding: 0.25rem; font-size: 75%;}
 </style>`).appendTo('head');
 
 // temporary fix due to c.dc script errors
@@ -26,12 +27,19 @@ function onready() {
 	var regexString = '(^|\\s)' + searchName.replace(/[\.\*\?\[\]\(\)\|\^\$\\\/]/g, '\\$&').replace(/\s+/, '(\\s+|\\s+.*\\s+)') + '$';
 	var regex = new RegExp(regexString, 'i');
 	
-	// Highlight exact matches
 	$('.candidates-list__person').each((index, element) => {
+		
+		// Highlight exact matches
 		var item = $(element);
 		if (item.find('.candidate-name').text().trim().match(regex)) {
 			item.addClass('sjo-search-exact');
 		}
+		
+		// Display ID numbers
+		var id = item.find('.candidate-name').attr('href').match(/\d+/);
+		$('<span class="sjo-search-id"></span>').text(id)
+			.appendTo(item.find('.person-name-and-party'));
+		
 	});
 	
 	// Capitalise name in new candidate button
