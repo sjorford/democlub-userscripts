@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.09.22.0
+// @version     2020.09.29.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -53,6 +53,8 @@ function onready() {
     		font-weight: bold;
 		}
 		
+		.sjo-link-delete {color: red; margin-right: 0.25em;}
+
 	</style>`).appendTo('head');
 	
 	if (location.href.indexOf('/person/create/') >= 0) {
@@ -250,6 +252,11 @@ function onready() {
 			.wrap('<span class="sjo-link-wrapper"></span>')
 			.hide();
 		
+		var deleteButton = $('<a class="sjo-link-delete" target="#">Delete</a>')
+			.insertBefore(link)
+			.click(deleteLink)
+			.hide();
+		
 		updateLink();
 		
 		function updateLink() {
@@ -277,6 +284,12 @@ function onready() {
 			
 			var valueType = select.val();
 			
+			if (href == '' && valueType == '') {
+				deleteButton.hide();
+			} else {
+				deleteButton.show();
+			}
+			
 			if (href == '' || valueType == '' || valueType == 'email') {
 				link.hide();
 			} else {
@@ -291,6 +304,14 @@ function onready() {
 				same.toggleClass('sjo-linktype-duplicate', testType != '' && same.length > 1);
 			});
 			
+		}
+		
+		function deleteLink() {
+			var formItem = deleteButton.closest('.sjo-formitem');
+			formItem.find('input').val('');
+			formItem.find('select').val('');
+			updateLink();
+			return false;
 		}
 		
 	});
