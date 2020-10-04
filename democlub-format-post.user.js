@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.04.1
+// @version     2020.10.04.2
 // @grant       none
 // ==/UserScript==
 
@@ -137,7 +137,9 @@ function onready() {
 			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
 		});
 		
-		formatResultsTable('.candidates-list');
+		$('.candidates-list').each((index, element) => {
+			formatResultsTable(element);
+		});
 		
 	}
 	
