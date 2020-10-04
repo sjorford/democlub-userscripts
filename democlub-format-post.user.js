@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2019.12.10.1
+// @version     2020.10.04.0
 // @grant       none
 // ==/UserScript==
 
@@ -63,7 +63,7 @@ function onready() {
 		.sjo-election-summary-lists tr > *:nth-of-type(3) {width: 300px;}
 		.sjo-election-summary-lists tr > *:nth-of-type(4) {width: 100px; text-align: right;}
 		
-		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 0.25rem; background-color: lightgrey;}
+		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 1px; background-color: lightgrey;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
 		.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
 		.sjo-party-bar.sjo-party-labour-and-co-operative-party   {background-color: red;}
@@ -129,8 +129,9 @@ function onready() {
 		items.closest('.columns').hide();
 		
 		// Add colour bar to photos
-		$('.candidates-list__person').each((index, element) => {
-			var partySlug = $('.party', element).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
+		$('.candidates-list tbody tr').each((index, element) => {
+			var tr = $(element);
+			var partySlug = tr.find('td').eq(1).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
 			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
 		});
 		
