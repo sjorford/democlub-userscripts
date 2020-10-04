@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.04.0
+// @version     2020.10.04.1
 // @grant       none
 // ==/UserScript==
 
@@ -54,14 +54,12 @@ function onready() {
 			margin-top: -15px;
 		}
 		
-		.sjo-election-summary tr > *:nth-of-type(1) {width: 250px;}
-		.sjo-election-summary tr > *:nth-of-type(2) {width: 300px;}
-		.sjo-election-summary tr > *:nth-of-type(3) {width: 100px; text-align: right;}
-		
-		.sjo-election-summary-lists tr > *:nth-of-type(1) {width: 250px;}
-		.sjo-election-summary-lists tr > *:nth-of-type(2) {text-align: center;}
-		.sjo-election-summary-lists tr > *:nth-of-type(3) {width: 300px;}
-		.sjo-election-summary-lists tr > *:nth-of-type(4) {width: 100px; text-align: right;}
+		.sjo-page-election .sjo-results-name  {width: 250px;}
+		.sjo-page-election .sjo-results-party {width: 300px;}
+		.sjo-page-election .sjo-results-votes {width: 100px;}
+		.sjo-results-votes {text-align: right;}
+		.sjo-results-pos   {text-align: center;}
+		.sjo-sort-hidden {display: none;}
 		
 		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 1px; background-color: lightgrey;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
@@ -86,10 +84,12 @@ function onready() {
 	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
 	
 	if (document.title.match(/Known candidates for each ballot/)) {
-
+		
 		// Election summary pages
 		// ================================
-
+		
+		$('body').addClass('sjo-page-election');
+		
 		$('.container table').each((index, element) => {
 			formatResultsTable(element);
 		});
@@ -98,6 +98,8 @@ function onready() {
 		
 		// Post pages
 		// ================================
+		
+		$('body').addClass('sjo-page-post');
 		
 		/*
 		// Add election link
@@ -135,7 +137,7 @@ function onready() {
 			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
 		});
 		
-		formatResultsTable('.vote_result table');
+		formatResultsTable('.candidates-list');
 		
 	}
 	
@@ -143,50 +145,116 @@ function onready() {
 		
 		var surnameRegex = /((de|de la|la|le|von|van|van der) )?[^\s]+$/i;
 		
-		// Add table classes
 		var table = $(selector);
 		var tbody = table.find('tbody:first-of-type');
-		if (table.find('th:nth-of-type(2)').text().trim() == 'List position') {
-			table.find('th:nth-of-type(2)').text('Pos');
-			table.addClass('sjo-election-results sjo-election-results-lists');
-		} else {
-			table.addClass('sjo-election-results');
-		}
+		var headers = table.getTableHeaders();
 		
-		// Sort candidates by name
-		tbody.append(tbody.find('tr').toArray().sort(nameSort));
+		// Add table classes
+		table.addClass('sjo-election-results');
+		var posIndex = headers.indexOf('List position');
+		if (posIndex >= 0) {
+			table.find('th').eq(posIndex).text('Pos');
+		}
 		
 		// Highlight elected candidates
-		if (table.find('th:last-of-type').text().trim() == 'Elected?') {
-			table.find('th:last-of-type').empty();
-			tbody.find('tr td:last-of-type').each((index, element) => {
-				if (element.innerHTML == 'Yes') {
-					element.innerHTML = '★';
-				} else if (element.innerHTML == 'No') {
-					element.innerHTML = '';
-				}
+		var electedIndex = headers.indexOf('Elected?');
+		if (electedIndex >= 0) {
+			table.find('th').eq(posIndex).text('').addClass('sjo-results-elected');
+			tbody.find('tr').each((i,e) => {
+				var cell = $(e).find('td').eq(electedIndex).addClass('sjo-results-elected');
+				cell.text(cell.text().replace(/^Yes$/, '★').replace(/^No$/, ''));
 			});
+		} else {
+			
+			// Split out new column
+			var resultsIndex = headers.indexOf('Results');
+			if (resultsIndex >= 0) {
+				table.find('th').eq(resultsIndex).text('Votes');
+				table.find('tr').each((i,e) => {
+					var tr = $(e);
+					var resultsCell = tr.find('td, th').eq(resultsIndex);
+					var electedCell = (resultsCell.is('th')) ? $('<th></th>') : $('<td></td>');
+					electedCell.addClass('sjo-results-elected').insertAfter(resultsCell);
+					if (resultsCell.text().match(/ \(elected\)/)) {
+						electedCell.text('★');
+						resultsCell.text(resultsCell.text().replace(/ \(elected\)/, ''));
+					}
+				});
+			}
+			
+			// Refresh table headers
+			headers = table.getTableHeaders();
+		
 		}
 		
-		// Click to sort candidates by name
-		table.find('th:contains("Candidate")').click(event => {
-			tbody.append(tbody.find('tr').toArray().sort(nameSort));
-		});
-
-		// Click to sort candidates by votes
-		table.find('th:contains("Votes")').click(event => {
-			tbody.append(tbody.find('tr').toArray().sort((a, b) => b.cells[2].innerText - a.cells[2].innerText));
+		// Add cell classes
+		table.find('tr').each((i,e) => {
+			$(e).find('td, th').each((i,e) => {
+				var td = $(e);
+				if (headers[i] == 'Name')  td.addClass('sjo-results-name');
+				if (headers[i] == 'Pos')   td.addClass('sjo-results-pos');
+				if (headers[i] == 'Party') td.addClass('sjo-results-party');
+				
+				// Format votes
+				if (headers[i] == 'Votes') {
+					td.addClass('sjo-results-votes');
+					if (td.is('td') && td.text().trim() !== '') {
+						var votes = td.text().trim() - 0;
+						var votesSort = ('0000000000' + votes).substr('-10');
+						var votesFormatted = votes.toLocaleString();
+						td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
+					}
+				}
+				
+			});
 		});
 		
-		function nameSort(a, b) {
-			var aName = a.cells[0].innerText.trim();
-			var bName = b.cells[0].innerText.trim();
-			var aSurname = aName.match(surnameRegex)[0];
-			var bSurname = bName.match(surnameRegex)[0];
-			return (
-				aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
-				aName > bName ? 1 : aName < bName ? -1 : 0);
-		}
+		// Click to sort
+		table.on('click', 'th', event => {
+			
+			var index = event.target.cellIndex;
+			var cell = $(event.target);
+			var sort = (cell.is('.sjo-results-name')) ? nameSort : 
+			           (cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
+			console.log(sort);
+			tbody.append(tbody.find('tr').toArray().sort(sort));
+			
+			function nameSort(a, b) {
+				var aName = a.cells[index].innerText.trim();
+				var bName = b.cells[index].innerText.trim();
+				var aSurname = aName.match(surnameRegex)[0];
+				var bSurname = bName.match(surnameRegex)[0];
+				return (
+					aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
+					aName    > bName    ? 1 : aName    < bName    ? -1 : 0);
+			}
+			
+			function plainSort(a, b) {
+				return _plainSort(a, b, 1);
+			}
+			
+			function inverseSort(a, b) {
+				return _plainSort(a, b, -1);
+			}
+			
+			function _plainSort(a, b, order) {
+				var aText = a.cells[index].innerText.trim();
+				var bText = b.cells[index].innerText.trim();
+				var sort;
+				if (aText.match(/^\d+$/) && bText.match(/^\d+$/)) {
+					var aNum = aText - 0;
+					var bNum = bText - 0;
+					sort = aNum > bNum ? 1 : aNum < bNum ? -1 : 0;
+				} else {
+					sort = aText > bText ? 1 : aText < bText ? -1 : 0;
+				}
+				return (order === -1) ? -sort : sort;
+			}
+			
+		});
+		
+		// Default sort by name
+		table.find('th.sjo-results-name').click();
 		
 	}
 	
