@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.05.0
+// @version     2020.10.05.1
 // @grant       none
 // ==/UserScript==
 
@@ -184,10 +184,10 @@ function onready() {
 				});
 			}
 			
-			// Refresh table headers
-			headers = table.getTableHeaders();
-		
 		}
+		
+		// Refresh table headers
+		headers = table.getTableHeaders();
 		
 		// Add cell classes
 		table.find('tr').each((i,e) => {
