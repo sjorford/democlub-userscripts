@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.05.1
+// @version     2020.10.05.2
 // @grant       none
 // ==/UserScript==
 
@@ -222,8 +222,8 @@ function onready() {
 			tbody.append(tbody.find('tr').toArray().sort(sort));
 			
 			function nameSort(a, b) {
-				var aName = a.cells[index].innerText.trim();
-				var bName = b.cells[index].innerText.trim();
+				var aName = a.cells[index].textContent.trim();
+				var bName = b.cells[index].textContent.trim();
 				var aSurname = aName.match(surnameRegex)[0];
 				var bSurname = bName.match(surnameRegex)[0];
 				return (
@@ -240,8 +240,8 @@ function onready() {
 			}
 			
 			function _plainSort(a, b, order) {
-				var aText = a.cells[index].innerText.trim();
-				var bText = b.cells[index].innerText.trim();
+				var aText = a.cells[index].textContent.trim();
+				var bText = b.cells[index].textContent.trim();
 				var sort;
 				if (aText.match(/^\d+$/) && bText.match(/^\d+$/)) {
 					var aNum = aText - 0;
