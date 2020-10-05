@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.04.2
+// @version     2020.10.05.0
 // @grant       none
 // ==/UserScript==
 
@@ -161,7 +161,7 @@ function onready() {
 		// Highlight elected candidates
 		var electedIndex = headers.indexOf('Elected?');
 		if (electedIndex >= 0) {
-			table.find('th').eq(posIndex).text('').addClass('sjo-results-elected');
+			table.find('th').eq(electedIndex).text('').addClass('sjo-results-elected');
 			tbody.find('tr').each((i,e) => {
 				var cell = $(e).find('td').eq(electedIndex).addClass('sjo-results-elected');
 				cell.text(cell.text().replace(/^Yes$/, '★').replace(/^No$/, ''));
