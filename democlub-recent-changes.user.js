@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.10.08.0
+// @version        2020.10.08.1
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -23,6 +23,7 @@ function onready() {
 		.sjo-number {text-align: right;}
 		.sjo-mychanges {background-color: #ffeb99 !important;}
 		.sjo-changes-bot {background-color: #9ed79e !important;}
+		.sjo-changes-internal {background-color: #d5646496 !important;}
 		.sjo-changes-candidacy-delete {background-color: pink !important;}
 		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
 	</style>`).appendTo('head');
@@ -54,6 +55,12 @@ function onready() {
 		// Add links
 		var sourceCell = cells.eq(headings['Information source']);
 		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
+		
+		// Flag internally-sourced edits
+		console.log(sourceCell.text().trim());
+		if (sourceCell.text().trim().match(/democracyclub/)) {
+			row.addClass('sjo-changes-internal');
+		}
 		
 		// Highlight my changes
 		if (cells.eq(headings['User']).text().trim() == username) {
