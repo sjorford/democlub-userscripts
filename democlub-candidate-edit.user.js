@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.10.11.0
+// @version     2020.10.11.1
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -262,6 +262,10 @@ function onready() {
 		function updateLink() {
 			
 			var href = input.val().trim();
+			
+			// Strip tracking links
+			href = href.replace(/\?originalSubdomain=.*/, '');
+			
 			input.val(href);
 			
 			// Detect link types
