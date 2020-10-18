@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.02.28.0
+// @version     2020.10.18.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -31,6 +31,7 @@ $(`<style>
 		cursor: pointer;
 	}
 
+	input.sjo-filter {display: inline-block; width: 30ex; padding: 5px; height: auto;}
 
 </style>`).appendTo('head');
 
@@ -60,7 +61,7 @@ $(function() {
 			+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
 		
 		// Wrap table
-		var wrapper = $('<div></div>').insertBefore(table).append(table);
+		var wrapper = $('<div class="sjo-posts-wrapper"></div>').insertBefore(table).append(table);
 		heading.click(() => wrapper.toggle());
 		
 		// Format election names
@@ -84,7 +85,7 @@ $(function() {
 				
 				var subTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 				table.find('thead').clone().appendTo(subTable);
-				$('<h4></h4>').text(electionType.description).insertBefore(subTable);
+				$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description).insertBefore(subTable);
 				
 				// Find all rows for this election
 				links.each((index, element) => {
@@ -100,7 +101,7 @@ $(function() {
 						// Separate out whole elections
 						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 						table.find('thead').clone().appendTo(electionTable);
-						$('<h4></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
+						$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
 						
 						// Sort posts
 						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
@@ -128,5 +129,31 @@ $(function() {
 		if (table.find('tbody tr').length == 0) table.remove();
 		
 	});
+	
+	// Add filter
+	var filter = $('<input class="sjo-filter" id="sjo-filter" autocomplete="off">')
+		.insertAfter('.filters')
+		.wrap('<label for="sjo-filter"></label>')
+		.before('Filter: ')
+		.focus().on('change keyup', event => {
+			console.log(event.originalEvent, filter.val());
+			
+			// Find rows that match filter text
+			var filterText = filter.val().trim().toLowerCase();
+			var rows = $('.sjo-posts-wrapper tbody tr').filter((i,e) => {
+				return e.innerText.trim().toLowerCase().indexOf(filterText) >= 0;
+			});
+			
+			// Hide everything
+			$('.sjo-posts-heading, .sjo-posts-wrapper, .ballot_table, .ballot_table tbody tr, .sjo-posts-subhead').hide();
+			
+			// Show matching rows and their headings
+			rows.show()
+				.closest('.ballot_table').show()
+				.prev('.sjo-posts-subhead').show().end()
+				.closest('.sjo-posts-wrapper').show()
+				.prev('.sjo-posts-heading').show();
+			
+		});
 	
 });
