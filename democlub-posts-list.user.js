@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.10.18.0
+// @version     2020.10.18.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -40,11 +40,14 @@ $(function() {
 	var electionTypes = [
 		{type: 'parl',     description: 'UK Parliament'},
 		{type: 'europarl', description: 'European Parliament'},
-		{type: 'sp',       description: 'Scottish Parliament'},
-		{type: 'naw',      description: 'Welsh Assembly'},
+		{type: 'sp.c',     description: 'Scottish Parliament (constituencies)'},
+		{type: 'sp.r',     description: 'Scottish Parliament (regions)'},
+		{type: 'naw.c',    description: 'Welsh Assembly (constituencies)'},
+		{type: 'naw.r',    description: 'Welsh Assembly (regions)'},
 		{type: 'nia',      description: 'Northern Ireland Assembly'},
 		{type: 'pcc',      description: 'Police and Crime Commissioner'},
-		{type: 'gla',      description: 'Greater London Assembly'},
+		{type: 'gla.c',    description: 'Greater London Assembly (constituencies)'},
+		{type: 'gla.a',    description: 'Greater London Assembly (additional)'},
 		{type: 'mayor',    description: 'Mayoral elections'},
 		{type: 'local',    description: 'Local elections'},
 	];
@@ -67,10 +70,18 @@ $(function() {
 		// Format election names
 		var links = table.find(`td:first-of-type a`);
 		links.each((index, element) => {
+			
 			var link = $(element);
 			var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
 			var electionName = Utils.shortOrgName(link.text(), slug);
+			electionName = electionName.trim().replace(/ elections \((Constituencies|Regions|Additional)\)$/, '');
 			link.text(electionName);
+			
+			// Copy election names down
+			var firstCell = link.closest('td')
+			var firstRow = firstCell.closest('tr').addClass('sjo-firstrow');
+			firstRow.nextUntil('tr:has(td:first-of-type a)').find('td:first-of-type').html(firstCell.html());
+			
 		});
 		
 		// Split large elections only
@@ -80,7 +91,7 @@ $(function() {
 		
 		// Create a table for each election type
 		$.each(electionTypes, (index, electionType) => {
-			var links = table.find(`td:first-of-type a[href*="/${electionType.type}."]`);
+			var links = table.find(`.sjo-firstrow td:first-of-type a[href*="/${electionType.type}."]`);
 			if (links.length > 0) {
 				
 				var subTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
@@ -92,21 +103,20 @@ $(function() {
 					
 					var link = $(element);
 					var slug = link.attr('href').match(/\/elections\/(.*)\//)[1];
-					var electionName = Utils.shortOrgName(link.text(), slug);
 					
 					var firstRow = $(element).closest('tr');
-					var rows = firstRow.nextUntil('tr:has(td:first-of-type a)').add(firstRow);
+					var rows = firstRow.nextUntil('.sjo-firstrow').add(firstRow);
+					
 					if (rows.length > 5) {
 						
 						// Separate out whole elections
 						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 						table.find('thead').clone().appendTo(electionTable);
-						$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + electionName : '')).insertBefore(electionTable);
+						$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + link.text() : '')).insertBefore(electionTable);
 						
 						// Sort posts
 						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
 						electionTable.append(sortedRows);
-						electionTable.find('tbody tr:first-of-type td:first-of-type').append(firstRow.find('td:first-of-type').contents());
 						
 					} else {
 						
