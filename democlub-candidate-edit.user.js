@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.10.13.1
+// @version     2020.10.19.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -266,7 +266,7 @@ function onready() {
 			// Strip tracking links
 			href = href.replace(/\?(originalSubdomain|fbclid|ref)=.*/, '');
 			
-			input.val(href);
+			input.val(href).removeClass('sjo-input-invalid');
 			
 			// Detect link types
 			if (href.match(/^[-_\.a-z0-9]+@[-_\.a-z0-9]+$/i)) {
@@ -299,8 +299,16 @@ function onready() {
 			if (href == '' || valueType == '' || valueType == 'email') {
 				link.hide();
 			} else {
-				if (valueType == 'wikidata_id') href = `https://www.wikidata.org/wiki/${href}`;
-				if (valueType == 'twitter_username') href = `https://twitter.com/${href}`;
+				if (valueType == 'wikidata_id') {
+					href = `https://www.wikidata.org/wiki/${href}`;
+				} else if (valueType == 'twitter_username') {
+					href = `https://twitter.com/${href}`;
+				} else {
+					if (!href.match(/^https?:/)) {
+						href = 'http://' + href;
+						input.addClass('sjo-input-invalid');
+					}
+				}
 				link.attr('href', href).show();
 			}
 			
