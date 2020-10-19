@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.10.18.1
+// @version     2020.10.19.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -151,7 +151,10 @@ $(function() {
 			// Find rows that match filter text
 			var filterText = filter.val().trim().toLowerCase();
 			var rows = $('.sjo-posts-wrapper tbody tr').filter((i,e) => {
-				return e.innerText.trim().toLowerCase().indexOf(filterText) >= 0;
+				var row = $(e);
+				var rowText = row.find('td').slice(0, 2).text() + ' ' + row.find('a').eq(1).attr('href').replace(/.*\/elections\//, '');
+				rowText = rowText.replace(/\s+/g, ' ').trim().toLowerCase();
+				return rowText.indexOf(filterText) >= 0;
 			});
 			
 			// Hide everything
