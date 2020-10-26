@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.10.19.0
+// @version     2020.10.26.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -414,5 +414,8 @@ function onready() {
 	var personID = location.pathname.match(/\/person\/(\d+)?/)[1];
 	if (personID)
 		$('.person__hero h1').html((i, html) => html.replace(/: (.*)/, `: <a href="person/${personID}">$1</a>`));
+	
+	// Remove autocomplete from merge ID field
+	$('#other').attr('autocomplete', 'off');
 	
 }
