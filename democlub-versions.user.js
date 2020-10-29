@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2020.04.28.0
+// @version     2020.10.28.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -195,7 +195,7 @@ function onready() {
 		function cleanData(data, fieldName) {
 			var cleanData = data.replace(/\\"/g, '"').replace(/\\r\\n/g, '<br>');
 			if (fieldName == 'twitter_username') {
-				cleanData = `<a href="https://twitter.com/${cleanData}">${cleanData}</a>`;
+				cleanData = `<a target="_blank" href="https://twitter.com/${cleanData}">${cleanData}</a>`;
 			}
 			var partyMatch = cleanData.match(/^stood for (\S+)$/);
 			console.log(partyMatch);
