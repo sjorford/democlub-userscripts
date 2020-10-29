@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.10.19.0
+// @version     2020.10.29.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -44,6 +44,8 @@ $(function() {
 		{type: 'sp.r',     description: 'Scottish Parliament (regions)'},
 		{type: 'naw.c',    description: 'Welsh Assembly (constituencies)'},
 		{type: 'naw.r',    description: 'Welsh Assembly (regions)'},
+		{type: 'senedd.c', description: 'Senedd Cymru (constituencies)'},
+		{type: 'senedd.r', description: 'Senedd Cymru (regions)'},
 		{type: 'nia',      description: 'Northern Ireland Assembly'},
 		{type: 'pcc',      description: 'Police and Crime Commissioner'},
 		{type: 'gla.c',    description: 'Greater London Assembly (constituencies)'},
