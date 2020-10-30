@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.10.28.0
+// @version     2020.10.30.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -243,7 +243,7 @@ function onready() {
 	
 	linkInputs.each((i,e) => {
 		
-		var input = $(e).change(updateLink);
+		var input = $(e).change(updateLink).on('input', updateLink);
 		var row = input.closest('.row');
 		var select = row.find(linkSelects).change(updateLink);
 		
@@ -269,8 +269,9 @@ function onready() {
 			input.val(href).removeClass('sjo-input-invalid');
 			
 			// Detect link types
-			if (href.match(/^[-_\.a-z0-9]+@[-_\.a-z0-9]+$/i)) {
+			if (href.match(/^(?:mailto\:)?[-_\.a-z0-9]+@[-_\.a-z0-9]+$/i)) {
 				select.val('email');
+				input.val(href.replace(/^mailto:/, ''));
 			} else if (href.match(/facebook.com/)) {
 				if (!select.val().match(/facebook/))
 					select.val('facebook_page_url');
