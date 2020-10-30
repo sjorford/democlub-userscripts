@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.10.30.1
+// @version     2020.10.30.2
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -269,9 +269,10 @@ function onready() {
 			input.val(href).removeClass('sjo-input-invalid');
 			
 			// Detect link types
-			if (href.match(/^(?:mailto\:)?[-_\.a-z0-9]+@[-_\.a-z0-9]+$/i)) {
+			var match;
+			if (match = href.match(/^(?:mailto\:)?([-_\.a-z0-9]+@[-_\.a-z0-9]+)$/i)) {
 				select.val('email');
-				input.val(href.replace(/^mailto:/, ''));
+				input.val(match[1]);
 			} else if (href.match(/facebook.com/)) {
 				if (!select.val().match(/facebook/))
 					select.val('facebook_page_url');
@@ -285,8 +286,9 @@ function onready() {
 				select.val('youtube_profile');
 			} else if (href.match(/^Q[0-9]+$/)) {
 				select.val('wikidata_id');
-			} else if (href.match(/^[_a-z0-9]{1,15}$/i)) {
+			} else if (match = href.match(/^(?:https:\/\/(?:mobile\.)?twitter.com\/)?([_a-z0-9]{1,15})$/i)) {
 				select.val('twitter_username');
+				input.val(match[1]);
 			} else if (href.match(/^https?:\/\/[^\/]*(conservative|labour|libdem)/i)) {
 				select.val('party_ppc_page_url');
 			}
