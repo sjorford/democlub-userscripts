@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
-// @version     2020.04.28.1
+// @version     2020.10.30.0
 // @grant       none
 // ==/UserScript==
 
@@ -29,7 +29,7 @@ $(function() {
 				wrapper.append('<div>Are you sure?<div><input type="button" class="button sjo-yesimsure" value="Yes"></div></div>')
 			}
 			
-			$('.sjo-yesimsure').click(event => mergeButton.removeProp('disabled'));
+			$('.sjo-yesimsure').click(event => mergeButton.prop('disabled', false));
 			
 		}).fail((jqxhr, status, error) => wrapper.text(status + ': ' + error));
 		
