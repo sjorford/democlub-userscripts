@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
-// @version     2020.10.30.0
+// @version     2020.10.30.1
 // @grant       none
 // ==/UserScript==
 
@@ -24,7 +24,7 @@ $(function() {
 			var otherName = $(data).find('.person__hero h1').text();
 			wrapper.text('Merging with ' + otherName);
 			if (otherName == thisName) {
-				mergeButton.removeProp('disabled');
+				mergeButton.prop('disabled', false);
 			} else {
 				wrapper.append('<div>Are you sure?<div><input type="button" class="button sjo-yesimsure" value="Yes"></div></div>')
 			}
