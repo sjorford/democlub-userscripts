@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.11.06.0
+// @version     2020.11.06.1
 // @grant       none
 // ==/UserScript==
 
@@ -253,7 +253,6 @@ function onready() {
 			var cell = $(event.target);
 			var sort = (cell.is('.sjo-results-name')) ? nameSort : 
 			           (cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
-			console.log(sort);
 			tbody.append(tbody.find('tr').toArray().sort(sort));
 			
 			function nameSort(a, b) {
@@ -291,7 +290,9 @@ function onready() {
 		});
 		
 		// Default sort by name
-		table.find('th.sjo-results-name').click();
+		if (posIndex < 0) {
+			table.find('th.sjo-results-name').click();
+		}
 		
 	}
 	
