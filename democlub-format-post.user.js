@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.10.05.2
+// @version     2020.11.06.0
 // @grant       none
 // ==/UserScript==
 
@@ -94,6 +94,40 @@ function onready() {
 			formatResultsTable(element);
 		});
 		
+		// Collapse lists
+		if ($('body').is('.sjo-election-haslists')) {
+			
+			$('.container h3').each((i,e) => {
+				var h3 = $(e);
+				var collapsibles = h3.nextUntil('h3');
+				var inner = $('<div class="sjo-list-inner"></div>').insertAfter(h3).append(collapsibles);
+				var outer = $('<div class="sjo-list-outer"></div>').insertBefore(h3).append(h3).append(inner);
+				$('<a class="sjo-list-expanded" href="#">▼</a>').prependTo(h3).click(event => collapseList(outer));
+				$('<a class="sjo-list-collapsed" href="#">►</a>').prependTo(h3).click(event => expandList(outer)).hide();
+			});
+			
+			var actions = $('<div></div>').insertBefore('.sjo-list-outer:first-of-type');
+			$('<a href="#" style="font-weight: bold;">Collapse all</a>').click(event => collapseList('.sjo-list-outer') && false).appendTo(actions);
+			$('<a href="#" style="font-weight: bold; margin-left: 1em;">Expand all</a>').click(event => expandList('.sjo-list-outer') && false).appendTo(actions);
+			
+			function collapseList(selector) {
+				var wrapper = $(selector);
+				wrapper.find('.sjo-list-inner').hide();
+				wrapper.find('.sjo-list-expanded').hide();
+				wrapper.find('.sjo-list-collapsed').show();
+				return false;
+			}
+			
+			function expandList(selector) {
+				var wrapper = $(selector);
+				wrapper.find('.sjo-list-inner').show();
+				wrapper.find('.sjo-list-expanded').show();
+				wrapper.find('.sjo-list-collapsed').hide();
+				return false;
+			}
+			
+		}
+		
 	} else {
 		
 		// Post pages
@@ -156,6 +190,7 @@ function onready() {
 		var posIndex = headers.indexOf('List position');
 		if (posIndex >= 0) {
 			table.find('th').eq(posIndex).text('Pos');
+			$('body').addClass('sjo-election-haslists');
 		}
 		
 		// Highlight elected candidates
