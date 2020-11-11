@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.11.06.1
+// @version     2020.11.11.0
 // @grant       none
 // ==/UserScript==
 
@@ -174,6 +174,8 @@ function onready() {
 		$('.candidates-list').each((index, element) => {
 			formatResultsTable(element);
 		});
+		
+		$('h1').html((index, text) => text.replace('Police and Crime Commissioner', 'PCC'));
 		
 	}
 	
