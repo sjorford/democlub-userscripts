@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.10.30.0
+// @version        2020.11.16.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -11,7 +11,9 @@
 // @require        https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
-// @require        https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+
+// @require https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
+
 // ==/UserScript==
 
 // Global variables
@@ -683,7 +685,7 @@ function cleanData(index, candidate, isResults) {
 	candidate._election = candidate.election;
 	
 	// Election
-	var electionMatch = candidate.election.match(/^((parl|nia|pcc|mayor|europarl)|((sp|naw|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
+	var electionMatch = candidate.election.match(/^((parl|nia|pcc|mayor|europarl)|((sp|naw|senedd|gla)\.[a-z])|((local)\.[^\.]+))\.(.+\.)?(\d{4}-\d{2}-\d{2})$/);
 	candidate._election_type = electionMatch[2] || electionMatch[3] || electionMatch[6] || null;
 	candidate._election_area = electionMatch[1];
 	candidate._election_name = electionsList[candidate.election].name;
