@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.11.16.0
+// @version        2020.11.21.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -651,11 +651,11 @@ function prepareRender() {
 	
 	// Change status message
 	if (currentExtract.urls.length > 1) {
-		var status = $('#sjo-api-status').html(`${sjo.api.tableData.length} records found in ${currentExtract.urls.length} files <a href="#" id="sjo-api-status-listurls">(list)</a>`).show();
+		var status = $('#sjo-api-status').html(`<span class="sjo-api-status-found">${sjo.api.tableData.length}</span> records found in ${currentExtract.urls.length} files <a href="#" id="sjo-api-status-listurls">(list)</a>`).show();
 		var list = $('<ul id="sjo-api-status-urls"></ul>').html(currentExtract.urls.map(url => `<li><a href="${url}">${url}</a></li>`).join('')).appendTo(status).hide();
 		$('#sjo-api-status-listurls').click(event => list.toggle() && event.preventDefault());
 	} else {
-		$('#sjo-api-status').html(`${sjo.api.tableData.length} records found in <a href="${currentExtract.urls[0]}">${currentExtract.urls[0]}</a>`).show();
+		$('#sjo-api-status').html(`<span class="sjo-api-status-found">${sjo.api.tableData.length}</span> records found in <a href="${currentExtract.urls[0]}">${currentExtract.urls[0]}</a>`).show();
 	}
 	
 	$('body').trigger('sjo-api-action');
@@ -773,9 +773,13 @@ function truncateDataTable() {
 	
 	// Reduce the data table to just the filtered rows
 	sjo.api.tableData = $.grep(sjo.api.tableData, record => record.__filters.every(value => value));
+	$('.sjo-api-status-found').text(sjo.api.tableData.length);
 	
 	// Rebuild the filters
 	buildFilters();
+	
+	// Rebuild raw output
+	outputRaw();
 
 }
 

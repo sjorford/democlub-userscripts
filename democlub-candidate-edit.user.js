@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.11.13.0
+// @version     2020.11.21.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -108,7 +108,9 @@ function onready() {
 	// Format current election headings
 	heading.closest('div').find('h3').each((index, element) => {
 		var subHeading = $(element);
-		var slug = subHeading.next('.form-item').find('.standing-select').attr('name').replace(/^standing_/, '');
+		var select = subHeading.next('.form-item').find('.standing-select');
+		if (select.length == 0) return; // something changed
+		var slug = select.attr('name').replace(/^standing_/, '');
 		var electionName = Utils.shortOrgName(subHeading.text(), slug);
 		subHeading.text(electionName);
 	});
