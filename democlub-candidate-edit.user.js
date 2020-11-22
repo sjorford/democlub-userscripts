@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.11.21.0
+// @version     2020.11.22.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -272,28 +272,29 @@ function onready() {
 			
 			// Detect link types
 			var match;
-			if (match = href.match(/^(?:mailto\:)?([-_\.a-z0-9]+@[-_\.a-z0-9]+)$/i)) {
-				select.val('email');
-				input.val(match[1]);
-			} else if (href.match(/facebook.com/)) {
-				if (!select.val().match(/facebook/))
-					select.val('facebook_page_url');
-			} else if (href.match(/instagram.com/)) {
-				select.val('instagram_url');
-			} else if (href.match(/linkedin.com/)) {
-				select.val('linkedin_url');
-			} else if (href.match(/wikipedia.org/)) {
-				select.val('wikipedia_url');
-			} else if (href.match(/youtube.com/)) {
-				select.val('youtube_profile');
-			} else if (href.match(/^Q[0-9]+$/)) {
-				select.val('wikidata_id');
-			} else if (match = href.match(/^(?:https:\/\/(?:mobile\.)?twitter.com\/)?([_a-z0-9]{1,15})$/i)) {
-				select.val('twitter_username');
-				input.val(match[1]);
-			} else if (href.match(/^https?:\/\/[^\/]*(conservative|labour|libdem)/i)) {
-				select.val('party_ppc_page_url');
-			}
+			if (select.val() == '')
+				if (match = href.match(/^(?:mailto\:)?([-_\.a-z0-9]+@[-_\.a-z0-9]+)$/i)) {
+					select.val('email');
+					input.val(match[1]);
+				} else if (href.match(/facebook.com/)) {
+					if (!select.val().match(/facebook/))
+						select.val('facebook_page_url');
+				} else if (href.match(/instagram.com/)) {
+					select.val('instagram_url');
+				} else if (href.match(/linkedin.com/)) {
+					select.val('linkedin_url');
+				} else if (href.match(/wikipedia.org/)) {
+					select.val('wikipedia_url');
+				} else if (href.match(/youtube.com/)) {
+					select.val('youtube_profile');
+				} else if (href.match(/^Q[0-9]+$/)) {
+					select.val('wikidata_id');
+				} else if (match = href.match(/^(?:https:\/\/(?:mobile\.)?twitter.com\/)?([_a-z0-9]{1,15})$/i)) {
+					select.val('twitter_username');
+					input.val(match[1]);
+				} else if (href.match(/^https?:\/\/[^\/]*(conservative|labour|libdem)/i)) {
+					select.val('party_ppc_page_url');
+				}
 			
 			var valueType = select.val();
 			
