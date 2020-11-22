@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.11.21.0
+// @version        2020.11.22.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -190,7 +190,7 @@ function initialize() {
 	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">').appendTo(dateWrapper)
 			.before('To: ').datepicker(datePickerOptions);
 	
-	var electionTypes = 'all,parl,local,mayor,europarl,sp,naw,nia,gla,pcc'.split(',');
+	var electionTypes = 'all,all except local,parl,local,mayor,europarl,sp,naw,nia,gla,pcc'.split(',');
 	var typeSelect = $('<select id="sjo-api-select-type"></select>')
 			.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').before('Type: ');
 	$.each(electionTypes, (i,e) => $('<option></option>').val(e).text(e).appendTo(typeSelect));
@@ -446,6 +446,8 @@ function startDownload(event) {
 		var electionType = $('#sjo-api-select-type').val();
 		if (electionType == 'all') {
 			extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+		} else if (electionType == 'all except local') {
+			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && element.type !== 'local').map(element => element.url);
 		} else {
 			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && element.type == electionType).map(element => element.url);
 		}
