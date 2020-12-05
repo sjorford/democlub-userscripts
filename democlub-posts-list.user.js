@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.10.29.0
+// @version     2020.12.05.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -21,7 +21,8 @@ $(`<style>
 	.sjo-post-verified {background-color: #bbf7bb !important;}
 	
 	.ballot_table th, .ballot_table td {padding: 0.25rem;}
-	.sjo-posts-heading-main {
+	.sjo-posts-heading {
+		background-color: hsl(195, 80%, 80%);
 		border: 2px solid #222;
 		padding: 0.25rem 0.5rem;
 	}
@@ -29,6 +30,21 @@ $(`<style>
 		background-color: hsl(195, 80%, 60%);
 		color: black;
 		cursor: pointer;
+	}
+	
+	.sjo-toc {
+		font-size: 0.75rem;
+		clear: both;
+	}
+	.sjo-toc li {
+		margin-right: 1.5em;
+		float: left;
+	}
+	.sjo-toc li:last-of-type {
+		margin-bottom: 1em;
+	}
+	.sjo-posts-subhead {
+		clear: both;
 	}
 
 	input.sjo-filter {display: inline-block; width: 30ex; padding: 5px; height: auto;}
@@ -91,6 +107,10 @@ $(function() {
 		if (table.find('tr').length < 50) return;
 		heading.addClass('sjo-posts-heading-main');
 		
+		// Create TOC
+		var tocWrapper = $('<div></div>').appendTo(wrapper);
+		var toc = $('<ul class="sjo-toc"></ul>').appendTo(tocWrapper);
+		
 		// Create a table for each election type
 		$.each(electionTypes, (index, electionType) => {
 			var links = table.find(`.sjo-firstrow td:first-of-type a[href*="/${electionType.type}."]`);
@@ -98,7 +118,10 @@ $(function() {
 				
 				var subTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 				table.find('thead').clone().appendTo(subTable);
-				$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description).insertBefore(subTable);
+				var subhead = $(`<h4 class="sjo-posts-subhead" id="sjo-posts-subhead-${electionType.type}"></h4>`).text(electionType.description).insertBefore(subTable);
+				var tocEntry = $('<li></li>').appendTo(toc);
+				var tocEntryLink = $(`<a href="#sjo-posts-subhead-${electionType.type}"></a>`).text(electionType.description).appendTo(tocEntry);
+				var tocMore = $('<ul class="sjo-toc"></ul>').appendTo(tocWrapper).hide();
 				
 				// Find all rows for this election
 				links.each((index, element) => {
@@ -109,12 +132,17 @@ $(function() {
 					var firstRow = $(element).closest('tr');
 					var rows = firstRow.nextUntil('.sjo-firstrow').add(firstRow);
 					
-					if (rows.length > 5) {
+					if (rows.length > 4) {
 						
 						// Separate out whole elections
 						var electionTable = $(`<table class="ballot_table"></table>`).appendTo(wrapper);
 						table.find('thead').clone().appendTo(electionTable);
-						$('<h4 class="sjo-posts-subhead"></h4>').text(electionType.description + (electionType.type == 'local' ? ' - ' + link.text() : '')).insertBefore(electionTable);
+						var subhead = $(`<h4 class="sjo-posts-subhead" id="sjo-posts-subhead-${slug}"></h4>`).text(electionType.description).insertBefore(electionTable);
+						if (electionType.type == 'local') {
+							subhead.text(subhead.text() + ' - ' + link.text());
+							var tocMoreEntry = $('<li></li>').appendTo(tocMore);
+							$(`<a href="#sjo-posts-subhead-${slug}"></a>`).text(link.text()).appendTo(tocMoreEntry);
+						}
 						
 						// Sort posts
 						var sortedRows = rows.toArray().sort((a,b) => a.cells[1].innerText < b.cells[1].innerText ? -1 : a.cells[1].innerText > b.cells[1].innerText ? 1 : 0);
@@ -129,9 +157,18 @@ $(function() {
 					
 				});
 				
+				// Remove catch-all table if empty
 				if (subTable.find('tbody tr').length == 0) {
+					tocEntryLink.attr('href', '#' + subTable.nextAll('h4').first().attr('id'));
 					subTable.prev('h4').remove();
 					subTable.remove();
+				}
+				
+				// Add link to open sub-TOC
+				if (tocMore.children().length > 0) {
+					$('<a href="#">(more...)</a>').click(event => tocMore.toggle() && false).appendTo(tocEntry).before(' ');
+				} else {
+					tocMore.remove();
 				}
 				
 			}
