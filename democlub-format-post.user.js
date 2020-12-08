@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2020.11.11.0
+// @version     2020.12.08.0
 // @grant       none
 // ==/UserScript==
 
@@ -181,7 +181,7 @@ function onready() {
 	
 	function formatResultsTable(selector) {
 		
-		var surnameRegex = /((de|de la|la|le|von|van|van der) )?[^\s]+$/i;
+		var surnameRegex = /(\b(de|de la|la|le|von|van|van der) )?[^\s]+$/i;
 		
 		var table = $(selector);
 		var tbody = table.find('tbody:first-of-type');
