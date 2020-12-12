@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.11.22.0
+// @version        2020.12.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -78,6 +78,9 @@ $(`<style>
 	.sjo-api-date-weird  a.ui-state-active {background-color: #007fff !important;}
 	
 	.sjo-nowrap {white-space: nowrap;}
+	
+	.sjo-section-heading::before {content: '▶ '; display: inline-block; width: 1em;}
+	.sjo-section-heading.sjo-expanded::before {content: '▼ ';}
 	
 </style>`).appendTo('head');
 
@@ -321,6 +324,16 @@ function initialize() {
 	
 	// Trigger event for other scripts
 	$('body').trigger('sjo-api-loaded');
+	
+	// Collapse list of CSVs
+	$('#current, #future, #past').each((i,e) => {
+		var section = $(e).hide();
+		var heading = section.find('h3').addClass('sjo-section-heading').insertBefore(section)
+			.click(event => {
+				heading.toggleClass('sjo-expanded');
+				section.toggle();
+			});
+	});
 	
 }
 
