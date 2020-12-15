@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.12.05.0
+// @version     2020.12.15.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -121,7 +121,7 @@ $(function() {
 				var subhead = $(`<h4 class="sjo-posts-subhead" id="sjo-posts-subhead-${electionType.type}"></h4>`).text(electionType.description).insertBefore(subTable);
 				var tocEntry = $('<li></li>').appendTo(toc);
 				var tocEntryLink = $(`<a href="#sjo-posts-subhead-${electionType.type}"></a>`).text(electionType.description).appendTo(tocEntry);
-				var tocMore = $('<ul class="sjo-toc"></ul>').appendTo(tocWrapper).hide();
+				var tocMore = $('<ul class="sjo-toc"></ul>').appendTo(tocWrapper);
 				
 				// Find all rows for this election
 				links.each((index, element) => {
