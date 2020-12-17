@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.12.12.0
+// @version        2020.12.17.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -1085,6 +1085,9 @@ function renderTable(callback) {
 		(renderData.numRowsDisplayed == renderData.numRowsMatched ? '' : 
 			' (displaying ' + (renderData.startRowNo) + '-' + (renderData.startRowNo + renderData.numRowsDisplayed - 1) + ')')).show();
 	*/
+	var statusText = (renderData.numRowsMatched == sjo.api.tableData.length ? '' : 'Filtered ' + renderData.numRowsMatched + ' of ')
+		+ sjo.api.tableData.length;
+	$('.sjo-api-status-found').text(statusText);
 	
 	// Display paging buttons
 	// TODO: if there are a lot, only ... display ... selected ... pages
