@@ -85,7 +85,7 @@
       "_post_label",
       "party_id",
       "party_name",
-      "wikidata_id"
+      "wikidata_id",
       "_wikipedia",
       "has:elected"
     ]
