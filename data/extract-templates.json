@@ -73,6 +73,23 @@
       "has:elected"
     ]
   },
+  "wp+wd":{
+    "display":"Wikipedia/Wikidata",
+    "columns":[
+      "id",
+      "name",
+      "election",
+      "election_date",
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "party_id",
+      "party_name",
+      "wikidata_id"
+      "_wikipedia",
+      "has:elected"
+    ]
+  },
   "twitter":{
     "display":"Twitter",
     "columns":[
