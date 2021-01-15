@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2020.12.15.0
+// @version     2021.01.15.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -53,24 +53,100 @@ $(`<style>
 
 $(function() {
 	
-	var electionTypes = [
-		{type: 'parl',     description: 'UK Parliament'},
-		{type: 'europarl', description: 'European Parliament'},
-		{type: 'sp.c',     description: 'Scottish Parliament (constituencies)'},
-		{type: 'sp.r',     description: 'Scottish Parliament (regions)'},
-		{type: 'naw.c',    description: 'Welsh Assembly (constituencies)'},
-		{type: 'naw.r',    description: 'Welsh Assembly (regions)'},
-		{type: 'senedd.c', description: 'Senedd Cymru (constituencies)'},
-		{type: 'senedd.r', description: 'Senedd Cymru (regions)'},
-		{type: 'nia',      description: 'Northern Ireland Assembly'},
-		{type: 'pcc',      description: 'Police and Crime Commissioner'},
-		{type: 'gla.c',    description: 'Greater London Assembly (constituencies)'},
-		{type: 'gla.a',    description: 'Greater London Assembly (additional)'},
-		{type: 'mayor',    description: 'Mayoral elections'},
-		{type: 'local',    description: 'Local elections'},
-	];
+	var electionTypes = {
+		'parl':     'UK Parliament',
+		'europarl': 'European Parliament',
+		'sp.c':     'Scottish Parliament (constituencies)',
+		'sp.r':     'Scottish Parliament (regions)',
+		'naw.c':    'Welsh Assembly (constituencies)',
+		'naw.r':    'Welsh Assembly (regions)',
+		'senedd.c': 'Senedd Cymru (constituencies)',
+		'senedd.r': 'Senedd Cymru (regions)',
+		'nia':      'Northern Ireland Assembly',
+		'pcc':      'Police and Crime Commissioner',
+		'gla.c':    'Greater London Assembly (constituencies)',
+		'gla.a':    'Greater London Assembly (additional)',
+		'mayor':    'Mayoral elections',
+		'local':    'Local elections',
+	};
 	
 	$('.ballot_table').each((i,e) => {
+		
+		var table = $(e);
+		table.find('th:contains("Candidates known")').text('Known');
+		var theadHTML = table.find('thead')[0].outerHTML;
+		
+		// Format heading
+		var heading = table.prev('h3').addClass('sjo-posts-heading');
+		var date = moment(heading.text(), 'Do MMM YYYY');
+		heading.html(date.format('D MMMM YYYY') 
+			+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
+		
+		// Wrap table
+		var wrapper = $('<div class="sjo-posts-wrapper"></div>').insertBefore(table).append(table);
+		heading.click(() => wrapper.toggle());
+		
+		// Get collection of all rows
+		var rowsAllSets = {};
+		var electionSlug, electionType, electionName, electionGroup;
+		table.find('tbody tr').each((i,e) => {
+			
+			var links = $('a[href^="/elections/"]', e);
+			if (links.length >= 2) {
+				
+				electionSlug = links[0].href.match(/([^\/]+)\/$/)[1];
+				electionType = electionSlug.match(/(\w+(?:\.\w)?)\./)[1];
+				electionName = Utils.shortOrgName(links[0].innerText, electionSlug);
+				electionGroup = (electionType == 'mayor' || electionType == 'pcc') ? electionType : electionSlug;
+				
+				if (!electionTypes[electionType]) electionTypes[electionType] = 'Unknown';
+				
+				if (!rowsAllSets[electionType]) rowsAllSets[electionType] = {};
+				rowsAllSets[electionType][electionGroup] = {name: electionName, rows: []};
+				
+			}
+			
+			var postName = links[links.length - 1].innerText.trim();
+			var html = e.outerHTML.trim().replace(/<td>[\s\S]*?<\/td>/, `<td><strong><a href="/elections/${electionSlug}/">${electionName}</a></strong></td>`);
+			
+			rowsAllSets[electionType][electionGroup].rows.push({
+				postName: postName,
+				html: html
+			});
+			
+		});
+		
+		var newHTML = '';
+		
+		// Create a table for each election type
+		$.each(electionTypes, (electionType, description) => {
+			var rows = rowsAllSets[electionType];
+			if (!rows) return;
+			var elections = Object.values(rows).sort((a,b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
+			console.log(electionType, elections);
+			
+			$.each(elections, (i,election) => {
+				
+				var subheadText = description + (electionType == 'local' ? ` - ${election.name}` : '');
+				newHTML += `<h4 class="sjo-posts-subhead">${subheadText}</h4>`;
+				newHTML += `<table class="ballot_table">`;
+				newHTML += theadHTML;
+				
+				var rowsHTML = election.rows
+								.sort((a,b) => a.postName > b.postName ? 1 : a.postName < b.postName ? -1 : 0)
+								.map(row => row.html).join('\n');
+				newHTML += rowsHTML;
+				
+				newHTML += `</table>`;
+
+			});
+			
+		});
+		
+		// Overwrite table with new HTML
+		wrapper.html(newHTML);
+		
+		return;
 		
 		var table = $(e);
 		table.find('th:contains("Candidates known")').text('Known');
