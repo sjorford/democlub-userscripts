@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2020.12.07.1
+// @version     2021.01.23.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -11,6 +11,7 @@
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
+// @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -18,6 +19,9 @@
 window.setTimeout(onready, 0);
 
 function onready() {
+	
+	// Style sheet for datepicker
+	$('<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">').appendTo('head');
 	
 	$(`<style>
 		
@@ -34,6 +38,8 @@ function onready() {
 		input.sjo-input[type="text"],
 		input.sjo-input[type="email"],
 		input.sjo-input[type="number"] {width: 390px; display: inline-block;}
+		#id_gender, #id_birth_date, #id_death_date {width: 100px;}
+		.sjo-formitem-id_birth_date p {float: left; margin-right: 3em;}
 		
 		input.sjo-input-invalid {background-color: #fcc;}
 		
@@ -184,6 +190,7 @@ function onready() {
 		
 		// Reformat field
 		formItem.addClass('sjo-formitem');
+		formItem.addClass('sjo-formitem-' + id);
 		label.addClass('sjo-label').text(labelText + ':');
 		input.addClass('sjo-input');
 		if (formItem.parent().is('.columns')) formItem.unwrap();
@@ -199,12 +206,24 @@ function onready() {
 			Utils.formatPartySelects(input);
 		}
 		
+		// Show date pickers
+		if (id == 'id_birth_date' || id == 'id_death_date') {
+			var datePickerOptions = {
+				dateFormat: 'dd/mm/yy',
+				showOtherMonths: true,
+				selectOtherMonths: true,
+			};
+			input.datepicker(datePickerOptions);
+		}
+		
+		/*
 		// Hide date of death field
 		if (id == 'id_death_date' && input.val() == '') {
 			input.hide();
 			var showDeath = $('<a class="sjo-show-death">Add</a>').insertAfter(input)
 				.click(event => {showDeath.hide(); input.show();});
 		}
+		*/
 		
 		// Format names with unexpected characters
 		// TODO: remove the class once the name is edited
