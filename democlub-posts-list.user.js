@@ -2,7 +2,7 @@
 // @name        Democracy Club elections list
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
-// @version     2021.01.15.0
+// @version     2021.01.24.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -100,9 +100,8 @@ $(function() {
 				electionGroup = (electionType == 'mayor' || electionType == 'pcc') ? electionType : electionSlug;
 				
 				if (!electionTypes[electionType]) electionTypes[electionType] = 'Unknown';
-				
 				if (!rowsAllSets[electionType]) rowsAllSets[electionType] = {};
-				rowsAllSets[electionType][electionGroup] = {name: electionName, rows: []};
+				if (!rowsAllSets[electionType][electionGroup]) rowsAllSets[electionType][electionGroup] = {name: electionName, rows: []};
 				
 			}
 			
