@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.01.23.0
+// @version     2021.01.26.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -46,7 +46,7 @@ function onready() {
 		select[id^="id_tmp_person_identifiers-"] {height: 2rem; margin-bottom: 0.25em; padding: 0.25rem;}
 		.sjo-linktype-duplicate {background-color: #fcc;}
 		
-		.sjo-noelections-warning {margin-left: 0.5em; font-weight: bold; color: red;}
+		.sjo-noelections-warning {margin-left: 1em; margin-right: 1em; font-weight: bold; color: red;}
 		
 		[id^="id_standing_"], label[for^="id_standing_"] {display: none;}
 		.sjo-candidacy-clear {margin-left: 0.5em; font-weight: bold; color: red;}
@@ -154,7 +154,7 @@ function onready() {
 				
 				select.val('standing').change().closest('p').hide();
 				$.each(electionFields, (key, value) => formatField(key, value, slug));
-				updateElectionsWarning();
+				hideWarning();
 				
 				selectSinglePost(slug);
 				
@@ -240,12 +240,16 @@ function onready() {
 	}
 	
 	// Display a warning message if this person has no current elections
-	$('<span class="sjo-noelections-warning">WARNING: no current elections</span>')
-		.insertAfter('input.button[value="Save changes"]');
-	updateElectionsWarning();
+	var submitButton = $('#person-details input[type="submit"]').attr('disabled', 'disabled');
+	var submitWarning = $('<span class="sjo-noelections-warning">WARNING: no current elections</span>').insertAfter(submitButton);
+	var dismissWarning = $('<a class="sjo-noelections-dismiss" href="#">Dismiss</a>').insertAfter(submitWarning).click(hideWarning);
+	if ($('.post-select').length > 0) hideWarning()
 	
-	function updateElectionsWarning() {
-		$('.sjo-noelections-warning').toggle($('.post-select').length == 0);
+	function hideWarning() {
+		submitWarning.hide();
+		dismissWarning.hide();
+		submitButton.removeAttr('disabled');
+		return false;
 	}
 	
 	// Hide extra buttons
