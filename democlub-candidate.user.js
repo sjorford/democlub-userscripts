@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.01.29.0
+// @version     2021.01.29.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -139,7 +139,7 @@ function onready() {
 						dd.html(`<a target="_blank" href="https://twitter.com/${linkText}">${linkText}</a>`);
 					}
 				} else if (dt.text() == 'Source') {
-					dd.html(dd.text().replace(/(https?:[^\s]+)/g, '<a target="_blank" href="$1">$1</a>'));
+					dd.html(dd.text().replace(/(https?:[^\s]+)/gi, '<a target="_blank" href="$1">$1</a>'));
 				}
 			}
 			
