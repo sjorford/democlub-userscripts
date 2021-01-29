@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2020.10.28.0
+// @version     2021.01.29.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -218,6 +218,10 @@ function onready() {
 	if (!avatar.attr('src').match(/blank-person/)) {
 		avatar.wrap(`<a href="//static-candidates.democracyclub.org.uk/media/images/images/${personID}.png"></a>`);
 	}
+	
+	// Hide long data URI
+	// https://candidates.democracyclub.org.uk/person/768/martin-mcguinness
+	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
 	
 	/*
 	// Check vandalism list
