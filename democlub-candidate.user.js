@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.01.29.1
+// @version     2021.01.29.2
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -222,15 +222,5 @@ function onready() {
 	// Hide long data URI
 	// https://candidates.democracyclub.org.uk/person/768/martin-mcguinness
 	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
-	
-	/*
-	// Check vandalism list
-	$.get('https://raw.githubusercontent.com/DemocracyClub/yournextrepresentative/master/ynr/settings/constants/needs_review.py', (data, status, xhr) => {
-		var list = data.replace(/#.*\n/g, '').replace(/\s/g, '').match(/{(.*)}/)[1].split(',');
-		if (list.indexOf(personID) >= 0) {
-			$('<span class="sjo-watchlist">⚠️</span>').prependTo('.person__hero');
-		}
-	});
-	*/
 	
 }
