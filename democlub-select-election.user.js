@@ -2,12 +2,11 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2020.03.09.0
+// @version        2021.01.30.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
-// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/districts.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -20,12 +19,11 @@ function onready() {
 		
 		.sjo-addperson-listcolumns {xxxcolumn-width: 200px; columns: 5;}
 		.sjo-addperson-listcolumns p {font-size: 0.8rem;}
-		.sjo-addperson-listcolumns h4 {font-size: 1rem; font-weight: bold;}
+		.sjo-addperson-listcolumns h4 {margin-top: 0.5rem; font-size: 1rem; font-weight: bold;}
+		.sjo-addperson-listcolumns h3 {margin-top: 1rem;}
 		.sjo-addperson-listitem {margin: 0;}
 		
 		.sjo-addperson-button {margin: 0 0 0.25em 0; padding: 0.25em 0.5em; text-indent: 0; font-size: 0.8rem; text-align: left; width: 100%; background-color: #e7e7e7; color: black;}
-		
-		.sjo-addperson-button-mayor::before {content: "\u{1F464}"; right: 0; position: absolute; padding-right: 0.5em;}
 		.sjo-addperson-latest {background-color: gold;}
 		
 		.sjo-filter {display: inline-block !important; width: 15em !important; padding: 0.1rem !important; height: 1.5rem !important;}
@@ -34,6 +32,9 @@ function onready() {
 	</style>`).appendTo('head');
 	
 	var lists = $('[role=list]');
+	lists.prev('h3').remove();
+	lists.wrapAll('<div class="sjo-addperson-listcolumns"></div>');
+	
 	lists.each(function(index, element) {
 		
 		// Format list of buttons into columns
@@ -53,27 +54,10 @@ function onready() {
 			electionName = Utils.shortOrgName(electionName, electionID);
 			button.text(electionName);
 			
-			// Flag districts by type
-			var district = Districts[electionName];
-			if (district) {
-				button.addClass('sjo-addperson-button-' + district.type);
-			}
-			
-			// Flag mayoral elections
-			if (button.attr('href').match(/\/election\/mayor\./)) {
-				button.addClass('sjo-addperson-button-mayor');
-			}
-			
 		});
-		
-		list.append(listitems.toArray().sort((a, b) => a.innerText > b.innerText));
 		
 	});
 	
-	// Remove headings
-	var headings = lists.prev('h3');
-	lists.add(headings).wrapAll('<div class="sjo-addperson-listcolumns"></div>');
-	headings.remove();
 	
 	// Get all unique election groups
 	var groups = [];
@@ -82,21 +66,51 @@ function onready() {
 		var group = match[3] + '_' + match[1];
 		if (groups.indexOf(group) < 0) groups.push(group);
 	});
-	groups = groups.sort();
+	
+	// Sort election groups
+	var types = {
+		parl:   {sort: 1, name: 'UK Parliament'},
+		sp:     {sort: 2, name: 'Scottish Parliament'},
+		senedd: {sort: 3, name: 'Senedd Cymru'},
+		gla:    {sort: 4, name: 'London Assembly'},
+		mayor:  {sort: 5, name: 'Mayor'},
+		pcc:    {sort: 6, name: 'PCC'},
+		local:  {sort: 7, name: 'Local'},
+	};
+	
+	groups = groups.sort((a,b) => {
+		var [dateA, typeA] = a.split('_');
+		var [dateB, typeB] = b.split('_');
+		if (dateA < dateB) return -1;
+		if (dateA > dateB) return  1;
+		if (types[typeA].sort < types[typeB].sort) return -1;
+		if (types[typeA].sort > types[typeB].sort) return  1;
+		return 0;
+	});
 	
 	// Sort all elections by date and type
-	// TODO: display local/mayor/etc. subheadings, but not always?
+	var curDate;
 	$.each(groups, (index, group) => {
-		var parts = group.split('_');
-		var listitems = $(`[id^="sjo-addperson-button-${parts[1]}"][id\$="${parts[0]}"]`).closest('.sjo-addperson-listitem');
-		$('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems)
-			.before(`<h3>${moment(parts[0], "YYYY-MM-DD").format("D MMM YYYY")}</h3>`);
 		
-		// Add alphabetic index
+		var [date, type] = group.split('_');
+		var listitems = $(`[id^="sjo-addperson-button-${type}"][id\$="${date}"]`).closest('.sjo-addperson-listitem')
+				.sort((a,b) => a.innerText < b.innerText ? -1 : a.innerText > b.innerText ?  1 : 0);
+		var newList = $('<div role="list"></div>').appendTo('.sjo-addperson-listcolumns').append(listitems);
+		
+		// Add date heading
+		if (date != curDate) {
+			$('<h3></h3>').text(moment(date, "YYYY-MM-DD").format("D MMM YYYY")).insertBefore(newList);
+		}
+		
+		// Add subheadings
 		if (listitems.length > 50) {
 			listitems.filter((i, e) => i == 0 || e.innerText[0] != listitems.get(i - 1).innerText[0])
 				.each((i, e) => $(`<h4>${e.innerText[0]}</h4>`).insertBefore(e));
+		} else if (!(date != curDate && type == 'local')) {
+			$(`<h4>${types[type].name}</h4>`).insertBefore(listitems.first());
 		}
+		
+		curDate = date;
 		
 	});
 	
