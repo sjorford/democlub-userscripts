@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2020.10.28.0
+// @version     2021.02.02.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -198,7 +198,6 @@ function onready() {
 				cleanData = `<a target="_blank" href="https://twitter.com/${cleanData}">${cleanData}</a>`;
 			}
 			var partyMatch = cleanData.match(/^stood for (\S+)$/);
-			console.log(partyMatch);
 			if (partyMatch && partyList[partyMatch[1]]) {
 				cleanData += ` (${partyList[partyMatch[1]]})`;
 			}
