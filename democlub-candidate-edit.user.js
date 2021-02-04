@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.01.26.0
+// @version     2021.02.04.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -40,12 +40,15 @@ function onready() {
 		input.sjo-input[type="number"] {width: 390px; display: inline-block;}
 		#id_gender, #id_birth_date, #id_death_date {width: 100px;}
 		.sjo-formitem-id_birth_date p {float: left; margin-right: 3em;}
+		input.sjo-input[id^="id_party_list_position_"] {width: 100px;}
 		
 		input.sjo-input-invalid {background-color: #fcc;}
 		
 		select[id^="id_tmp_person_identifiers-"] {height: 2rem; margin-bottom: 0.25em; padding: 0.25rem;}
 		.sjo-linktype-duplicate {background-color: #fcc;}
 		
+		.source-confirmation {width: 900px;}
+		#id_source {width: 100%}
 		.sjo-noelections-warning {margin-left: 1em; margin-right: 1em; font-weight: bold; color: red;}
 		
 		[id^="id_standing_"], label[for^="id_standing_"] {display: none;}
