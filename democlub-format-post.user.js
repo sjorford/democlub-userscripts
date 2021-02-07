@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.01.28.0
+// @version     2021.02.07.0
 // @grant       none
 // ==/UserScript==
 
@@ -138,12 +138,11 @@ function onready() {
 		// Add election link
 		var electionName = document.title.match(/ in the (.*)/)[1];
 		var slug = window.location.pathname.match(/\/elections\/(.*?)\//)[1];
-		console.log(slug);
 		var slugParts = slug.match(/^([^\.]+(?:\.[acr])?)((\.[^\.]+)?\.[^\.]{3,}(?:\.by)?)?(\.\d\d\d\d-\d\d-\d\d)$/);
 		if (slugParts[2]) {
 			var parentSlug = slugParts[1] + (slugParts[3] ? slugParts[3] : '') + slugParts[4];
 			$('<a></a>').text('➢ ' + electionName).attr('href', `/elections/${parentSlug}`)
-				.prependTo($('.candidates-list').closest('.columns')).wrap('<h3></h3>');
+				.prependTo($('.candidates-list, .no-candidates').closest('.columns')).wrap('<h3></h3>');
 		}
 		
 		// Convert the timeline to a breadcrumb type thing
