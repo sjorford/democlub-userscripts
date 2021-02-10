@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.07.0
+// @version     2021.02.10.0
 // @grant       none
 // ==/UserScript==
 
@@ -74,6 +74,8 @@ function onready() {
 		.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
 		
 		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
+		
+		.candidates-list td {width: 33%;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
@@ -172,6 +174,27 @@ function onready() {
 		});
 		
 		$('h1').html((index, text) => text.replace('Police and Crime Commissioner', 'PCC'));
+		
+		// Split lists into parties
+		if (window.location.pathname.match(/\/(sp.r|senedd.r|naw.r|gla.a|europarl)\./)) {
+			
+			var table = $('.candidates-list');
+			var head = table.children('thead');
+			var rows = $('.candidates-list > tbody > tr');
+			var parties = $('td.sjo-results-party', rows).toArray().map(e => e.innerText.trim());
+			parties = [...new Set(parties)].sort();
+			
+			$.each(parties, (index,party) => {
+				var partyRows = rows.filter((i,e) => $(e).children('td.sjo-results-party').text().trim() == party);
+				$('<h3></h3>').text(party).insertBefore(table);
+				$('<table></table>').attr('class', table.attr('class')).insertBefore(table).append(head.clone()).append(partyRows);
+			});
+			
+			if (table.find('tbody > tr').length == 0) {
+				table.hide();
+			}
+			
+		}
 		
 	}
 	
