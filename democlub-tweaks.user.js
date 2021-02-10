@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2021.01.29.0
+// @version     2021.02.08.0
 // @grant       none
 // ==/UserScript==
 
@@ -99,6 +99,9 @@ function onready() {
 	// Collapse filters by default
 	// https://github.com/DemocracyClub/yournextrepresentative/issues/1119
 	$('.advance_filters').removeAttr('open');
+	
+	// Default image upload reason
+	$('#id_why_allowed_2, #id_why_allowed_url_2').click();
 	
 }
 
