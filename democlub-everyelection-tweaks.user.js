@@ -1,5 +1,5 @@
 // ==UserScript==
-// @name        Democracy Club Elections tweaks
+// @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
 // @version     2020.02.22.0
