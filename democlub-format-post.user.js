@@ -3,8 +3,9 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.10.0
+// @version     2021.02.18.0
 // @grant       none
+// @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -61,7 +62,8 @@ function onready() {
 		.sjo-results-pos   {text-align: center;}
 		.sjo-sort-hidden {display: none;}
 		
-		.sjo-party-bar {float: left; width: 0.5rem; height: 4em; margin-right: 1px; background-color: lightgrey;}
+		.sjo-page-election .sjo-party-bar {float: left; width: 0.5rem; height: 1.2em; margin-right: 2px; background-color: lightgrey;}
+		.sjo-page-post     .sjo-party-bar {float: left; width: 0.5rem; height: 4em;   margin-right: 1px; background-color: lightgrey;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
 		.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
 		.sjo-party-bar.sjo-party-labour-and-co-operative-party   {background-color: red;}
@@ -162,13 +164,6 @@ function onready() {
 		});
 		items.closest('.columns').hide();
 		
-		// Add colour bar to photos
-		$('.candidates-list tbody tr').each((index, element) => {
-			var tr = $(element);
-			var partySlug = tr.find('td').eq(1).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
-			var avatar = $('.person-avatar', element).before(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
-		});
-		
 		$('.candidates-list').each((index, element) => {
 			formatResultsTable(element);
 		});
@@ -213,6 +208,13 @@ function onready() {
 			table.find('th').eq(posIndex).text('Pos');
 			$('body').addClass('sjo-election-haslists');
 		}
+		
+		// Add colour bar to photos
+		table.find('tbody tr').each((index, element) => {
+			var tr = $(element);
+			var partySlug = tr.find('td').eq(headers.indexOf('Party')).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
+			tr.find('td').first().prepend(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
+		});
 		
 		// Highlight elected candidates
 		var electedIndex = headers.indexOf('Elected?');
