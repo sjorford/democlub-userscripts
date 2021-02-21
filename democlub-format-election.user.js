@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.20.0
+// @version     2021.02.21.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -63,7 +63,8 @@ function onready() {
 		.sjo-sort-hidden {display: none;}
 		
 		.sjo-party-bar {width: 10px !important; min-width: 10px; padding: 0;}
-		td.sjo-party-bar {background-color: lightgrey; border: solid 1px #ddd;}
+		tbody .sjo-party-bar {background-color: lightgrey; border: solid 1px #ddd;}
+		.sjo-party-bar.sjo-party-notstanding                     {background-color: unset; border: unset;}
 		.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
 		.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
 		.sjo-party-bar.sjo-party-labour-and-co-operative-party   {background-color: red;}
@@ -209,10 +210,21 @@ function onready() {
 			$('body').addClass('sjo-election-haslists');
 		}
 		
+		// Add blank party column to not-standing table
+		var partyCol = headers.indexOf('Party');
+		if (partyCol < 0) {
+			var nameCol = headers.indexOf('Name');
+			table.find(`thead tr th:nth-of-type(${nameCol+1})`).after('<th>Party</th>');
+			table.find(`tbody tr td:nth-of-type(${nameCol+1})`).after('<td></td>');
+			headers = table.getTableHeaders();
+			partyCol = headers.indexOf('Party');
+		}
+		
 		// Add colour bar
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
-			var partySlug = tr.find('td').eq(headers.indexOf('Party')).text().toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().replace(/\s+/g, '-');
+			var party = tr.find('td').eq(partyCol).text().trim();
+			var partySlug = party == '' ? 'notstanding' : slugify(party);
 			tr.prepend(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
 		});
 		headers = table.find('thead tr').prepend('<th class="sjo-party-bar"></th>');
@@ -329,6 +341,11 @@ function onready() {
 			};
 		}
 		
+	}
+	
+	// TODO: move this to Utils
+	function slugify(text) {
+		return text.toLowerCase().replace(/[^a-z0-9'’]+/g, ' ').trim().replace(/\s+/g, '-')
 	}
 	
 }
