@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.02.24.0
+// @version        2021.02.24.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -79,6 +79,7 @@ $(`<style>
 	
 	.sjo-section-heading::before {content: '▶ '; display: inline-block; width: 1em;}
 	.sjo-section-heading.sjo-expanded::before {content: '▼ ';}
+	.sjo-api-type-wrapper {margin-right: 1em;}
 	
 </style>`).appendTo('head');
 
@@ -196,6 +197,9 @@ function initialize() {
 			.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').before('Type: ');
 	$.each(electionTypes, (i,e) => $('<option></option>').val(e).text(e).appendTo(typeSelect));
 	typeSelect.chosen();
+	
+	$('<input type="checkbox" id="sjo-api-cancelled" value="cancelled">')
+		.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').after('<label for="sjo-api-cancelled">Include cancelled</label>');
 	
 	// Highlight selected option
 	$('.sjo-api-option-extract').click(event => {
@@ -482,6 +486,11 @@ function startDownload(event) {
 	}
 	
 	localStorage.setItem('sjo-api-template', $('#sjo-api-select-template').val());
+	
+	if ($('#sjo-api-cancelled:checked').val() != 'cancelled') {
+		extract.limits = extract.limits || {};
+		extract.limits.cancelled_poll = [false];
+	}
 	
 	currentExtract = extract;
 	console.log('startDownload', currentExtract);
