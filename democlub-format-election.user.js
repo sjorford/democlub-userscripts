@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.21.0
+// @version     2021.02.24.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -82,6 +82,9 @@ function onready() {
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
+		.sjo-action {margin-right: 2em;}
+		.sjo-action-selected {font-weight: bold;}
+		
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
@@ -99,9 +102,9 @@ function onready() {
 			formatResultsTable(element);
 		});
 		
-		// Collapse lists
 		if ($('body').is('.sjo-election-haslists')) {
 			
+			// Collapse lists
 			$('.container h3').each((i,e) => {
 				var h3 = $(e);
 				var collapsibles = h3.nextUntil('h3');
@@ -129,6 +132,41 @@ function onready() {
 				wrapper.find('.sjo-list-expanded').show();
 				wrapper.find('.sjo-list-collapsed').hide();
 				return false;
+			}
+			
+		} else {
+			
+			// Group by party
+			$('.container h3').first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
+			var wrapper = $('<div class="sjo-view"></div>').insertAfter('.sjo-view').hide();
+			var tableHeader = $('.sjo-election-results thead').first();
+			
+			var parties = $('td.sjo-results-party').toArray().map(e => e.innerText.trim());
+			parties = [...new Set(parties)].sort();
+			console.log(parties);
+			$.each(parties, (i,party) => {
+				$('<h3></h3>').text(party).appendTo(wrapper);
+				
+				var table = $('<table></table>').appendTo(wrapper).append();
+				tableHeader.clone().appendTo(table)
+					.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
+				
+				$('td.sjo-results-party').filter((i,e) => e.innerText.trim() == party).each((i,e) => {
+					var row = $(e).closest('tr');
+					var ward = row.closest('table').prevAll('h3').first().text().trim();
+					var newRow = row.clone().appendTo(table);
+					newRow.find('.sjo-results-party').text(ward).removeClass('sjo-results-party').addClass('sjo-results-ward');
+				});
+				
+			});
+			
+			var actions = $('<div></div>').insertBefore('h3:first-of-type');
+			$('<a href="#" class="sjo-action">By ward</a>').click(event => toggleViews() && false).appendTo(actions).addClass('sjo-action-selected');
+			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews() && false).appendTo(actions);
+			
+			function toggleViews() {
+				$('.sjo-action').toggleClass('sjo-action-selected');
+				$('.sjo-view').toggle();
 			}
 			
 		}
