@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.24.0
+// @version     2021.02.25.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -160,7 +160,7 @@ function onready() {
 				
 			});
 			
-			var actions = $('<div></div>').insertBefore('h3:first-of-type');
+			var actions = $('<div></div>').insertBefore('.sjo-view:first-of-type');
 			$('<a href="#" class="sjo-action">By ward</a>').click(event => toggleViews() && false).appendTo(actions).addClass('sjo-action-selected');
 			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews() && false).appendTo(actions);
 			
