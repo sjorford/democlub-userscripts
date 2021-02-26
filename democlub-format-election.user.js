@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.02.25.0
+// @version     2021.02.26.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -147,7 +147,7 @@ function onready() {
 			$.each(parties, (i,party) => {
 				$('<h3></h3>').text(party).appendTo(wrapper);
 				
-				var table = $('<table></table>').appendTo(wrapper).append();
+				var table = $('<table class="sjo-election-results"></table>').appendTo(wrapper).append();
 				tableHeader.clone().appendTo(table)
 					.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
 				
@@ -234,8 +234,6 @@ function onready() {
 	
 	function formatResultsTable(selector) {
 		
-		var surnameRegex = /(\b(de|de la|la|le|von|van|van der) )?[^\s]+$/i;
-		
 		var table = $(selector);
 		var tbody = table.find('tbody:first-of-type');
 		var headers = table.getTableHeaders();
@@ -321,55 +319,58 @@ function onready() {
 			});
 		});
 		
-		// Click to sort
-		table.on('click', 'th', event => {
-			
-			var index = event.target.cellIndex;
-			var cell = $(event.target);
-			var sort = (cell.is('.sjo-results-name')) ? nameSort : 
-			           (cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
-			tbody.append(tbody.find('tr').toArray().sort(sort));
-			
-			function nameSort(a, b) {
-				var aName = a.cells[index].textContent.trim();
-				var bName = b.cells[index].textContent.trim();
-				var aSurname = aName.match(surnameRegex)[0];
-				var bSurname = bName.match(surnameRegex)[0];
-				return (
-					aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
-					aName    > bName    ? 1 : aName    < bName    ? -1 : 0);
-			}
-			
-			function plainSort(a, b) {
-				return _plainSort(a, b, 1);
-			}
-			
-			function inverseSort(a, b) {
-				return _plainSort(a, b, -1);
-			}
-			
-			function _plainSort(a, b, order) {
-				var aText = a.cells[index].textContent.trim();
-				var bText = b.cells[index].textContent.trim();
-				var sort;
-				if (aText.match(/^\d+$/) && bText.match(/^\d+$/)) {
-					var aNum = aText - 0;
-					var bNum = bText - 0;
-					sort = aNum > bNum ? 1 : aNum < bNum ? -1 : 0;
-				} else {
-					sort = aText > bText ? 1 : aText < bText ? -1 : 0;
-				}
-				return (order === -1) ? -sort : sort;
-			}
-			
-		});
-		
 		// Default sort by name
 		if (posIndex < 0) {
 			table.find('th.sjo-results-name').click();
 		}
 		
 	}
+	
+	// Click to sort tables
+	$('body').on('click', '.sjo-election-results th', event => {
+		
+		var index = event.target.cellIndex;
+		var cell = $(event.target);
+		var sort = 
+			(cell.is('.sjo-results-name')) ? nameSort : 
+			(cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
+		var tbody = cell.closest('table').find('tbody');
+		tbody.append(tbody.find('tr').toArray().sort(sort));
+		
+		function nameSort(a, b) {
+			var surnameRegex = /(\b(de|de la|la|le|von|van|van der) )?[^\s]+$/i;
+			var aName = a.cells[index].textContent.trim();
+			var bName = b.cells[index].textContent.trim();
+			var aSurname = aName.match(surnameRegex)[0];
+			var bSurname = bName.match(surnameRegex)[0];
+			return (
+				aSurname > bSurname ? 1 : aSurname < bSurname ? -1 : 
+				aName    > bName    ? 1 : aName    < bName    ? -1 : 0);
+		}
+		
+		function plainSort(a, b) {
+			return _plainSort(a, b, 1);
+		}
+		
+		function inverseSort(a, b) {
+			return _plainSort(a, b, -1);
+		}
+		
+		function _plainSort(a, b, order) {
+			var aText = a.cells[index].textContent.trim();
+			var bText = b.cells[index].textContent.trim();
+			var sort;
+			if (aText.match(/^\d+$/) && bText.match(/^\d+$/)) {
+				var aNum = aText - 0;
+				var bNum = bText - 0;
+				sort = aNum > bNum ? 1 : aNum < bNum ? -1 : 0;
+			} else {
+				sort = aText > bText ? 1 : aText < bText ? -1 : 0;
+			}
+			return (order === -1) ? -sort : sort;
+		}
+		
+	});
 	
 	function polyfill() {
 			
