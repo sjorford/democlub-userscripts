@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.02.07.0
+// @version     2021.02.27.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -319,7 +319,7 @@ function onready() {
 					select.val('twitter_username');
 					href = match[1];
 					input.val(href);
-				} else if (href.match(/^https?:\/\/[^\/]*(conservative|labour|libdem)/i)) {
+				} else if (href.match(/^https?:\/\/[^\/]*(conservative|labour|libdem|greenparty)/i)) {
 					select.val('party_ppc_page_url');
 				}
 			
