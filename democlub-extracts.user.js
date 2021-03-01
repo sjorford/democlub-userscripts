@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.02.28.0
+// @version        2021.03.01.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -749,8 +749,8 @@ function cleanData(index, candidate, isResults) {
 	candidate.gender = candidate.gender.trim();
 	if (candidate.gender === '') {
 		candidate._gender = 
-			candidate.title.match(/mrs|miss|ms/i) ? 'f' :
-			candidate.title.match(/mr/i) ? 'm' :
+			candidate.honorific_prefix.match(/mrs|miss|ms/i) ? 'f' :
+			candidate.honorific_prefix.match(/mr/i) ? 'm' :
 			'';
 	} else {
 		candidate._gender = 
