@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2020.02.22.0
+// @version     2021.03.03.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -156,7 +156,7 @@ function trimCouncilNames() {
 		var filterText = filter.val().trim().toLowerCase();
 		$('.block-label').each((index, element) => {
 			var label = $(element);
-			label.toggleClass('sjo-hidden', !label.text().trim().toLowerCase().match(filterText));
+			label.toggleClass('sjo-hidden', !(label.text().trim().toLowerCase().match(filterText) || label.has('input:checked').length > 0));
 		});
 	});
 	
