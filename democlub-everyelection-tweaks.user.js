@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2021.03.03.0
+// @version     2021.03.04.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -37,6 +37,10 @@ function onready() {
 	
 	if (location.href == 'https://elections.democracyclub.org.uk/') {
 		displaySubIDs();
+	}
+	
+	if (location.href.indexOf('/id_creator/election_type/') >= 0) {
+		$('input[name="election_type-election_type"][value="local"]').click(); // temp default
 	}
 	
 	if (location.href.indexOf('/id_creator/date/') >= 0) {
@@ -102,6 +106,7 @@ function displayDatePicker() {
 	
 	var today = moment();
 	var defaultDate = moment(today).subtract(today.day(), 'days').add(39, 'days');
+	defaultDate = moment('2021-05-06'); // temp default
 	
 	var wrapper = $('<div class="sjo-date-picker"></div>').insertAfter('.form-date').wrap('<div></div>');
 	wrapper.datepicker({
