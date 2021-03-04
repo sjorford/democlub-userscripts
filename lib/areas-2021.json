@@ -347,26 +347,26 @@
 ,"Wyre Forest":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
 ,"York":{"pcc":["North Yorkshire Police"]}}
 ,"mayor":{"Mayor of Bedford":{"pcc":["Bedfordshire Police"]}
-,"Mayor of Bristol":{"pcc":["Avon and Somerset Constabulary"]}
+,"Mayor of Bristol":{"mayor":["Mayor of West of England"],"pcc":["Avon and Somerset Constabulary"]}
 ,"Mayor of Cambridgeshire and Peterborough":{"pcc":["Cambridgeshire Constabulary"]}
 ,"Mayor of Copeland":{"pcc":["Cumbria Constabulary"]}
-,"Mayor of Doncaster":{"pcc":["South Yorkshire Police"]}
+,"Mayor of Doncaster":{"mayor":["Mayor of Sheffield City Region"],"pcc":["South Yorkshire Police"]}
 ,"Mayor of Greater Manchester":{}
-,"Mayor of Hackney":{"gla.a":["London Assembly"],"gla.c":["North East"]}
+,"Mayor of Hackney":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["North East"]}
 ,"Mayor of Leicester":{"pcc":["Leicestershire Police"]}
-,"Mayor of Lewisham":{"gla.a":["London Assembly"],"gla.c":["Greenwich and Lewisham"]}
-,"Mayor of Liverpool":{"pcc":["Merseyside Police"]}
+,"Mayor of Lewisham":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Greenwich and Lewisham"]}
+,"Mayor of Liverpool":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
 ,"Mayor of Liverpool City Region":{"pcc":["Merseyside Police","Cheshire Constabulary"]}
 ,"Mayor of London":{}
 ,"Mayor of Mansfield":{"pcc":["Nottinghamshire Police"]}
-,"Mayor of Middlesbrough":{"pcc":["Cleveland Police"]}
-,"Mayor of Newham":{"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Mayor of Middlesbrough":{"mayor":["Mayor of Tees Valley"],"pcc":["Cleveland Police"]}
+,"Mayor of Newham":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
 ,"Mayor of North of Tyne":{"pcc":["Northumbria Police"]}
-,"Mayor of North Tyneside":{"pcc":["Northumbria Police"]}
-,"Mayor of Salford":{}
+,"Mayor of North Tyneside":{"mayor":["Mayor of North of Tyne"],"pcc":["Northumbria Police"]}
+,"Mayor of Salford":{"mayor":["Mayor of Greater Manchester"]}
 ,"Mayor of Sheffield City Region":{"pcc":["South Yorkshire Police"]}
 ,"Mayor of Tees Valley":{"pcc":["Cleveland Police","Durham Constabulary"]}
-,"Mayor of Tower Hamlets":{"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Mayor of Tower Hamlets":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
 ,"Mayor of Watford":{"pcc":["Hertfordshire Constabulary"]}
 ,"Mayor of West Midlands":{"pcc":["West Midlands Police"]}
 ,"Mayor of West of England":{"pcc":["Avon and Somerset Constabulary"]}
