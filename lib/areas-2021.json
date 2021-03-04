@@ -1,0 +1,525 @@
+{"gla.a":{"London Assembly":{"mayor":["Mayor of London"]}}
+,"gla.c":{"Barnet and Camden":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Bexley and Bromley":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Brent and Harrow":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"City and East":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Croydon and Sutton":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Ealing and Hillingdon":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Enfield and Haringey":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Greenwich and Lewisham":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Havering and Redbridge":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Lambeth and Southwark":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"Merton and Wandsworth":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"North East":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"South West":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}
+,"West Central":{"mayor":["Mayor of London"],"gla.a":["London Assembly"]}}
+,"local":{"Adur":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Allerdale":{"local":["Cumbria"],"pcc":["Cumbria Constabulary"]}
+,"Amber Valley":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Arun":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Ashfield":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Ashford":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Babergh":{"local":["Suffolk"],"pcc":["Suffolk Constabulary"]}
+,"Barking and Dagenham":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Barnet":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Barnet and Camden"]}
+,"Barnsley":{"mayor":["Mayor of Sheffield City Region"],"pcc":["South Yorkshire Police"]}
+,"Barrow-in-Furness":{"local":["Cumbria"],"pcc":["Cumbria Constabulary"]}
+,"Basildon":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Basingstoke and Deane":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Bassetlaw":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Bath and North East Somerset":{"mayor":["Mayor of West of England"],"pcc":["Avon and Somerset Constabulary"]}
+,"Bedford":{"mayor":["Mayor of Bedford"],"pcc":["Bedfordshire Police"]}
+,"Bexley":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Bexley and Bromley"]}
+,"Birmingham":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Blaby":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Blackburn with Darwen":{"pcc":["Lancashire Constabulary"]}
+,"Blackpool":{"pcc":["Lancashire Constabulary"]}
+,"Bolsover":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Bolton":{"mayor":["Mayor of Greater Manchester"]}
+,"Boston":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"Bournemouth, Christchurch and Poole":{"pcc":["Dorset Police"]}
+,"Bracknell Forest":{"pcc":["Thames Valley Police"]}
+,"Bradford":{"mayor":["Mayor of West Yorkshire"]}
+,"Braintree":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Breckland":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"Brent":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Brent and Harrow"]}
+,"Brentwood":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Brighton and Hove":{"pcc":["Sussex Police"]}
+,"Bristol":{"mayor":["Mayor of Bristol","Mayor of West of England"],"pcc":["Avon and Somerset Constabulary"]}
+,"Broadland":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"Bromley":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Bexley and Bromley"]}
+,"Bromsgrove":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"Broxbourne":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"Broxtowe":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Buckinghamshire":{"pcc":["Thames Valley Police"]}
+,"Burnley":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Bury":{"mayor":["Mayor of Greater Manchester"]}
+,"Calderdale":{"mayor":["Mayor of West Yorkshire"]}
+,"Cambridge":{"local":["Cambridgeshire"],"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"Cambridgeshire":{"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"Camden":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Barnet and Camden"]}
+,"Cannock Chase":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Canterbury":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Carlisle":{"local":["Cumbria"],"pcc":["Cumbria Constabulary"]}
+,"Castle Point":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Central Bedfordshire":{"pcc":["Bedfordshire Police"]}
+,"Charnwood":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Chelmsford":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Cheltenham":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"Cherwell":{"local":["Oxfordshire"],"pcc":["Thames Valley Police"]}
+,"Cheshire East":{"pcc":["Cheshire Constabulary"]}
+,"Cheshire West and Chester":{"pcc":["Cheshire Constabulary"]}
+,"Chesterfield":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Chichester":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Chorley":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"City of London":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Colchester":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Copeland":{"local":["Cumbria"],"mayor":["Mayor of Copeland"],"pcc":["Cumbria Constabulary"]}
+,"Cornwall":{"pcc":["Devon & Cornwall Police"]}
+,"Cotswold":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"County Durham":{"pcc":["Durham Constabulary"]}
+,"Coventry":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Craven":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Crawley":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Croydon":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Croydon and Sutton"]}
+,"Cumbria":{"pcc":["Cumbria Constabulary"]}
+,"Dacorum":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"Darlington":{"mayor":["Mayor of Tees Valley"],"pcc":["Durham Constabulary"]}
+,"Dartford":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Derby":{"pcc":["Derbyshire Constabulary"]}
+,"Derbyshire":{"pcc":["Derbyshire Constabulary"]}
+,"Derbyshire Dales":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Devon":{"pcc":["Devon & Cornwall Police"]}
+,"Doncaster":{"mayor":["Mayor of Doncaster","Mayor of Sheffield City Region"],"pcc":["South Yorkshire Police"]}
+,"Dorset":{"pcc":["Dorset Police"]}
+,"Dover":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Dudley":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Ealing":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Ealing and Hillingdon"]}
+,"East Cambridgeshire":{"local":["Cambridgeshire"],"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"East Devon":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"East Hampshire":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"East Hertfordshire":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"East Lindsey":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"East Riding of Yorkshire":{"pcc":["Humberside Police"]}
+,"East Staffordshire":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"East Suffolk":{"local":["Suffolk"],"pcc":["Suffolk Constabulary"]}
+,"East Sussex":{"pcc":["Sussex Police"]}
+,"Eastbourne":{"local":["East Sussex"],"pcc":["Sussex Police"]}
+,"Eastleigh":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Eden":{"local":["Cumbria"],"pcc":["Cumbria Constabulary"]}
+,"Elmbridge":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Enfield":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Enfield and Haringey"]}
+,"Epping Forest":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Epsom and Ewell":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Erewash":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Essex":{"pcc":["Essex Police"]}
+,"Exeter":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"Fareham":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Fenland":{"local":["Cambridgeshire"],"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"Folkestone and Hythe":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Forest of Dean":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"Fylde":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Gateshead":{"pcc":["Northumbria Police"]}
+,"Gedling":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Gloucester":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"Gloucestershire":{"pcc":["Gloucestershire Constabulary"]}
+,"Gosport":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Gravesham":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Great Yarmouth":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"Greenwich":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Greenwich and Lewisham"]}
+,"Guildford":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Hackney":{"mayor":["Mayor of Hackney","Mayor of London"],"gla.a":["London Assembly"],"gla.c":["North East"]}
+,"Halton":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Cheshire Constabulary"]}
+,"Hambleton":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Hammersmith and Fulham":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["West Central"]}
+,"Hampshire":{"pcc":["Hampshire Constabulary"]}
+,"Harborough":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Haringey":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Enfield and Haringey"]}
+,"Harlow":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Harrogate":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Harrow":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Brent and Harrow"]}
+,"Hart":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Hartlepool":{"mayor":["Mayor of Tees Valley"],"pcc":["Cleveland Police"]}
+,"Hastings":{"local":["East Sussex"],"pcc":["Sussex Police"]}
+,"Havant":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Havering":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Havering and Redbridge"]}
+,"Herefordshire":{"pcc":["West Mercia Police"]}
+,"Hertfordshire":{"pcc":["Hertfordshire Constabulary"]}
+,"Hertsmere":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"High Peak":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"Hillingdon":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Ealing and Hillingdon"]}
+,"Hinckley and Bosworth":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Horsham":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Hounslow":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["South West"]}
+,"Huntingdonshire":{"local":["Cambridgeshire"],"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"Hyndburn":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Ipswich":{"local":["Suffolk"],"pcc":["Suffolk Constabulary"]}
+,"Isle of Wight":{"pcc":["Hampshire Constabulary"]}
+,"Isles of Scilly":{"pcc":["Devon & Cornwall Police"]}
+,"Islington":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["North East"]}
+,"Kensington and Chelsea":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["West Central"]}
+,"Kent":{"pcc":["Kent Police"]}
+,"King's Lynn and West Norfolk":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"Kingston upon Hull":{"pcc":["Humberside Police"]}
+,"Kingston upon Thames":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["South West"]}
+,"Kirklees":{"mayor":["Mayor of West Yorkshire"]}
+,"Knowsley":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
+,"Lambeth":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Lambeth and Southwark"]}
+,"Lancashire":{"pcc":["Lancashire Constabulary"]}
+,"Lancaster":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Leeds":{"mayor":["Mayor of West Yorkshire"]}
+,"Leicester":{"mayor":["Mayor of Leicester"],"pcc":["Leicestershire Police"]}
+,"Leicestershire":{"pcc":["Leicestershire Police"]}
+,"Lewes":{"local":["East Sussex"],"pcc":["Sussex Police"]}
+,"Lewisham":{"mayor":["Mayor of Lewisham","Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Greenwich and Lewisham"]}
+,"Lichfield":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Lincoln":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"Lincolnshire":{"pcc":["Lincolnshire Police"]}
+,"Liverpool":{"mayor":["Mayor of Liverpool","Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
+,"Luton":{"pcc":["Bedfordshire Police"]}
+,"Maidstone":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Maldon":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Malvern Hills":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"Manchester":{"mayor":["Mayor of Greater Manchester"]}
+,"Mansfield":{"local":["Nottinghamshire"],"mayor":["Mayor of Mansfield"],"pcc":["Nottinghamshire Police"]}
+,"Medway":{"pcc":["Kent Police"]}
+,"Melton":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Mendip":{"local":["Somerset"],"pcc":["Avon and Somerset Constabulary"]}
+,"Merton":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Merton and Wandsworth"]}
+,"Mid Devon":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"Mid Suffolk":{"local":["Suffolk"],"pcc":["Suffolk Constabulary"]}
+,"Mid Sussex":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Middlesbrough":{"mayor":["Mayor of Middlesbrough","Mayor of Tees Valley"],"pcc":["Cleveland Police"]}
+,"Milton Keynes":{"pcc":["Thames Valley Police"]}
+,"Mole Valley":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"New Forest":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Newark and Sherwood":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Newcastle upon Tyne":{"mayor":["Mayor of North of Tyne"],"pcc":["Northumbria Police"]}
+,"Newcastle-under-Lyme":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Newham":{"mayor":["Mayor of Newham","Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Norfolk":{"pcc":["Norfolk Constabulary"]}
+,"North Devon":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"North East Derbyshire":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"North East Lincolnshire":{"pcc":["Humberside Police"]}
+,"North Hertfordshire":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"North Kesteven":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"North Lincolnshire":{"pcc":["Humberside Police"]}
+,"North Norfolk":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"North Northamptonshire":{"pcc":["Northamptonshire Police"]}
+,"North Somerset":{"pcc":["Avon and Somerset Constabulary"]}
+,"North Tyneside":{"mayor":["Mayor of North Tyneside","Mayor of North of Tyne"],"pcc":["Northumbria Police"]}
+,"North Warwickshire":{"local":["Warwickshire"],"pcc":["Warwickshire Police"]}
+,"North West Leicestershire":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"North Yorkshire":{"pcc":["North Yorkshire Police"]}
+,"Northumberland":{"mayor":["Mayor of North of Tyne"],"pcc":["Northumbria Police"]}
+,"Norwich":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"Nottingham":{"pcc":["Nottinghamshire Police"]}
+,"Nottinghamshire":{"pcc":["Nottinghamshire Police"]}
+,"Nuneaton and Bedworth":{"local":["Warwickshire"],"pcc":["Warwickshire Police"]}
+,"Oadby and Wigston":{"local":["Leicestershire"],"pcc":["Leicestershire Police"]}
+,"Oldham":{"mayor":["Mayor of Greater Manchester"]}
+,"Oxford":{"local":["Oxfordshire"],"pcc":["Thames Valley Police"]}
+,"Oxfordshire":{"pcc":["Thames Valley Police"]}
+,"Pendle":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Peterborough":{"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"Plymouth":{"pcc":["Devon & Cornwall Police"]}
+,"Portsmouth":{"pcc":["Hampshire Constabulary"]}
+,"Preston":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Reading":{"pcc":["Thames Valley Police"]}
+,"Redbridge":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Havering and Redbridge"]}
+,"Redcar and Cleveland":{"mayor":["Mayor of Tees Valley"],"pcc":["Cleveland Police"]}
+,"Redditch":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"Reigate and Banstead":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Ribble Valley":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Richmond upon Thames":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["South West"]}
+,"Richmondshire":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Rochdale":{"mayor":["Mayor of Greater Manchester"]}
+,"Rochford":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Rossendale":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Rother":{"local":["East Sussex"],"pcc":["Sussex Police"]}
+,"Rotherham":{"mayor":["Mayor of Sheffield City Region"],"pcc":["South Yorkshire Police"]}
+,"Rugby":{"local":["Warwickshire"],"pcc":["Warwickshire Police"]}
+,"Runnymede":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Rushcliffe":{"local":["Nottinghamshire"],"pcc":["Nottinghamshire Police"]}
+,"Rushmoor":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Rutland":{"pcc":["Leicestershire Police"]}
+,"Ryedale":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Salford":{"mayor":["Mayor of Salford","Mayor of Greater Manchester"]}
+,"Sandwell":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Scarborough":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Sedgemoor":{"local":["Somerset"],"pcc":["Avon and Somerset Constabulary"]}
+,"Sefton":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
+,"Selby":{"local":["North Yorkshire"],"pcc":["North Yorkshire Police"]}
+,"Sevenoaks":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Sheffield":{"mayor":["Mayor of Sheffield City Region"],"pcc":["South Yorkshire Police"]}
+,"Shropshire":{"pcc":["West Mercia Police"]}
+,"Slough":{"pcc":["Thames Valley Police"]}
+,"Solihull":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Somerset":{"pcc":["Avon and Somerset Constabulary"]}
+,"Somerset West and Taunton":{"local":["Somerset"],"pcc":["Avon and Somerset Constabulary"]}
+,"South Cambridgeshire":{"local":["Cambridgeshire"],"mayor":["Mayor of Cambridgeshire and Peterborough"],"pcc":["Cambridgeshire Constabulary"]}
+,"South Derbyshire":{"local":["Derbyshire"],"pcc":["Derbyshire Constabulary"]}
+,"South Gloucestershire":{"mayor":["Mayor of West of England"],"pcc":["Avon and Somerset Constabulary"]}
+,"South Hams":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"South Holland":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"South Kesteven":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"South Lakeland":{"local":["Cumbria"],"pcc":["Cumbria Constabulary"]}
+,"South Norfolk":{"local":["Norfolk"],"pcc":["Norfolk Constabulary"]}
+,"South Oxfordshire":{"local":["Oxfordshire"],"pcc":["Thames Valley Police"]}
+,"South Ribble":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"South Somerset":{"local":["Somerset"],"pcc":["Avon and Somerset Constabulary"]}
+,"South Staffordshire":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"South Tyneside":{"pcc":["Northumbria Police"]}
+,"Southampton":{"pcc":["Hampshire Constabulary"]}
+,"Southend-on-Sea":{"pcc":["Essex Police"]}
+,"Southwark":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Lambeth and Southwark"]}
+,"Spelthorne":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"St Albans":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"St. Helens":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
+,"Stafford":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Staffordshire":{"pcc":["Staffordshire Police"]}
+,"Staffordshire Moorlands":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Stevenage":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"Stockport":{"mayor":["Mayor of Greater Manchester"]}
+,"Stockton-on-Tees":{"mayor":["Mayor of Tees Valley"],"pcc":["Cleveland Police"]}
+,"Stoke-on-Trent":{"pcc":["Staffordshire Police"]}
+,"Stratford-on-Avon":{"local":["Warwickshire"],"pcc":["Warwickshire Police"]}
+,"Stroud":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"Suffolk":{"pcc":["Suffolk Constabulary"]}
+,"Sunderland":{"pcc":["Northumbria Police"]}
+,"Surrey":{"pcc":["Surrey Police"]}
+,"Surrey Heath":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Sutton":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Croydon and Sutton"]}
+,"Swale":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Swindon":{"pcc":["Wiltshire Police"]}
+,"Tameside":{"mayor":["Mayor of Greater Manchester"]}
+,"Tamworth":{"local":["Staffordshire"],"pcc":["Staffordshire Police"]}
+,"Tandridge":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Teignbridge":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"Telford and Wrekin":{"pcc":["West Mercia Police"]}
+,"Tendring":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Test Valley":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Tewkesbury":{"local":["Gloucestershire"],"pcc":["Gloucestershire Constabulary"]}
+,"Thanet":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Three Rivers":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"Thurrock":{"pcc":["Essex Police"]}
+,"Tonbridge and Malling":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Torbay":{"pcc":["Devon & Cornwall Police"]}
+,"Torridge":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"Tower Hamlets":{"mayor":["Mayor of Tower Hamlets","Mayor of London"],"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Trafford":{"mayor":["Mayor of Greater Manchester"]}
+,"Tunbridge Wells":{"local":["Kent"],"pcc":["Kent Police"]}
+,"Uttlesford":{"local":["Essex"],"pcc":["Essex Police"]}
+,"Vale of White Horse":{"local":["Oxfordshire"],"pcc":["Thames Valley Police"]}
+,"Wakefield":{"mayor":["Mayor of West Yorkshire"]}
+,"Walsall":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Waltham Forest":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["North East"]}
+,"Wandsworth":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["Merton and Wandsworth"]}
+,"Warrington":{"pcc":["Cheshire Constabulary"]}
+,"Warwick":{"local":["Warwickshire"],"pcc":["Warwickshire Police"]}
+,"Warwickshire":{"pcc":["Warwickshire Police"]}
+,"Watford":{"local":["Hertfordshire"],"mayor":["Mayor of Watford"],"pcc":["Hertfordshire Constabulary"]}
+,"Waverley":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Wealden":{"local":["East Sussex"],"pcc":["Sussex Police"]}
+,"Welwyn Hatfield":{"local":["Hertfordshire"],"pcc":["Hertfordshire Constabulary"]}
+,"West Berkshire":{"pcc":["Thames Valley Police"]}
+,"West Devon":{"local":["Devon"],"pcc":["Devon & Cornwall Police"]}
+,"West Lancashire":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"West Lindsey":{"local":["Lincolnshire"],"pcc":["Lincolnshire Police"]}
+,"West Northamptonshire":{"pcc":["Northamptonshire Police"]}
+,"West Oxfordshire":{"local":["Oxfordshire"],"pcc":["Thames Valley Police"]}
+,"West Suffolk":{"local":["Suffolk"],"pcc":["Suffolk Constabulary"]}
+,"West Sussex":{"pcc":["Sussex Police"]}
+,"Westminster":{"mayor":["Mayor of London"],"gla.a":["London Assembly"],"gla.c":["West Central"]}
+,"Wigan":{"mayor":["Mayor of Greater Manchester"]}
+,"Wiltshire":{"pcc":["Wiltshire Police"]}
+,"Winchester":{"local":["Hampshire"],"pcc":["Hampshire Constabulary"]}
+,"Windsor and Maidenhead":{"pcc":["Thames Valley Police"]}
+,"Wirral":{"mayor":["Mayor of Liverpool City Region"],"pcc":["Merseyside Police"]}
+,"Woking":{"local":["Surrey"],"pcc":["Surrey Police"]}
+,"Wokingham":{"pcc":["Thames Valley Police"]}
+,"Wolverhampton":{"mayor":["Mayor of West Midlands"],"pcc":["West Midlands Police"]}
+,"Worcester":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"Worcestershire":{"pcc":["West Mercia Police"]}
+,"Worthing":{"local":["West Sussex"],"pcc":["Sussex Police"]}
+,"Wychavon":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"Wyre":{"local":["Lancashire"],"pcc":["Lancashire Constabulary"]}
+,"Wyre Forest":{"local":["Worcestershire"],"pcc":["West Mercia Police"]}
+,"York":{"pcc":["North Yorkshire Police"]}}
+,"mayor":{"Mayor of Bedford":{"pcc":["Bedfordshire Police"]}
+,"Mayor of Bristol":{"pcc":["Avon and Somerset Constabulary"]}
+,"Mayor of Cambridgeshire and Peterborough":{"pcc":["Cambridgeshire Constabulary"]}
+,"Mayor of Copeland":{"pcc":["Cumbria Constabulary"]}
+,"Mayor of Doncaster":{"pcc":["South Yorkshire Police"]}
+,"Mayor of Greater Manchester":{}
+,"Mayor of Hackney":{"gla.a":["London Assembly"],"gla.c":["North East"]}
+,"Mayor of Leicester":{"pcc":["Leicestershire Police"]}
+,"Mayor of Lewisham":{"gla.a":["London Assembly"],"gla.c":["Greenwich and Lewisham"]}
+,"Mayor of Liverpool":{"pcc":["Merseyside Police"]}
+,"Mayor of Liverpool City Region":{"pcc":["Merseyside Police","Cheshire Constabulary"]}
+,"Mayor of London":{}
+,"Mayor of Mansfield":{"pcc":["Nottinghamshire Police"]}
+,"Mayor of Middlesbrough":{"pcc":["Cleveland Police"]}
+,"Mayor of Newham":{"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Mayor of North of Tyne":{"pcc":["Northumbria Police"]}
+,"Mayor of North Tyneside":{"pcc":["Northumbria Police"]}
+,"Mayor of Salford":{}
+,"Mayor of Sheffield City Region":{"pcc":["South Yorkshire Police"]}
+,"Mayor of Tees Valley":{"pcc":["Cleveland Police","Durham Constabulary"]}
+,"Mayor of Tower Hamlets":{"gla.a":["London Assembly"],"gla.c":["City and East"]}
+,"Mayor of Watford":{"pcc":["Hertfordshire Constabulary"]}
+,"Mayor of West Midlands":{"pcc":["West Midlands Police"]}
+,"Mayor of West of England":{"pcc":["Avon and Somerset Constabulary"]}
+,"Mayor of West Yorkshire":{}}
+,"pcc":{"Avon and Somerset Constabulary":{}
+,"Bedfordshire Police":{}
+,"Cambridgeshire Constabulary":{}
+,"Cheshire Constabulary":{}
+,"Cleveland Police":{}
+,"Cumbria Constabulary":{}
+,"Derbyshire Constabulary":{}
+,"Devon & Cornwall Police":{}
+,"Dorset Police":{}
+,"Durham Constabulary":{}
+,"Dyfed-Powys Police":{}
+,"Essex Police":{}
+,"Gloucestershire Constabulary":{}
+,"Gwent Police":{}
+,"Hampshire Constabulary":{}
+,"Hertfordshire Constabulary":{}
+,"Humberside Police":{}
+,"Kent Police":{}
+,"Lancashire Constabulary":{}
+,"Leicestershire Police":{}
+,"Lincolnshire Police":{}
+,"Merseyside Police":{}
+,"Norfolk Constabulary":{}
+,"North Wales Police":{}
+,"North Yorkshire Police":{}
+,"Northamptonshire Police":{}
+,"Northumbria Police":{}
+,"Nottinghamshire Police":{}
+,"South Wales Police":{}
+,"South Yorkshire Police":{}
+,"Staffordshire Police":{}
+,"Suffolk Constabulary":{}
+,"Surrey Police":{}
+,"Sussex Police":{}
+,"Thames Valley Police":{}
+,"Warwickshire Police":{}
+,"West Mercia Police":{}
+,"West Midlands Police":{}
+,"Wiltshire Police":{}}
+,"senedd.c":{"Aberavon":{"senedd.r":["South Wales West"]}
+,"Aberconwy":{"senedd.r":["North Wales"]}
+,"Alyn and Deeside":{"senedd.r":["North Wales"]}
+,"Arfon":{"senedd.r":["North Wales"]}
+,"Blaenau Gwent":{"senedd.r":["South Wales East"]}
+,"Brecon and Radnorshire":{"senedd.r":["Mid and West Wales"]}
+,"Bridgend":{"senedd.r":["South Wales West"]}
+,"Caerphilly":{"senedd.r":["South Wales East"]}
+,"Cardiff Central":{"senedd.r":["South Wales Central"]}
+,"Cardiff North":{"senedd.r":["South Wales Central"]}
+,"Cardiff South and Penarth":{"senedd.r":["South Wales Central"]}
+,"Cardiff West":{"senedd.r":["South Wales Central"]}
+,"Carmarthen East and Dinefwr":{"senedd.r":["Mid and West Wales"]}
+,"Carmarthen West and South Pembrokeshire":{"senedd.r":["Mid and West Wales"]}
+,"Ceredigion":{"senedd.r":["Mid and West Wales"]}
+,"Clwyd South":{"senedd.r":["North Wales"]}
+,"Clwyd West":{"senedd.r":["North Wales"]}
+,"Cynon Valley":{"senedd.r":["South Wales Central"]}
+,"Delyn":{"senedd.r":["North Wales"]}
+,"Dwyfor Meirionnydd":{"senedd.r":["Mid and West Wales"]}
+,"Gower":{"senedd.r":["South Wales West"]}
+,"Islwyn":{"senedd.r":["South Wales East"]}
+,"Llanelli":{"senedd.r":["Mid and West Wales"]}
+,"Merthyr Tydfil and Rhymney":{"senedd.r":["South Wales East"]}
+,"Monmouth":{"senedd.r":["South Wales East"]}
+,"Montgomeryshire":{"senedd.r":["Mid and West Wales"]}
+,"Neath":{"senedd.r":["South Wales West"]}
+,"Newport East":{"senedd.r":["South Wales East"]}
+,"Newport West":{"senedd.r":["South Wales East"]}
+,"Ogmore":{"senedd.r":["South Wales West"]}
+,"Pontypridd":{"senedd.r":["South Wales Central"]}
+,"Preseli Pembrokeshire":{"senedd.r":["Mid and West Wales"]}
+,"Rhondda":{"senedd.r":["South Wales Central"]}
+,"Swansea East":{"senedd.r":["South Wales West"]}
+,"Swansea West":{"senedd.r":["South Wales West"]}
+,"Torfaen":{"senedd.r":["South Wales East"]}
+,"Vale of Clwyd":{"senedd.r":["North Wales"]}
+,"Vale of Glamorgan":{"senedd.r":["South Wales Central"]}
+,"Wrexham":{"senedd.r":["North Wales"]}
+,"Ynys Môn":{"senedd.r":["North Wales"]}}
+,"sp.c":{"Aberdeen Central":{"sp.r":["North East Scotland"]}
+,"Aberdeen Donside":{"sp.r":["North East Scotland"]}
+,"Aberdeen South and North Kincardine":{"sp.r":["North East Scotland"]}
+,"Aberdeenshire East":{"sp.r":["North East Scotland"]}
+,"Aberdeenshire West":{"sp.r":["North East Scotland"]}
+,"Airdrie and Shotts":{"sp.r":["Central Scotland"]}
+,"Almond Valley":{"sp.r":["Lothian"]}
+,"Angus North and Mearns":{"sp.r":["North East Scotland"]}
+,"Angus South":{"sp.r":["North East Scotland"]}
+,"Argyll and Bute":{"sp.r":["Highlands and Islands"]}
+,"Ayr":{"sp.r":["South Scotland"]}
+,"Banffshire and Buchan Coast":{"sp.r":["North East Scotland"]}
+,"Caithness, Sutherland and Ross":{"sp.r":["Highlands and Islands"]}
+,"Carrick, Cumnock and Doon Valley":{"sp.r":["South Scotland"]}
+,"Clackmannanshire and Dunblane":{"sp.r":["Mid Scotland and Fife"]}
+,"Clydebank and Milngavie":{"sp.r":["West Scotland"]}
+,"Clydesdale":{"sp.r":["South Scotland"]}
+,"Coatbridge and Chryston":{"sp.r":["Central Scotland"]}
+,"Cowdenbeath":{"sp.r":["Mid Scotland and Fife"]}
+,"Cumbernauld and Kilsyth":{"sp.r":["Central Scotland"]}
+,"Cunninghame North":{"sp.r":["West Scotland"]}
+,"Cunninghame South":{"sp.r":["West Scotland"]}
+,"Dumbarton":{"sp.r":["West Scotland"]}
+,"Dumfriesshire":{"sp.r":["South Scotland"]}
+,"Dundee City East":{"sp.r":["North East Scotland"]}
+,"Dundee City West":{"sp.r":["North East Scotland"]}
+,"Dunfermline":{"sp.r":["Mid Scotland and Fife"]}
+,"East Kilbride":{"sp.r":["Central Scotland"]}
+,"East Lothian":{"sp.r":["South Scotland"]}
+,"Eastwood":{"sp.r":["West Scotland"]}
+,"Edinburgh Central":{"sp.r":["Lothian"]}
+,"Edinburgh Eastern":{"sp.r":["Lothian"]}
+,"Edinburgh Northern and Leith":{"sp.r":["Lothian"]}
+,"Edinburgh Pentlands":{"sp.r":["Lothian"]}
+,"Edinburgh Southern":{"sp.r":["Lothian"]}
+,"Edinburgh Western":{"sp.r":["Lothian"]}
+,"Ettrick, Roxburgh and Berwickshire":{"sp.r":["South Scotland"]}
+,"Falkirk East":{"sp.r":["Central Scotland"]}
+,"Falkirk West":{"sp.r":["Central Scotland"]}
+,"Galloway and West Dumfries":{"sp.r":["South Scotland"]}
+,"Glasgow Anniesland":{"sp.r":["Glasgow"]}
+,"Glasgow Cathcart":{"sp.r":["Glasgow"]}
+,"Glasgow Kelvin":{"sp.r":["Glasgow"]}
+,"Glasgow Maryhill and Springburn":{"sp.r":["Glasgow"]}
+,"Glasgow Pollok":{"sp.r":["Glasgow"]}
+,"Glasgow Provan":{"sp.r":["Glasgow"]}
+,"Glasgow Shettleston":{"sp.r":["Glasgow"]}
+,"Glasgow Southside":{"sp.r":["Glasgow"]}
+,"Greenock and Inverclyde":{"sp.r":["West Scotland"]}
+,"Hamilton, Larkhall and Stonehouse":{"sp.r":["Central Scotland"]}
+,"Inverness and Nairn":{"sp.r":["Highlands and Islands"]}
+,"Kilmarnock and Irvine Valley":{"sp.r":["South Scotland"]}
+,"Kirkcaldy":{"sp.r":["Mid Scotland and Fife"]}
+,"Linlithgow":{"sp.r":["Lothian"]}
+,"Mid Fife and Glenrothes":{"sp.r":["Mid Scotland and Fife"]}
+,"Midlothian North and Musselburgh":{"sp.r":["Lothian"]}
+,"Midlothian South, Tweeddale and Lauderdale":{"sp.r":["South Scotland"]}
+,"Moray":{"sp.r":["Highlands and Islands"]}
+,"Motherwell and Wishaw":{"sp.r":["Central Scotland"]}
+,"Na h-Eileanan an Iar":{"sp.r":["Highlands and Islands"]}
+,"North East Fife":{"sp.r":["Mid Scotland and Fife"]}
+,"Orkney Islands":{"sp.r":["Highlands and Islands"]}
+,"Paisley":{"sp.r":["West Scotland"]}
+,"Perthshire North":{"sp.r":["Mid Scotland and Fife"]}
+,"Perthshire South and Kinross-shire":{"sp.r":["Mid Scotland and Fife"]}
+,"Renfrewshire North and West":{"sp.r":["West Scotland"]}
+,"Renfrewshire South":{"sp.r":["West Scotland"]}
+,"Rutherglen":{"sp.r":["Glasgow"]}
+,"Shetland Islands":{"sp.r":["Highlands and Islands"]}
+,"Skye, Lochaber and Badenoch":{"sp.r":["Highlands and Islands"]}
+,"Stirling":{"sp.r":["Mid Scotland and Fife"]}
+,"Strathkelvin and Bearsden":{"sp.r":["West Scotland"]}
+,"Uddingston and Bellshill":{"sp.r":["Central Scotland"]}}}
