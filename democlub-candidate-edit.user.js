@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.02.27.0
+// @version     2021.03.13.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -63,7 +63,9 @@ function onready() {
 		}
 		
 		.sjo-link-delete {color: red; margin-right: 0.25em;}
-
+		
+		.sjo-expanded {height: 50em !important;}
+		
 	</style>`).appendTo('head');
 	
 	if (location.href.indexOf('/person/create/') >= 0) {
@@ -452,5 +454,10 @@ function onready() {
 	
 	// Remove autocomplete from merge ID field
 	$('#other').attr('autocomplete', 'off');
+	
+	// Expand bio field
+	var bioField = $('#id_biography')
+			.on('focus', event => bioField.addClass('sjo-expanded'))
+			.on('blur', event => bioField.val() === '' ? bioField.removeClass('sjo-expanded') : null);
 	
 }
