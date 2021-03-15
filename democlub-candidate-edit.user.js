@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.03.13.0
+// @version     2021.03.15.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -248,7 +248,7 @@ function onready() {
 	var submitButton = $('#person-details input[type="submit"]').attr('disabled', 'disabled');
 	var submitWarning = $('<span class="sjo-noelections-warning">WARNING: no current elections</span>').insertAfter(submitButton);
 	var dismissWarning = $('<a class="sjo-noelections-dismiss" href="#">Dismiss</a>').insertAfter(submitWarning).click(hideWarning);
-	if ($('.post-select').length > 0) hideWarning()
+	if ($('.post-select, input[name^="standing_"][value="standing"]').length > 0) hideWarning()
 	
 	function hideWarning() {
 		submitWarning.hide();
