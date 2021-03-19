@@ -2,7 +2,7 @@
 // @name           Democracy Club select election
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.01.30.0
+// @version        2021.03.19.0
 // @match          https://candidates.democracyclub.org.uk/person/create/select_election?*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -15,7 +15,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		
 		.sjo-addperson-listcolumns {xxxcolumn-width: 200px; columns: 5;}
 		.sjo-addperson-listcolumns p {font-size: 0.8rem;}

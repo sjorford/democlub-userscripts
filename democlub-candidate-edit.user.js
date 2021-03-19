@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.03.15.0
+// @version     2021.03.19.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -23,7 +23,7 @@ function onready() {
 	// Style sheet for datepicker
 	$('<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">').appendTo('head');
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		
 		.sjo-formitem {margin-bottom: 6px;}
 		

@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.02.02.0
+// @version     2021.03.19.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -16,7 +16,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		.sjo-version            {border: none !important; table-layout: fixed; width: 100%}
 		.sjo-version tr         {background: transparent !important; border-top: 1px solid white; vertical-align: top;}
 		.sjo-version-field      {width: 8rem;  padding: 0.25em 0.5em  0.25em 0;      font-weight: normal;}

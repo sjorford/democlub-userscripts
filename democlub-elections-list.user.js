@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2021.03.03.0
+// @version     2021.03.19.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -11,7 +11,7 @@
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.23.0/moment.min.js
 // ==/UserScript==
 
-$(`<style>
+$(`<style class="sjo-styles">
 	.sjo-posts td {padding: .25rem; vertical-align: top;}
 	.sjo-post-incomplete {background-color: #fdd !important;}
 	.sjo-post-complete {background-color: #ffb !important;}

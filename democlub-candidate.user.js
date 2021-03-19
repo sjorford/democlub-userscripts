@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.01.29.2
+// @version     2021.03.19.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -17,7 +17,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		
 		.person__actions__action {padding: 1em; margin-bottom: 1em;}
 		.person__details dl {margin-bottom: 1em;}

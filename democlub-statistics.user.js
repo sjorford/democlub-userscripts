@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/*
-// @version     2020.08.15.0
+// @version     2021.03.19.0
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -16,7 +16,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		.sjo-stats {font-size: 9pt;}
 		.sjo-stats tr {background-color: inherit !important;}
 		.sjo-stats td, .sjo-stats th {padding: 4px;}

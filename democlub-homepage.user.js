@@ -2,7 +2,7 @@
 // @name           Democracy Club homepage
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.01.22.0
+// @version        2021.03.19.0
 // @match          https://candidates.democracyclub.org.uk/
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -11,7 +11,7 @@
 
 $(function() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		.sjo-table th, .sjo-table td {padding: .35rem}
 	</style>`).appendTo('head');
 	

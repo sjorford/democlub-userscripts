@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/election/*/person/create/*
-// @version     2020.03.09.0
+// @version     2021.03.19.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -17,7 +17,7 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		.sjo-post-candidates {background-color: #ff9;}
 		.sjo-post-candidates p {margin-bottom: 0.25em;}
 		.sjo-is-current {font-weight: bold;}

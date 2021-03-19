@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.03.13.0
+// @version     2021.03.19.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -16,7 +16,7 @@ function onready() {
 	
 	polyfill();
 	
-	$(`<style>
+	$(`<style class="sjo-styles">
 		
 		.sjo-api-timeline {margin-bottom: 0.5rem;}
 		.sjo-api-timeline-item {display: inline-block; border: 2px solid white; font-size: small; padding: 2px 2px 2px 16px;}
