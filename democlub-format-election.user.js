@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.03.19.0
+// @version     2021.03.21.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -158,7 +158,7 @@ function onready() {
 				
 				$('td.sjo-results-party').filter((i,e) => e.innerText.trim().replace(/^Labour and Co-operative Party$/, 'Labour Party') == party).each((i,e) => {
 					var row = $(e).closest('tr');
-					var ward = row.closest('table').prevAll('h3').first().text().trim();
+					var ward = row.closest('table').prevAll('h3').first().text().replace(/🔐/, '').trim();
 					var newRow = row.clone().appendTo(table);
 					if (newRow.find('.sjo-results-party').text().trim() == 'Labour and Co-operative Party') {
 						newRow.find('.sjo-results-name').append(coopLogo);
