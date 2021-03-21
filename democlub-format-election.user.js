@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.03.21.0
+// @version     2021.03.21.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -60,6 +60,7 @@ function onready() {
 		.sjo-page-election .sjo-results-ward  {width: 300px;}
 		.sjo-page-election .sjo-results-votes {width: 100px;}
 		.sjo-results-votes {text-align: right;}
+		.sjo-results-votes-missing {background-color: lightgray;}
 		.sjo-results-pos   {text-align: center;}
 		.sjo-sort-hidden {display: none;}
 		
@@ -139,6 +140,12 @@ function onready() {
 			}
 			
 		} else {
+			
+			// Highlight missing results
+			$('.sjo-results-votes').filter((i,e) => e.innerText.trim() != '')
+				.closest('.sjo-election-results')
+				.find('.sjo-results-votes').filter((i,e) => e.innerText.trim() == '')
+				.addClass('sjo-results-votes-missing');
 			
 			// Group by party
 			$('.container h3').first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
