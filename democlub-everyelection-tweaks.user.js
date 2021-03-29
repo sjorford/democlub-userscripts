@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2021.03.26.0
+// @version     2021.03.29.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -37,22 +37,24 @@ function onready() {
 	
 	if (location.href == 'https://elections.democracyclub.org.uk/') {
 		//displaySubIDs();
-	}
-	
-	if (location.href.indexOf('/id_creator/election_type/') >= 0) {
+	} else if (location.href.indexOf('/elections/') >= 0) {
+		updateTitle($('.election h1').first().text());
+	} else if (location.href.indexOf('/id_creator/election_type/') >= 0) {
+		updateTitle('ID Creator');
 		$('input[name="election_type-election_type"][value="local"]').click(); // temp default
-	}
-	
-	if (location.href.indexOf('/id_creator/date/') >= 0) {
+	} else if (location.href.indexOf('/id_creator/date/') >= 0) {
+		updateTitle('ID Creator');
 		displayDatePicker();
-	}
-	
-	if (location.href.indexOf('/id_creator/election_organisation/') >= 0) {
+	} else if (location.href.indexOf('/id_creator/election_organisation/') >= 0) {
+		updateTitle('ID Creator');
 		trimCouncilNames();
+	} else if (location.href.indexOf('/id_creator/election_organisation_division/') >= 0) {
+		updateTitle('ID Creator');
+		formatDivisions();
 	}
 	
-	if (location.href.indexOf('/id_creator/election_organisation_division/') >= 0) {
-		formatDivisions();
+	function updateTitle(newText) {
+		window.document.title = newText + window.document.title;
 	}
 	
 }
