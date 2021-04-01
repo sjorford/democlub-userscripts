@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.03.21.1
+// @version     2021.04.01.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -227,9 +227,9 @@ function onready() {
 		// Split lists into parties
 		if (window.location.pathname.match(/\/(sp.r|senedd.r|naw.r|gla.a|europarl)\./)) {
 			
-			var table = $('.candidates-list');
+			var table = $('.candidates-list').first();
 			var head = table.children('thead');
-			var rows = $('.candidates-list > tbody > tr');
+			var rows = table.find('tbody > tr');
 			var parties = $('td.sjo-results-party', rows).toArray().map(e => e.innerText.trim());
 			parties = [...new Set(parties)].sort();
 			
