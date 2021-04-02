@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.03.01.0
+// @version        2021.03.04.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -18,7 +18,6 @@
 var pageNo = 1, maxPageNo = 1;
 var sortColumn = -1, sortOrder = 1;
 var currentExtract, currentSet, currentIndex; // TODO: singletonize this
-var tableColumns = {};
 var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
 var templateDropdown;
@@ -143,9 +142,12 @@ function initialize() {
 	console.log('templates', templates);
 	
 	// Put data in page so it can be shared between userscripts
-	$('<script>var sjo = {api: {}};</script>').appendTo('head');
+	$('<script>var sjo = {};</script>').appendTo('head');
+	sjo.api = {};
 	sjo.api.tableData = null;
 	sjo.api.addTemplateOption = addTemplateOption;
+	
+	sjo.api.tableColumns = {};
 	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
@@ -619,7 +621,7 @@ function prepareRender() {
 	// Parse template
 	var currentTemplate = templates[$('#sjo-api-select-template').val()];
 	console.log('prepareRender', 'currentTemplate', currentTemplate);
-	tableColumns = currentTemplate.columns.map(fieldName => {
+	sjo.api.tableColumns = currentTemplate.columns.map(fieldName => {
 		var column = {name: fieldName, has: false, url: false};
 		if (column.name.substr(0, 4) == 'has:') {
 			column.name = column.name.slice(4);
@@ -630,7 +632,7 @@ function prepareRender() {
 		}
 		return column;
 	});
-	console.log('prepareRender', 'tableColumns', tableColumns);
+	console.log('prepareRender', 'tableColumns', sjo.api.tableColumns);
 	
 	// Set initial sort
 	if (currentTemplate.sort) {
@@ -639,7 +641,7 @@ function prepareRender() {
 		var sortColumnName, sortField;
 		for (var i = currentTemplate.sort.length - 1; i >= 0; i--) {
 			sortColumnName = currentTemplate.sort[i].column;
-			sortColumn = tableColumns[currentTemplate.columns.indexOf(sortColumnName)];
+			sortColumn = sjo.api.tableColumns[currentTemplate.columns.indexOf(sortColumnName)];
 			sortOrder = currentTemplate.sort[i].order;
 			sortField = dataFields[sortColumn.name];
 			sjo.api.tableData = sjo.api.tableData.sort((a, b) => sortCompare(sortColumn, sortField, a, b));
@@ -819,7 +821,7 @@ function cycleCheckbox(event) {
 	
 	var filter = $(event.target);
 	var colIndex = filter.closest('td').prop('cellIndex');
-	var column = tableColumns[colIndex];
+	var column = sjo.api.tableColumns[colIndex];
 	var field = dataFields[column.name];
 	console.log(colIndex, field.group, event.ctrlKey);
 	
@@ -859,12 +861,12 @@ function initializeTable() {
 	
 	// Create table header
 	// TODO: specify fixed widths to stop table from jumping
-	var colGroupsHtml = tableColumns.map(column => '<col class="sjo-api-col sjo-api-col-' + (column.has ? '__has_' : '') + column.name + '">');
-	var headerCellsHtml = tableColumns.map(column => 
+	var colGroupsHtml = sjo.api.tableColumns.map(column => '<col class="sjo-api-col sjo-api-col-' + (column.has ? '__has_' : '') + column.name + '">');
+	var headerCellsHtml = sjo.api.tableColumns.map(column => 
 		'<th class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"' + 
 			(dataFields[column.name].width ? ` style="width: ${dataFields[column.name].width};"` : '') + '>' + 
 			(dataFields[column.name].display && !column.has ? Utils.escapeHtml(dataFields[column.name].display) : '\u00B7') + '</th>');
-	var filterCellsHtml = tableColumns.map(column => '<td class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"></td>');
+	var filterCellsHtml = sjo.api.tableColumns.map(column => '<td class="sjo-api-cell-' + (column.has ? '__has_' : '') + column.name + '"></td>');
 	$('#sjo-api-table').empty().html(`<colgroup>${colGroupsHtml.join('')}</colgroup><thead>
 		<tr id="sjo-api-row-header">${headerCellsHtml.join('')}</tr>
 		<tr id="sjo-api-row-filter">${filterCellsHtml.join('')}</tr></thead><tbody></tbody>`);
@@ -887,7 +889,7 @@ function buildFilters() {
 		
 		// Loop through filterable fields
 		var values;
-		$.each(tableColumns, (colIndex, column) => {
+		$.each(sjo.api.tableColumns, (colIndex, column) => {
 			var field = dataFields[column.name];
 			
 			if (column.has) {
@@ -959,7 +961,7 @@ function applyFilters(callback) {
 		// Get filter parameters
 		var filter = $(element);
 		var colIndex = filter.closest('td').prop('cellIndex');
-		var column = tableColumns[colIndex];
+		var column = sjo.api.tableColumns[colIndex];
 		
 		if (filter.is('[type="checkbox"]')) {
 			
@@ -1008,7 +1010,7 @@ function applyFilters(callback) {
 function sortData(col) {
 	console.log('sortData', col);
 	
-	var column = tableColumns[col];
+	var column = sjo.api.tableColumns[col];
 	var field = dataFields[column.name];
 	
 	// Reverse sort if column is already sorted
@@ -1183,7 +1185,7 @@ function buildTableRows() {
 function buildTableRowCells(record) {
 	
 	// Loop through columns
-	var cellsHtml = tableColumns.map(column => {
+	var cellsHtml = sjo.api.tableColumns.map(column => {
 		
 		// Get field
 		var field = dataFields[column.name];
@@ -1216,7 +1218,7 @@ function tidyFilters() {
 	
 	// Go through all filterable fields
 	// TODO: make this loop the same as buildFilters, or vice versa
-	$.each(tableColumns, (colIndex, column) => {
+	$.each(sjo.api.tableColumns, (colIndex, column) => {
 		var field = dataFields[column.name];
 		if (!field.filter) return;
 		
@@ -1309,7 +1311,7 @@ function buildRawOutput() {
 
 function buildRawOutputRow(dataRow) {
 	
-	var cellValues = tableColumns.map(column => {
+	var cellValues = sjo.api.tableColumns.map(column => {
 		
 		// Get field
 		var field = dataFields[column.name];
