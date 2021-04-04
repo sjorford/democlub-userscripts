@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.03.19.0
+// @version     2021.04.04.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -456,8 +456,16 @@ function onready() {
 	$('#other').attr('autocomplete', 'off');
 	
 	// Expand bio field
-	var bioField = $('#id_biography')
-			.on('focus', event => bioField.addClass('sjo-expanded'))
-			.on('blur', event => bioField.val() === '' ? bioField.removeClass('sjo-expanded') : null);
+	var bioField = $('#id_biography').on('input', expandBioField);
+	expandBioField();
+	
+	function expandBioField(event) {
+		console.log('expandBioField');
+		var curHeight = bioField.css('height').replace(/px$/, '') - 0;
+		var scrollHeight = bioField.prop('scrollHeight') - 0;
+		var newHeight = scrollHeight + 3;
+		if (newHeight < curHeight) return;
+		bioField.css('height', newHeight + 'px');
+	}
 	
 }
