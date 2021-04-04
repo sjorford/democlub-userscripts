@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.03.19.0
+// @version     2021.04.04.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -207,16 +207,20 @@ function onready() {
 	});
 	
 	// Display previous names in header
-	var partyLabel = $('.person__details dt').filter((i,e) => e.innerText.trim() == "Party");
+	var prevNamesLabel;
 	var latestVersion = JSON.parse($('.full-version-json').first().text());
 	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => cleanChars(a.name)) : [];
 	currentNames.push(cleanChars(latestVersion.name));
 	$.each(oldNames, (index, name) => {
 		if (!currentNames.includes(name)) {
-			$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertBefore(partyLabel);
+			if (!prevNamesLabel) {
+				prevNamesLabel = $('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
+				$('.person__details dt').filter((i,e) => ['Name', 'Also known as'].includes(e.innerText.trim())).last()
+					.nextUntil('dt', 'dd').last().after(prevNamesLabel);
+			}
+			$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertAfter(prevNamesLabel);
 		}
 	});
-	$('.sjo-former-name').first().before('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
 	
 	// Format name prefix and suffix
 	var nameItem = $('.sjo-list-dt').filter((i,e) => e.innerText == 'Name').next('dd').text(latestVersion.name);
