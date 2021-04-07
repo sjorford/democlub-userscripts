@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.01.0
+// @version     2021.04.07.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -231,13 +231,23 @@ function onready() {
 			var head = table.children('thead');
 			var rows = table.find('tbody > tr');
 			var parties = $('td.sjo-results-party', rows).toArray().map(e => e.innerText.trim());
-			parties = [...new Set(parties)].sort();
+			parties = [...new Set(parties)].sort().sort((a,b) => a == 'Independent' ? 1 : b == 'Independent' ? -1 : 0);
 			
 			$.each(parties, (index,party) => {
 				var partyRows = rows.filter((i,e) => $(e).children('td.sjo-results-party').text().trim() == party);
+				if (party == 'Independent') {
+					partyRows.each((i,e) => {
+						addPartyTable(party, e);
+					});
+				} else {
+					addPartyTable(party, partyRows);
+				}
+			});
+			
+			function addPartyTable(party, partyRows) {
 				$('<h3></h3>').text(party).insertBefore(table);
 				$('<table></table>').attr('class', table.attr('class')).insertBefore(table).append(head.clone()).append(partyRows);
-			});
+			}
 			
 			if (table.find('tbody > tr').length == 0) {
 				table.hide();
