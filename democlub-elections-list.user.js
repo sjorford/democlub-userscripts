@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2021.03.19.0
+// @version     2021.04.07.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -146,7 +146,7 @@ $(function() {
 	
 	// Add filter
 	var filter = $('<input class="sjo-filter" id="sjo-filter" autocomplete="off">')
-		.insertAfter('.filters')
+		.insertAfter('.ds-filter')
 		.wrap('<label for="sjo-filter"></label>')
 		.before('Filter: ')
 		.focus().on('change keyup', event => {
