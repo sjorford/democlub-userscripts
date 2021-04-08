@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.04.02.0
+// @version        2021.04.08.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -732,6 +732,11 @@ function cleanData(index, candidate, isResults) {
 	// TODO: fix sorting of ages outside the range 10-99
 	candidate._election_year = +candidate.election_date.substr(0, 4);
 	if (candidate.birth_date) {
+		
+		// Fix dates in yyyy-00-00 format
+		// https://github.com/DemocracyClub/yournextrepresentative/issues/1418
+		candidate.birth_date = candidate.birth_date.replace(/-00-00$/, '');
+		
 		if (candidate.birth_date.length == 4) {
 			var ageThisYear = candidate._election_year - candidate.birth_date;
 			candidate._age_at_election = (ageThisYear - 1) + '-' + ageThisYear;
