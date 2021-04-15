@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.15.0
+// @version     2021.04.15.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -89,6 +89,8 @@ function onready() {
 		
 		.sjo-coop-logo {max-height: 18px; float: right;}
 		.sjo-coop-logo path {fill: #3f1d70;}
+		
+		.sjo-previous-ballot {float: right; border: 1px solid gray; border-radius: 5px; padding: 2px 6px; background-color: #fdd;}
 		
 	</style>`).appendTo('head');
 	
@@ -223,6 +225,12 @@ function onready() {
 		});
 		
 		$('h1').html((index, text) => text.replace('Police and Crime Commissioner', 'PCC'));
+		
+		// Shrink panel
+		var panel = $('h3 + .panel:contains("🔄 This ballot replaces")');
+		console.log(panel);
+		panel.find('a').insertBefore(panel.prev('h3')).addClass('sjo-previous-ballot');
+		panel.remove();
 		
 		// Split lists into parties
 		if (window.location.pathname.match(/\/(sp.r|senedd.r|naw.r|gla.a|europarl)\./)) {
