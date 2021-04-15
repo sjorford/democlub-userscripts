@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.03.19.0
+// @version     2021.04.15.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -51,6 +51,9 @@ function onready() {
 		.sjo-marker-main              {background-color: royalblue;}
 		.sjo-heading-past .sjo-marker {background-color: darkgrey;} /* wtf is darkgrey lighter than grey? */
 		.sjo-marker-main.sjo-marker-replacement {background-color: red;}
+		
+		.sjo-copyaslink {float: right; background: transparent; border-radius: 12px;}
+		.sjo-copyaslink:hover {background: white;}
 		
 	</style>`).appendTo('head');
 	
@@ -222,5 +225,17 @@ function onready() {
 	// Hide long data URI
 	// https://candidates.democracyclub.org.uk/person/768/martin-mcguinness
 	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
+	
+	// Add button to copy as link
+	$('<button class="sjo-copyaslink">🔗</button>').prependTo('.person__hero').click(event => {
+		var personName = $('.person__hero h1').text();
+		var partyName = $('.party').first().text();
+		var linkHTML = `<a href="${window.location.href}">${personName} (${personID}) - ${partyName}</a>`;
+		var temp = $('<div contenteditable></div>').insertAfter('.sjo-copyaslink').html(linkHTML).focus();
+		document.execCommand('selectAll');
+		document.execCommand('copy');
+		temp.remove();
+		return false;
+	});
 	
 }
