@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.04.08.0
+// @version        2021.04.16.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -200,7 +200,7 @@ function initialize() {
 	$.each(electionTypes, (i,e) => $('<option></option>').val(e).text(e).appendTo(typeSelect));
 	typeSelect.chosen();
 	
-	$('<input type="checkbox" id="sjo-api-cancelled" value="cancelled">')
+	$('<input type="checkbox" id="sjo-api-cancelled" value="cancelled" checked>')
 		.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').after('<label for="sjo-api-cancelled">Include cancelled</label>');
 	
 	// Highlight selected option
