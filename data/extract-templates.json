@@ -45,6 +45,34 @@
       }
     ]
   },
+  "short":{
+    "display":"Short",
+    "columns":[
+      "id",
+      "name",
+      "election",
+      "election_date",
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "party_id",
+      "party_name"
+    ],
+    "sort":[
+      {
+        "column":"election_date",
+        "order":1
+      },
+      {
+        "column":"_election_name",
+        "order":1
+      },
+      {
+        "column":"_post_label",
+        "order":1
+      }
+    ]
+  },
   "wikidata":{
     "display":"Wikidata",
     "columns":[
