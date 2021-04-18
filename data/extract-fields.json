@@ -234,11 +234,13 @@
     "display":"Instagram",
     "abbr":"ig",
     "link":"@@instagram_url@@",
+    "validate":"youtube",
     "group":"links"
   },
   "youtube_profile":{
     "display":"YouTube",
     "abbr":"yt",
+    "link":"@@youtube_profile@@",
     "group":"links"
   },
   "twitter_user_id":{
