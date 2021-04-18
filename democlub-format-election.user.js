@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.18.0
+// @version     2021.04.18.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -373,7 +373,7 @@ function onready() {
 		tbody.append(tbody.find('tr').toArray().sort(sort));
 		
 		function nameSort(a, b) {
-			var surnameRegex = /(\b(de|de la|la|le|von|van|van der) )?[^\s]+$/i;
+			var surnameRegex = /(\b(de( la)?|la|le|v[ao]n( de[rn]?)?) )?[^\s]+$/i;
 			var aName = a.cells[index].textContent.trim().toLowerCase();
 			var bName = b.cells[index].textContent.trim().toLowerCase();
 			var aSurname = aName.match(surnameRegex)[0];
