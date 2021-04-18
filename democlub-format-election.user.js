@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.18.1
+// @version     2021.04.18.2
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -355,7 +355,7 @@ function onready() {
 		table.on('click', 'th', sortResultsTable);
 		
 		// Default sort by name
-		if (posIndex < 0) {
+		if (posIndex < 0 && !window.location.href.match(/\.[ar]\./)) {
 			table.find('th.sjo-results-name').click();
 		}
 		
