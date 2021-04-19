@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/*
-// @version     2021.03.19.0
+// @version     2021.04.19.0
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -46,7 +46,7 @@ function onready() {
 				var bitMatch = bits[bitIndex].match(/<div id="(.*?)">\s*<h4>(.*?)<\/h4>\s*<ul>\s*<li>Total candidates: (\d+)<\/li>([\s\S]*?)<\/ul>/);
 
 				var id = bitMatch[1];
-				var matchId = id.match(/^statistics-election-((parl|sp|naw|nia|gla|mayor|pcc|local|europarl)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
+				var matchId = id.match(/^statistics-election-((parl|sp|naw|senedd|nia|gla|mayor|pcc|local|europarl)(-(a|r|c))?(-([-a-z]{2,}))?)-(\d{4}-\d{2}-\d{2})$/);
 				
 				var headerText = bitMatch[2];
 				var matchHeader = headerText.match(/^Statistics for the (\d{4} )?(.+?)( (local|[Mm]ayoral))?( [Ee]lection|by-election: (.*) (ward|constituency))?( \((.+)\))?$/, '');
