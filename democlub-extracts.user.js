@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.04.16.0
+// @version        2021.04.21.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -392,7 +392,7 @@ function buildDownloadList() {
 			// Parse election name
 			//var electionName = element.innerHTML.trim().match(/^Download the (\d{4} )?(.*?) candidates$/)[2];
 			var electionName = $(element).closest('td').prev('td').text();
-			electionName = Utils.shortOrgName(electionName);
+			electionName = Utils.shortOrgName(electionName, electionId);
 			electionName = electionName.replace(/\s+by-election.*$/, '');
 			if (electionId.startsWith('parl.') && electionName != 'General Election') {
 				electionName = 'UK Parliament';
