@@ -2,9 +2,10 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.08.03.0
+// @version        2021.04.23.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
+// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 $(function() {
@@ -14,11 +15,15 @@ $(function() {
 	
 	form.find('tr').each((index, element) => {
 		var cells = $(element).find('td');
-
+		
+		// contrast:
+		// (UKIP)    https://candidates.democracyclub.org.uk/uk_results/mayor.doncaster.2017-05-04/
+		// (Stratts) https://candidates.democracyclub.org.uk/uk_results/pcc.gloucestershire.2021-05-06/
+		
 		if (cells.closest('tbody').is(firstBody)) {
-			var candMatch = cells.first().text().match(/^(.*?)((\s+(von der|von de|von|van der|van de|van|de la|de|la)\s+)?([^\s]+))\s+\((.*)\)$/i);
-			cells.first().text(candMatch[1])
-				.after(`<td><strong>${candMatch[2].trim()}</strong></td><td>${candMatch[6]}</td>`);
+			var candMatch = cells.first().text().trim().match(/^(.+)\s+\(([^\(\)]+|[^\(\)]*\([^\(\)]+\)[^\(\)]*)\)$/i); // just the two problems
+			var nameSplit = Utils.splitName(candMatch[1]);
+			cells.first().text(nameSplit[0]).after(`<td><strong>${nameSplit[1]}</strong></td><td>${candMatch[2]}</td>`);
 		} else if (cells.find('#id_source').length > 0) {
 			cells.last().attr('colspan', '3');
 		} else {
