@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.18.2
+// @version     2021.04.26.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -161,7 +161,7 @@ function onready() {
 				if (party == 'Labour and Co-operative Party') return;
 				$('<h3></h3>').text(party).appendTo(wrapper);
 				
-				var table = $('<table class="sjo-election-results"></table>').appendTo(wrapper).append();
+				var table = $('<table class="sjo-election-results"></table>').appendTo(wrapper).on('click', 'th', sortResultsTable);
 				tableHeader.clone().appendTo(table)
 					.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
 				
@@ -371,6 +371,7 @@ function onready() {
 			(cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
 		var tbody = cell.closest('table').find('tbody');
 		tbody.append(tbody.find('tr').toArray().sort(sort));
+		return false;
 		
 		function nameSort(a, b) {
 			var surnameRegex = /(\b(de( la)?|la|le|v[ao]n( de[rn]?)?) )?[^\s]+$/i;
