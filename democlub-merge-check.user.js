@@ -1,8 +1,8 @@
 // ==UserScript==
 // @name        Democracy Club merge check
 // @namespace   sjorford@gmail.com
-// @include     https://candidates.democracyclub.org.uk/person/56105/duplicate?*
-// @version     2021.04.26.0
+// @include     https://candidates.democracyclub.org.uk/person/*/duplicate?*
+// @version     2021.04.26.1
 // @grant       none
 // ==/UserScript==
 
