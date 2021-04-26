@@ -4,7 +4,8 @@
 // @include     https://candidates.democracyclub.org.uk/person/*
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
-// @version     2021.03.19.0
+// @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
+// @version     2021.04.26.0
 // @grant       none
 // ==/UserScript==
 
