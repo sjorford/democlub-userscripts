@@ -18,12 +18,8 @@
     "validate":"name",
     "width":"12em"
   },
-  "honorific_prefix":{
-
-  },
-  "honorific_suffix":{
-
-  },
+  "honorific_prefix":{},
+  "honorific_suffix":{},
   "_first_name":{
     "display":"First Name",
     "filter":true
@@ -44,9 +40,7 @@
     "display":"Suffix",
     "filter":true
   },
-  "gender":{
-
-  },
+  "gender":{},
   "_gender":{
     "validate":"gender"
   },
@@ -243,41 +237,20 @@
     "link":"@@youtube_profile@@",
     "group":"links"
   },
-  "twitter_user_id":{
-
-  },
+  "twitter_user_id":{},
   "image_url":{
     "display":"Image",
     "abbr":"\u263A",
     "icon":true
   },
-  "proxy_image_url_template":{
-
-  },
-  "image_copyright":{
-
-  },
-  "image_uploading_user":{
-
-  },
-  "image_uploading_user_notes":{
-
-  },
-  "mapit_url":{
-
-  },
-  "gss_code":{
-
-  },
-  "parlparse_id":{
-
-  },
-  "theyworkforyou_url":{
-
-  },
-  "party_ec_id":{
-
-  },
+  "proxy_image_url_template":{},
+  "image_copyright":{},
+  "image_uploading_user":{},
+  "image_uploading_user_notes":{},
+  "gss_code":{},
+  "parlparse_id":{},
+  "theyworkforyou_url":{},
+  "party_ec_id":{},
   "favourite_biscuits":{
     "display":"Biscuit",
     "width":"12em"
@@ -289,5 +262,6 @@
     "boolean":true,
     "abbr":"🛇",
     "icon":true
-  }
+  },
+  "ballot_paper_id":{}
 }
