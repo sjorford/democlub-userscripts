@@ -4,6 +4,7 @@
     "columns":[
       "id",
       "name",
+      "ballot_paper_id",
       "election",
       "election_date",
       "_election_type",
