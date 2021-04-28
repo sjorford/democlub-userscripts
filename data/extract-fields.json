@@ -263,5 +263,13 @@
     "abbr":"🛇",
     "icon":true
   },
-  "ballot_paper_id":{}
+  "ballot_paper_id":{
+	  "display":"Ballot"
+  },
+  "seats_contested":{
+	  "display":"Seats"
+  },
+  "party_description_text":{
+	  "display":"Party Description"
+  }
 }
