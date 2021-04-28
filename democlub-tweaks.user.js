@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2021.04.28.0
+// @version     2021.04.28.1
 // @grant       none
 // ==/UserScript==
 
@@ -74,9 +74,6 @@ function onready() {
 	} else if (url.indexOf(rootUrl + 'uk_results/') === 0) {
 		formatResultsPostList();
 	}
-	
-	// TODO: hide long list of parties with no candidates
-	// e.g. https://candidates.democracyclub.org.uk/numbers/election/local.city-of-london.2017-03-23/parties
 	
 	// Hide empty header
 	var hero = $('.header__hero');
