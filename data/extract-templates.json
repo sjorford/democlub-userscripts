@@ -57,7 +57,8 @@
       "_election_name",
       "_post_label",
       "party_id",
-      "party_name"
+      "party_name",
+      "has:elected"
     ],
     "sort":[
       {
