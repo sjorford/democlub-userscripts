@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.05.07.0
+// @version     2021.05.07.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -105,7 +105,7 @@ function onready() {
 		// All elections page
 		// ================================
 		
-	} else if (document.title.trim() == 'Known candidates for each ballot') {
+	} else if (document.title.trim().match(/^Known candidates for each ballot/)) {
 		
 		// Election summary pages
 		// ================================
