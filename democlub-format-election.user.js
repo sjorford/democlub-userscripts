@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.04.26.1
+// @version     2021.05.07.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
@@ -98,7 +98,14 @@ function onready() {
 	
 	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
 	
-	if (document.title.match(/Known candidates for each ballot/)) {
+	console.log(document.title.trim());
+	
+	if (document.title.trim() == 'All ballots in current or future elections') {
+		
+		// All elections page
+		// ================================
+		
+	} else if (document.title.trim() == 'Known candidates for each ballot') {
 		
 		// Election summary pages
 		// ================================
