@@ -45,7 +45,11 @@ $(`<style class="sjo-styles">
 	}
 
 	input.sjo-filter {display: inline-block; width: 30ex; padding: 5px; height: auto;}
-
+	
+	.ds-filter-cluster ul {margin-top: 0.5rem; margin-bottom: 0;}
+	.ds-filter-label {min-width: 10em;}
+	#id_for_postcode {display: inline; width: 8em; margin-bottom: 0;}
+	
 </style>`).appendTo('head');
 
 $(function() {
@@ -172,5 +176,12 @@ $(function() {
 				.prev('.sjo-posts-heading').show();
 			
 		});
+	
+	// Format filters
+	$('li.ds-filter-label:contains("Election Type") ~ li a').not(':contains("All")')
+		.each((i,e) => e.innerText = e.href.match(/election_type=([^&]+)/)[1]);
+	$('li.ds-filter-label:contains("Filter by region") ~ li a').not(':contains("All")')
+		.each((i,e) => e.innerText = e.innerText.trim().match(/(?:^(\w)\w+ (\w)\w+$|(\w\w))/).slice(1).join('').toUpperCase());
+	
 	
 });
