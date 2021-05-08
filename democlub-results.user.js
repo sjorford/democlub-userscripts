@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.08.0
+// @version        2021.05.08.1
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -55,5 +55,7 @@ $(function() {
 		var html = element.innerText.replace(/\b(https?:\/\/\S+)/g, '<a href="$1">$1</a>');
 		$('<span></span>').html(html).insertAfter(element).prev('q').remove();
 	});
+	
+	$('td:contains("required")').html((i,html) => html.replace(/ \((Number, )?Not required\)/i, ''));
 	
 });
