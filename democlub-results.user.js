@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.08.2
+// @version        2021.05.09.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -58,5 +58,47 @@ $(function() {
 	});
 	
 	$('td:contains("required")').html((i,html) => html.replace(/ \((Number, )?Not required\)/i, ''));
+	
+	// Highlight ties
+	var voteInputs = $('input[id^="id_memberships_"]').on('change keyup', highlightTies);
+	highlightTies();
+	
+	function highlightTies() {
+		var votes = voteInputs.toArray().map(e => parseInt(e.value));
+		for (var i = 0; i < voteInputs.length; i++) {
+			
+			var input = voteInputs.eq(i);
+			var row = input.closest('tr');
+			var tie = false;
+			var pos = 1;
+			if (!isNaN(votes[i])) {
+				for (var k = 0; k < voteInputs.length; k++) {
+					if (k != i) {
+						if (votes[k] == votes[i]) {
+							tie = true;
+						} else if (votes[k] > votes[i]) {
+							pos++;
+						}
+					}
+				}
+			}
+			
+			row.find('.sjo-results-tie').remove();
+			if (tie) {
+				var suffix = ['th','st','nd','rd','th','th','th','th','th','th'][(''+pos).substr(-1)];
+				voteInputs.eq(i).closest('td').after(`<td class="sjo-results-tie">tie for ${pos}${suffix}</td>`);
+			}
+			
+		}
+	}
+	
+	// Calculate percentage
+	$('#id_total_electorate, #id_num_turnout_reported').on('change keyup', event => {
+		var turnout = $('#id_num_turnout_reported').val();
+		var electorate = $('#id_total_electorate').val();
+		if (turnout && electorate) {
+			$('#id_turnout_percentage').attr('placeholder', (100 * turnout / electorate).toFixed(2));
+		}
+	});
 	
 });
