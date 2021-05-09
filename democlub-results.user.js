@@ -2,13 +2,17 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.09.0
+// @version        2021.05.09.1
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 $(function() {
+	
+	$(`<style class="sjo-styles">
+		.sjo-results-winner {background-color: #ffc947 !important;}
+	</style>`).appendTo('head');
 	
 	var form = $('.ballot_paper_results_form');
 	var firstBody = form.find('tbody').first();
@@ -59,35 +63,55 @@ $(function() {
 	
 	$('td:contains("required")').html((i,html) => html.replace(/ \((Number, )?Not required\)/i, ''));
 	
-	// Highlight ties
-	var voteInputs = $('input[id^="id_memberships_"]').on('change keyup', highlightTies);
-	highlightTies();
+	// Estimate number of seats up
+	var voteInputs = $('input[id^="id_memberships_"]');
+	var numSeats = 1;
+	var parties = {};
+	voteInputs.each((i,e) => {
+		var party = $(e).closest('td').prev('td').text().trim();
+		if (party != 'Independent') {
+			if (!parties[party]) parties[party] = 0;
+			parties[party]++;
+			if (parties[party] > numSeats) numSeats = parties[party];
+		}
+	});
 	
-	function highlightTies() {
+	voteInputs.on('change keyup', checkVotes);
+	checkVotes();
+	
+	function checkVotes() {
 		var votes = voteInputs.toArray().map(e => parseInt(e.value));
 		for (var i = 0; i < voteInputs.length; i++) {
 			
 			var input = voteInputs.eq(i);
 			var row = input.closest('tr');
+			row.removeClass('sjo-results-winner').find('.sjo-results-tie').remove();
+			if (isNaN(votes[i])) continue;
+			
 			var tie = false;
 			var pos = 1;
-			if (!isNaN(votes[i])) {
-				for (var k = 0; k < voteInputs.length; k++) {
-					if (k != i) {
-						if (votes[k] == votes[i]) {
-							tie = true;
-						} else if (votes[k] > votes[i]) {
-							pos++;
-						}
+			var unknown = false;
+			
+			for (var k = 0; k < voteInputs.length; k++) {
+				if (k != i) {
+					if (isNaN(votes[k])) {
+						unknown = true;
+					} else if (votes[k] == votes[i]) {
+						tie = true;
+					} else if (votes[k] > votes[i]) {
+						pos++;
 					}
 				}
 			}
 			
-			row.find('.sjo-results-tie').remove();
+			// Highlight ties
 			if (tie) {
 				var suffix = ['th','st','nd','rd','th','th','th','th','th','th'][(''+pos).substr(-1)];
 				voteInputs.eq(i).closest('td').after(`<td class="sjo-results-tie">tie for ${pos}${suffix}</td>`);
 			}
+			
+			// Highlight winners
+			if (pos <= numSeats && !unknown) row.addClass('sjo-results-winner');
 			
 		}
 	}
