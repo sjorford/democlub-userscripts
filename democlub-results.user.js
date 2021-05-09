@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.09.1
+// @version        2021.05.09.2
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -11,7 +11,8 @@
 $(function() {
 	
 	$(`<style class="sjo-styles">
-		.sjo-results-winner {background-color: #ffc947 !important;}
+		.sjo-results-winner {background-color: khaki !important;}
+		.sjo-results-notes {font-weight: bold;}
 	</style>`).appendTo('head');
 	
 	var form = $('.ballot_paper_results_form');
@@ -85,7 +86,7 @@ $(function() {
 			
 			var input = voteInputs.eq(i);
 			var row = input.closest('tr');
-			row.removeClass('sjo-results-winner').find('.sjo-results-tie').remove();
+			row.removeClass('sjo-results-winner').find('.sjo-results-notes').remove();
 			if (isNaN(votes[i])) continue;
 			
 			var tie = false;
@@ -107,11 +108,11 @@ $(function() {
 			// Highlight ties
 			if (tie) {
 				var suffix = ['th','st','nd','rd','th','th','th','th','th','th'][(''+pos).substr(-1)];
-				voteInputs.eq(i).closest('td').after(`<td class="sjo-results-tie">tie for ${pos}${suffix}</td>`);
+				row.append(`<td class="sjo-results-notes">tie for ${pos}${suffix}</td>`);
 			}
 			
 			// Highlight winners
-			if (pos <= numSeats && !unknown) row.addClass('sjo-results-winner');
+			if (pos <= numSeats && !unknown) row.addClass('sjo-results-winner').append('<td class="sjo-results-notes">winner</td>');
 			
 		}
 	}
