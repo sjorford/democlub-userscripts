@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.04.26.0
+// @version     2021.05.12.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -53,8 +53,10 @@ function onready() {
 		.sjo-heading-past .sjo-marker {background-color: darkgrey;} /* wtf is darkgrey lighter than grey? */
 		.sjo-marker-main.sjo-marker-replacement {background-color: red;}
 		
-		.sjo-copyaslink {float: right; background: transparent; border-radius: 12px;}
+		.sjo-copyaslink {float: right; clear: right; background: transparent; border-radius: 12px;}
 		.sjo-copyaslink:hover {background: white;}
+		
+		.sjo-lastupdate {font-size: 12px; float: right; color: #b5e4de; margin-top: .2rem;}
 		
 	</style>`).appendTo('head');
 	
@@ -228,7 +230,7 @@ function onready() {
 	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
 	
 	// Add button to copy as link
-	$('<button class="sjo-copyaslink">🔗</button>').prependTo('.person__hero').click(event => {
+	$('<button class="sjo-copyaslink">🔗</button>').insertAfter('.person__photo').click(event => {
 		var personName = $('.person__hero h1').text();
 		var partyName = $('.party').first().text();
 		var linkHTML = `<a href="${window.location.href}">${personName} (${personID}) - ${partyName}</a>`;
@@ -238,5 +240,9 @@ function onready() {
 		temp.remove();
 		return false;
 	});
+	
+	// Show last update time in header
+	var updateTime = $('dt:contains("Timestamp")').first().next('dd').text().trim();
+	$(`<div class="sjo-lastupdate">Last updated: ${updateTime}</div>`).insertAfter('.person__photo');
 	
 }
