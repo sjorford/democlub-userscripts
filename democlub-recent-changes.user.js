@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.03.19.0
+// @version        2021.05.15.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -25,6 +25,7 @@ function onready() {
 		.sjo-changes-bot {background-color: #9ed79e !important;}
 		.sjo-changes-bot.sjo-changes-twitter-removed {background-color: #5cc45c !important;}
 		.sjo-changes-candidacy-delete {background-color: pink !important;}
+		.sjo-changes-sopn-upload * {background-color: goldenrod !important;}
 		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
 	</style>`).appendTo('head');
 	
@@ -57,7 +58,6 @@ function onready() {
 		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
 		
 		// Flag internally-sourced edits
-		console.log(sourceCell.text().trim());
 		if (sourceCell.text().trim().match(/democracyclub/)) {
 			row.addClass('sjo-changes-internal');
 		}
@@ -87,5 +87,25 @@ function onready() {
 		currentParams.set('page', targetParams.get('page'));
 		e.href = '?' + currentParams.toString();
 	})
+	
+	
+	// Convert action types to buttons
+	var actionSelect = $('#id_action_type').hide();
+	var actionOptions = actionSelect.find('option').each((i,e) => {
+		$(`<a href="#" data-value="${e.value}" ${e.selected ? ' aria-current="true"' : ''}>${e.innerText}</a>`)
+			.insertBefore(actionSelect).wrap('<li class="sjo-changes-action"></li>');
+	});
+	$('.sjo-changes-action').click(event => {
+		var button = $(event.target);
+		var option = actionOptions.filter((i,e) => e.value == button.data('value'));
+		if (button.attr('aria-current')) {
+			option.prop('selected', false);
+			button.removeAttr('aria-current');
+		} else {
+			option.prop('selected', true);
+			button.attr('aria-current', true);
+		}
+		return false;
+	});
 	
 }
