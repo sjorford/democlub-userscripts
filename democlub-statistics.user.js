@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/*
-// @version     2021.04.19.0
+// @version     2021.06.04.0
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -33,7 +33,7 @@ function onready() {
 	var sections = $('.statistics-elections').each(function(index, element) {
 		
 		var html = element.innerHTML;
-		var htmlSplit = html.match(/([\s\S]+)(<h3>[\s\S]+)/);
+		var htmlSplit = html.match(/(?:[\s\S]+?)(<h3>[\s\S]+)/);
 		if (!htmlSplit) return;
 		var blocks = htmlSplit[1].replace(/(<h3>)/g, '🤒$1').split('🤒');
 		var lastDate = null;
