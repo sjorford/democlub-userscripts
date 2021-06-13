@@ -2,18 +2,34 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.03.19.0
+// @version        2021.06.13.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
+// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 $(`<style class="sjo-styles">
-	.search_results li {height: 68px;}
-	.search_results li + li {height: 68px; margin-top: 1em;}
+	
+	.search_results li {height: 64px;}
+	.search_results li + li {height: 64px; margin-top: 1em;}
 	.search_results li img {max-height: 64px; object-fit: contain;}
 	.search_results li .button.secondary.small {margin-bottom: 0;}
-	.sjo-search-exact {border: 2px solid gold; padding: 5px; margin-left: -7px; border-radius: 4px; background-color: #fff3b1;}
+	.sjo-search-exact {background-color: #fff3b1;}
 	.sjo-search-id {float: right; padding: 0.25rem; font-size: 75%;}
+	
+	.sjo-party-bar {width: 10px !important; min-width: 10px; padding: 0; float: left; height: 64px; background-color: lightgrey; border-right: 1px solid white;}
+	.sjo-party-bar.sjo-party-conservative-and-unionist-party {background-color: blue;}
+	.sjo-party-bar.sjo-party-labour-party                    {background-color: red;}
+	.sjo-party-bar.sjo-party-labour-and-co-operative-party   {background-color: red;}
+	.sjo-party-bar.sjo-party-liberal-democrats               {background-color: orange;}
+	.sjo-party-bar.sjo-party-green-party                     {background-color: #00ea4b;}
+	.sjo-party-bar.sjo-party-scottish-green-party            {background-color: #00ea4b;}
+	.sjo-party-bar.sjo-party-uk-independence-party-ukip      {background-color: purple;}
+	.sjo-party-bar.sjo-party-the-brexit-party                {background-color: #41e7ff;}
+	.sjo-party-bar.sjo-party-reform-uk                       {background-color: #41e7ff;}
+	.sjo-party-bar.sjo-party-scottish-national-party-snp     {background-color: yellow;}
+	.sjo-party-bar.sjo-party-plaid-cymru-the-party-of-wales  {background-color: green;}
+	
 </style>`).appendTo('head');
 
 // temporary fix due to c.dc script errors
@@ -40,6 +56,11 @@ function onready() {
 		$('<span class="sjo-search-id"></span>').text(id)
 			.appendTo(item.find('.person-name-and-party'));
 		
+		// Add party colour
+		var party = item.find('.party').text().trim().match(/(.*) \(.*\)/)[1];
+		var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
+		item.prepend(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
+
 	});
 	
 	// Capitalise name in new candidate button
