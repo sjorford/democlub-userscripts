@@ -3,9 +3,10 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.06.05.0
+// @version     2021.06.13.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -300,7 +301,7 @@ function onready() {
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
 			var party = tr.find('td').eq(partyCol).text().trim();
-			var partySlug = party == '' ? 'notstanding' : slugify(party);
+			var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
 			tr.prepend(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
 		});
 		headers = table.find('thead tr').prepend('<th class="sjo-party-bar"></th>');
@@ -423,11 +424,6 @@ function onready() {
 			};
 		}
 		
-	}
-	
-	// TODO: move this to Utils
-	function slugify(text) {
-		return text.toLowerCase().replace(/[^a-z0-9'’]+/g, ' ').trim().replace(/\s+/g, '-')
 	}
 	
 	function coopLogo() {
