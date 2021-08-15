@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.08.15.0
+// @version     2021.08.15.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -62,6 +62,8 @@ function onready() {
 			background-image: url(https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/img/portcullis.svg);
 			background-repeat: no-repeat;
 			padding-left: 20px;
+			background-size: 15px;
+			background-position-y: center;
 		}
 		
 	</style>`).appendTo('head');
