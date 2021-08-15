@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.07.26.0
+// @version     2021.08.15.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -58,6 +58,12 @@ function onready() {
 		
 		.sjo-lastupdate {font-size: 12px; float: right; color: #b5e4de; margin-top: .2rem;}
 		
+		.sjo-parl {
+			background-image: url(https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/img/portcullis.svg);
+			background-repeat: no-repeat;
+			padding-left: 20px;
+		}
+		
 	</style>`).appendTo('head');
 	
 	var labelMappings = {
@@ -94,6 +100,11 @@ function onready() {
 			// TODO: move this to Utils
 			if (href.match(/\/elections\/mayor\./) && !council.startsWith('Mayor of ')) {
 				council = 'Mayor of ' + council;
+			}
+			
+			if (href.match(/\/elections\/parl\./)) {
+				council = "UK Parliament";
+				dt.addClass('sjo-parl');
 			}
 			
 			dt.html(`${council} <span class="sjo-heading-note">(${date.format("D MMM YYYY")})</span>`);
