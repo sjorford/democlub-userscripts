@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.06.13.0
+// @version     2021.10.30.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -296,6 +296,15 @@ function onready() {
 			headers = table.getTableHeaders();
 			partyCol = headers.indexOf('Party');
 		}
+		
+		// Add IDs column
+		table.find('tbody tr').each((index, element) => {
+			var tr = $(element);
+			var id = tr.find('td').eq(headers.indexOf('Name')).find('a').attr('href').match(/\/(\d+)\//)[1];
+			tr.prepend(`<td>${id}</td>`);
+		});
+		headers = table.find('thead tr').prepend('<th>ID</th>');
+		headers = table.getTableHeaders();
 		
 		// Add colour bar
 		table.find('tbody tr').each((index, element) => {
