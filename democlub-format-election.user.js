@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.10.31.0
+// @version     2021.10.31.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -60,10 +60,11 @@ function onready() {
 		.sjo-page-election .sjo-results-party {width: 300px;}
 		.sjo-page-election .sjo-results-ward  {width: 300px;}
 		.sjo-page-election .sjo-results-votes {width: 100px;}
-		.sjo-results-votes {text-align: right;}
-		.sjo-results-votes-missing {background-color: lightgray;}
-		.sjo-results-pos   {text-align: center;}
-		.sjo-sort-hidden {display: none;}
+		td.sjo-results-id, .sjo-results-votes {text-align: right;}
+		th.sjo-results-id                     {text-align: center;}
+		.sjo-results-votes-missing            {background-color: lightgray;}
+		.sjo-results-pos                      {text-align: center;}
+		.sjo-sort-hidden                      {display: none;}
 		
 		.sjo-party-bar {width: 10px !important; min-width: 10px; padding: 0;}
 		tbody .sjo-party-bar {background-color: lightgrey; border: solid 1px #ddd;}
@@ -98,8 +99,6 @@ function onready() {
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
 	
 	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
-	
-	console.log(document.title.trim());
 	
 	if (document.title.trim() == 'All ballots in current or future elections') {
 		
@@ -164,7 +163,6 @@ function onready() {
 			
 			var parties = $('td.sjo-results-party').toArray().map(e => e.innerText.trim());
 			parties = [...new Set(parties)].sort();
-			console.log(parties);
 			$.each(parties, (i,party) => {
 				if (party == 'Labour and Co-operative Party') return;
 				$('<h3></h3>').text(party).appendTo(wrapper);
@@ -236,7 +234,6 @@ function onready() {
 		
 		// Shrink panel
 		var panel = $('h3 + .panel:contains("🔄 This ballot replaces")');
-		console.log(panel);
 		panel.find('a').insertBefore(panel.prev('h3')).addClass('sjo-previous-ballot');
 		panel.remove();
 		
@@ -277,62 +274,60 @@ function onready() {
 		
 		var table = $(selector);
 		var tbody = table.find('tbody:first-of-type');
-		var headers = table.getTableHeaders();
 		
 		// Add table classes
 		table.addClass('sjo-election-results');
-		var posIndex = headers.indexOf('List position');
-		if (posIndex >= 0) {
-			table.find('th').eq(posIndex).text('Pos');
+		var posCol = table.getTableHeaders().indexOf('List position');
+		if (posCol >= 0) {
+			table.find('th').eq(posCol).text('Pos');
 			$('body').addClass('sjo-election-haslists');
 		}
 		
 		// Add blank party column to not-standing table
-		var partyCol = headers.indexOf('Party');
-		if (partyCol < 0) {
-			var nameCol = headers.indexOf('Name');
+		if (table.getTableHeaders().indexOf('Party') < 0) {
+			var nameCol = table.getTableHeaders().indexOf('Name');
 			table.find(`thead tr th:nth-of-type(${nameCol+1})`).after('<th>Party</th>');
 			table.find(`tbody tr td:nth-of-type(${nameCol+1})`).after('<td></td>');
-			headers = table.getTableHeaders();
-			partyCol = headers.indexOf('Party');
 		}
 		
 		// Add IDs column
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
-			var id = tr.find('td').eq(headers.indexOf('Name')).find('a').attr('href').match(/\/(\d+)\//)[1];
+			var nameCol = table.getTableHeaders().indexOf('Name');
+			var id = tr.find('td').eq(nameCol).find('a').attr('href').match(/\/(\d+)\//)[1];
 			tr.prepend(`<td class="sjo-results-id">${id}</td>`);
 		});
-		headers = table.find('thead tr').prepend('<th class="sjo-results-id">ID</th>');
-		headers = table.getTableHeaders();
+		table.find('thead tr').prepend('<th class="sjo-results-id">ID</th>');
 		
 		// Add colour bar
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
+			var partyCol = table.getTableHeaders().indexOf('Party');
 			var party = tr.find('td').eq(partyCol).text().trim();
 			var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
 			tr.prepend(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
 		});
-		headers = table.find('thead tr').prepend('<th class="sjo-party-bar"></th>');
-		headers = table.getTableHeaders();
+		table.find('thead tr').prepend('<th class="sjo-party-bar"></th>');
 		
 		// Highlight elected candidates
-		var electedIndex = headers.indexOf('Elected?');
-		if (electedIndex >= 0) {
-			table.find('th').eq(electedIndex).text('').addClass('sjo-results-elected');
+		var electedCol = table.getTableHeaders().indexOf('Elected?');
+		if (electedCol >= 0) {
+			
+			table.find('th').eq(electedCol).text('').addClass('sjo-results-elected');
 			tbody.find('tr').each((i,e) => {
-				var cell = $(e).find('td').eq(electedIndex).addClass('sjo-results-elected');
+				var cell = $(e).find('td').eq(electedCol).addClass('sjo-results-elected');
 				cell.text(cell.text().replace(/^Yes$/, '★').replace(/^No$/, ''));
 			});
+			
 		} else {
 			
 			// Split out new column
-			var resultsIndex = headers.indexOf('Results');
-			if (resultsIndex >= 0) {
-				table.find('th').eq(resultsIndex).text('Votes');
+			var resultsCol = table.getTableHeaders().indexOf('Results');
+			if (resultsCol >= 0) {
+				table.find('th').eq(resultsCol).text('Votes');
 				table.find('tr').each((i,e) => {
 					var tr = $(e);
-					var resultsCell = tr.find('td, th').eq(resultsIndex);
+					var resultsCell = tr.find('td, th').eq(resultsCol);
 					var electedCell = (resultsCell.is('th')) ? $('<th></th>') : $('<td></td>');
 					electedCell.addClass('sjo-results-elected').insertAfter(resultsCell);
 					if (resultsCell.text().match(/ \(elected\)/)) {
@@ -344,10 +339,8 @@ function onready() {
 			
 		}
 		
-		// Refresh table headers
-		headers = table.getTableHeaders();
-		
 		// Add cell classes
+		var headers = table.getTableHeaders();
 		table.find('tr').each((i,e) => {
 			$(e).find('td, th').each((i,e) => {
 				var td = $(e);
@@ -372,7 +365,7 @@ function onready() {
 		table.on('click', 'th', sortResultsTable);
 		
 		// Default sort by name
-		if (posIndex < 0 && !window.location.href.match(/\.[ar]\./)) {
+		if (posCol < 0 && !window.location.href.match(/\.[ar]\./)) {
 			table.find('th.sjo-results-name').click();
 		}
 		
