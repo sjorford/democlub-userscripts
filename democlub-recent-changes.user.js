@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.15.0
+// @version        2021.10.31.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -24,9 +24,9 @@ function onready() {
 		.sjo-mychanges {background-color: #ffeb99 !important;}
 		.sjo-changes-bot {background-color: #9ed79e !important;}
 		.sjo-changes-bot.sjo-changes-twitter-removed {background-color: #5cc45c !important;}
-		.sjo-changes-candidacy-delete {background-color: pink !important;}
-		.sjo-changes-sopn-upload * {background-color: goldenrod !important;}
-		.sjo-changes-photo-upload *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
+		.sjo-changes-candidacy-deleted {background-color: pink !important;}
+		.sjo-changes-sopn-uploaded * {background-color: goldenrod !important;}
+		.sjo-changes-photo-uploaded *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
 	</style>`).appendTo('head');
 	
 	var username = 'sjorford'; // TODO: get this from top of page?
@@ -68,7 +68,7 @@ function onready() {
 		}
 		
 		// Flag all rows by action
-		row.addClass('sjo-changes-' + cells.eq(headings['Action']).text());
+		row.addClass('sjo-changes-' + slugify(cells.eq(headings['Action']).text()));
 		
 		// Flag bot edits
 		if (cells.eq(headings['User']).text().trim().match(/Bot$/)) {
@@ -107,5 +107,9 @@ function onready() {
 		}
 		return false;
 	});
+	
+	function slugify(text) {
+		return text.toLowerCase().replace(/^[^a-z0-9]+|[^a-z0-9]+$/, '').replace(/[^a-z0-9]+/, '-');
+	}
 	
 }
