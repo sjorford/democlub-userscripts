@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.10.30.0
+// @version     2021.10.31.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -81,7 +81,7 @@ function onready() {
 		
 		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
 		
-		.candidates-list td {width: 33%;}
+		.sjo-results-name, .sjo-results-party {width: 50%;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
@@ -301,9 +301,9 @@ function onready() {
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
 			var id = tr.find('td').eq(headers.indexOf('Name')).find('a').attr('href').match(/\/(\d+)\//)[1];
-			tr.prepend(`<td>${id}</td>`);
+			tr.prepend(`<td class="sjo-results-id">${id}</td>`);
 		});
-		headers = table.find('thead tr').prepend('<th>ID</th>');
+		headers = table.find('thead tr').prepend('<th class="sjo-results-id">ID</th>');
 		headers = table.getTableHeaders();
 		
 		// Add colour bar
