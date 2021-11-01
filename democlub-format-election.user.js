@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.10.31.1
+// @version     2021.11.1.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -82,7 +82,7 @@ function onready() {
 		
 		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
 		
-		.sjo-results-name, .sjo-results-party {width: 50%;}
+		.sjo-results-name, .sjo-results-party, .sjo-results-actions {width: 33%;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
@@ -344,9 +344,10 @@ function onready() {
 		table.find('tr').each((i,e) => {
 			$(e).find('td, th').each((i,e) => {
 				var td = $(e);
-				if (headers[i] == 'Name')  td.addClass('sjo-results-name');
-				if (headers[i] == 'Pos')   td.addClass('sjo-results-pos');
-				if (headers[i] == 'Party') td.addClass('sjo-results-party');
+				if (headers[i] == 'Name')    td.addClass('sjo-results-name');
+				if (headers[i] == 'Pos')     td.addClass('sjo-results-pos');
+				if (headers[i] == 'Party')   td.addClass('sjo-results-party');
+				if (headers[i] == 'Actions') td.addClass('sjo-results-actions');
 				
 				// Format votes
 				if (headers[i] == 'Votes') {
