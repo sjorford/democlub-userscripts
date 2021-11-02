@@ -2,14 +2,11 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.10.31.0
+// @version        2021.11.02.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
-// @require        https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
-
-var maxUrlLength = 40;
 
 // temporary fix due to c.dc script errors
 // $(onready);
@@ -21,16 +18,10 @@ function onready() {
 		.sjo-changes td, .sjo-changes th {padding: 4px;}
 		.sjo-nowrap {white-space: nowrap;}
 		.sjo-number {text-align: right;}
-		.sjo-mychanges {background-color: #ffeb99 !important;}
-		.sjo-changes-bot {background-color: #9ed79e !important;}
-		.sjo-changes-bot.sjo-changes-twitter-removed {background-color: #5cc45c !important;}
-		.sjo-changes-candidacy-deleted {background-color: pink !important;}
-		.sjo-changes-sopn-uploaded * {background-color: goldenrod !important;}
-		.sjo-changes-photo-uploaded *, .sjo-changes-photo-approve *, .sjo-changes-photo-reject *, .sjo-changes-photo-ignore * {color: #ccc !important;}
 	</style>`).appendTo('head');
 	
-	var username = 'sjorford'; // TODO: get this from top of page?
-	var now = moment();
+	var maxUrlLength = 40;
+	var username = $('.nav-links__item:contains("Signed in as") strong').text().trim();
 	
 	// Get table and headings
 	var table = $('.container table').addClass('sjo-changes');
@@ -41,13 +32,6 @@ function onready() {
 		var row = $(element);
 		var cells = row.find('td');
 		if (cells.length === 0) return;
-		
-		/*
-		// Reformat dates
-		var dateCell = cells.eq(headings['Date and time']);
-		var time = moment(dateCell.html().replace(/\./g, ''), 'MMMM D, YYYY, h:mm a');
-		dateCell.html(time.format('D MMM' + (time.year() == now.year() ? '' : ' YYYY') + ' HH:mm'));
-		*/
 		
 		// Stop columns wrapping
 		cells.eq(headings['Date and time']).addClass('sjo-nowrap');
@@ -95,6 +79,7 @@ function onready() {
 		$(`<a href="#" data-value="${e.value}" ${e.selected ? ' aria-current="true"' : ''}>${e.innerText}</a>`)
 			.insertBefore(actionSelect).wrap('<li class="sjo-changes-action"></li>');
 	});
+	
 	$('.sjo-changes-action').click(event => {
 		var button = $(event.target);
 		var option = actionOptions.filter((i,e) => e.value == button.data('value'));
