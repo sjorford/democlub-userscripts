@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*/review/
-// @version     2021.11.13.0
+// @version     2021.11.13.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -13,6 +13,12 @@
 window.setTimeout(onready, 0);
 
 function onready() {
+	
+	$(`<style>
+		thead th label {font-weight: bold;}
+		.sopn_adding_table input {margin-bottom: 0;}
+		.sjo-extra-row {display: none;}
+	</style>`).appendTo('head');
 	
 	// Sort europarl candidates by party
 	if (window.location.href.indexOf('/europarl.') >= 0) {
@@ -28,5 +34,27 @@ function onready() {
 	}
 	
 	$('summary:contains("How to add or check candidates")').parent('details').hide();
+	
+	// Collapse table
+	var table = $('#bulk_add_form .sopn_adding_table');
+	table.find('thead').first().empty().append(
+		table.find('tbody th').closest('tr').first()
+	);
+	table.find('thead').not(':first-of-type').remove();
+	table.find('tbody th').closest('tr').remove();
+	table.find('td').contents()
+		.filter((i,e) => e.nodeType == Node.TEXT_NODE)
+		.filter((i,e) => e.textContent.trim() == 'If the party is blank on the SOPN, enter "Independent"')
+		.remove();
+	table.find('br').remove();
+	
+	if (table.find('input[id$="-name"]').filter((i,e) => e.value != '').length > 0) {
+		table.find('input[id$="-name"]').filter((i,e) => e.value == '')
+			.closest('tbody').addClass('sjo-extra-row');
+		$('<button type="button" class="tiny" id="sjo-show-extra-rows">Show more rows</button>')
+			.click(event => $('tbody').removeClass('sjo-extra-row') 
+				   && $('#sjo-show-extra-rows').hide())
+			.insertAfter(table).wrap('<div></div>');
+	}
 	
 }
