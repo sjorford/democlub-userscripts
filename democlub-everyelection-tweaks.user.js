@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2021.05.14.0
+// @version     2021.11.17.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -51,6 +51,8 @@ function onready() {
 	} else if (location.href.indexOf('/id_creator/election_organisation_division/') >= 0) {
 		updateTitle('ID Creator');
 		formatDivisions();
+	} else if (location.href.indexOf('/election_radar/') >= 0) {
+		$('.block-label').css({display: 'inline-block'});
 	}
 	
 	function updateTitle(newText) {
