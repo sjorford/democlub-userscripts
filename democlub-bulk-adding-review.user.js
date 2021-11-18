@@ -2,7 +2,7 @@
 // @name        Democracy Club bulk adding review
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2018.06.24.0
+// @version     2021.11.18.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -75,11 +75,5 @@ function onready() {
 	function trimPost(postName) {
 		return postName.match(/^(Member of (the Scottish )?Parliament for )?(.*?)( ward)?$/)[3];
 	}
-	
-	// Highlight selected option
-	$('body').on('change', '.sjo-bulkadd-listitem input[type="radio"]', event => {
-		$('.sjo-bulkadd-listitem').each((index, element) =>
-			$(element).toggleClass('sjo-bulkadd-selected', $('input[type="radio"]', element).is(':checked')));
-	});
 	
 }
