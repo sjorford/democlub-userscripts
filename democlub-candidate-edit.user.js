@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.11.11.0
+// @version     2021.11.22.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -83,7 +83,7 @@ function onready() {
 		'id_name':							'Name',
 		'id_honorific_suffix':				'Suffix',
 		'id_gender':						'Gender',
-		'id_birth_date':					'Date of birth',
+		'id_birth_date':					'Year of birth',
 		'id_death_date':					'Date of death',
 		'id_biography':						'Statement',
 		'id_favourite_biscuit':				'Biscuit \u{1F36A}',
@@ -109,7 +109,7 @@ function onready() {
 	
 	// Format general candidate fields
 	//$.each(candidateFields, (key, value) => formatField(key, value, null));
-	$('input[type="text"], textarea', '#person-details').each((i,e) => formatField(e.id));
+	$('input[type="text"], input[type="number"], textarea', '#person-details').each((i,e) => formatField(e.id));
 	
 	// Find heading of candidacy section
 	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
@@ -214,7 +214,7 @@ function onready() {
 		}
 		
 		// Show date pickers
-		if (id == 'id_birth_date' || id == 'id_death_date') {
+		if (id == 'id_death_date') {
 			var datePickerOptions = {
 				dateFormat: 'dd/mm/yy',
 				showOtherMonths: true,
@@ -222,15 +222,6 @@ function onready() {
 			};
 			input.datepicker(datePickerOptions);
 		}
-		
-		/*
-		// Hide date of death field
-		if (id == 'id_death_date' && input.val() == '') {
-			input.hide();
-			var showDeath = $('<a class="sjo-show-death">Add</a>').insertAfter(input)
-				.click(event => {showDeath.hide(); input.show();});
-		}
-		*/
 		
 		// Format names with unexpected characters
 		// TODO: remove the class once the name is edited
