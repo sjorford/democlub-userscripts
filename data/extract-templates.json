@@ -78,12 +78,12 @@
   "superbrief":{
     "display":"Superbrief",
     "columns":[
-      "_election_type",
-      "_election_name",
       "_post_label",
       "name",
       "election_date",
       "id",
+      "_election_type",
+      "_election_name",
       "has:elected"
     ],
     "sort":[
