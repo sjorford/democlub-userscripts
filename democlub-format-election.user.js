@@ -3,8 +3,9 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.11.1.0
+// @version     2021.12.04.0
 // @grant       none
+// @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -94,11 +95,18 @@ function onready() {
 		
 		.sjo-previous-ballot {float: right; border: 1px solid gray; border-radius: 5px; padding: 2px 6px; background-color: #fdd;}
 		
+		.sjo-date-heading {float: right; font-size: larger; margin-top: 0.8rem !important;}
+		
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
 	
 	$('#constituency-name').html((index, html) => html.replace('Police and Crime Commissioner', 'PCC'));
+	
+	var dateMatch = window.location.href.match(/\d{4}-\d{2}-\d{2}/);
+	if (dateMatch) {
+		$('<span class="sjo-date-heading"><span>').text(moment(dateMatch[0]).format("D MMM YYYY")).insertBefore('h1');
+	}
 	
 	if (document.title.trim() == 'All ballots in current or future elections') {
 		
