@@ -75,6 +75,32 @@
       }
     ]
   },
+  "superbrief":{
+    "display":"Superbrief",
+    "columns":[
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "name",
+      "election_date",
+      "id",
+      "has:elected"
+    ],
+    "sort":[
+      {
+        "column":"has:elected",
+        "order":1
+      },
+      {
+        "column":"_post_label",
+        "order":1
+      },
+      {
+        "column":"name",
+        "order":1
+      }
+    ]
+  },
   "wikidata":{
     "display":"Wikidata",
     "columns":[
