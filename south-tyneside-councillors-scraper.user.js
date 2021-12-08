@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           South Tyneside councillors scraper
 // @namespace      sjorford@gmail.com
-// @version        2021.12.08.0
+// @version        2021.12.08.1
 // @author         Stuart Orford
 // @match          https://www.southtyneside.gov.uk/article/60209/Councillors-A-to-Z*
 // @grant          none
@@ -16,10 +16,17 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	var tables = $('#COUNCILLORSLISTBYNAME_PAGE1_HTML table');
-	var rows = tables.find('tbody tr:has(a)')
-	rows.find('a').text((i,text) => text.trim().replace(/^Councillor /, ''));
 	tables.find('tr td:nth-of-type(2), tr th:nth-of-type(2)').remove();
-	tables.first().append(rows).find('caption').remove();
+	tables.find('caption').remove();
+	
+	var rows = tables.find('tbody tr:has(a)')
+	rows.each((i,e) => {
+		var row = $(e);
+		var link = row.find('a');
+		link.text((i,text) => text.trim().replace(/^Councillor /, ''));
+		$('<td></td>').text(link[0].href).appendTo(row);
+	});
+	tables.first().append(rows);
 	tables.not(tables.first()).remove();
 	
 });
