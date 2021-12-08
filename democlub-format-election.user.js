@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.12.04.1
+// @version     2021.12.08.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -336,7 +336,7 @@ function onready() {
 				table.find('tr').each((i,e) => {
 					var tr = $(e);
 					var resultsCell = tr.find('td, th').eq(resultsCol);
-					var electedCell = (resultsCell.is('th')) ? $('<th></th>') : $('<td></td>');
+					var electedCell = resultsCell.is('th') ? $('<th></th>') : $('<td></td>');
 					electedCell.addClass('sjo-results-elected').insertAfter(resultsCell);
 					if (resultsCell.text().match(/ \(elected\)/)) {
 						electedCell.text('★');
@@ -346,6 +346,36 @@ function onready() {
 			}
 			
 		}
+		
+		// Flag tied results
+		var votesCol = table.getTableHeaders().indexOf('Votes');
+		table.find('tr').each((i,e) => {
+			var tr = $(e);
+			
+			var votesCell = tr.find('td, th').eq(votesCol);
+			var tiedCell = (votesCell.is('th') ? $('<th></th>') : $('<td></td>')).addClass('sjo-results-tied').appendTo(tr);
+			var votes = parseInt(votesCell.text().trim(), 10);
+			if (votes === NaN) return;
+			
+			var ties = table.find('tr').not(tr).filter((i,e) => {
+				var votesTied = parseInt($(e).find('td, th').eq(votesCol).text().trim(), 10);
+				if (votes === NaN) return false;
+				return (Math.abs(votes - votesTied) == 0);
+			});
+			
+			var nearTies = table.find('tr').not(tr).filter((i,e) => {
+				var votesTied = parseInt($(e).find('td, th').eq(votesCol).text().trim(), 10);
+				if (votes === NaN) return false;
+				return (Math.abs(votes - votesTied) == 1);
+			});
+			
+			if (ties.length > 0) {
+				tiedCell.text('(tie)');
+			} else if (nearTies.length > 0) {
+				tiedCell.text('(tie?)');
+			}
+			
+		});
 		
 		// Add cell classes
 		var headers = table.getTableHeaders();
