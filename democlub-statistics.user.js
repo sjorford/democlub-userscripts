@@ -2,7 +2,7 @@
 // @name        Democracy Club statistics
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/numbers/*
-// @version     2021.06.04.0
+// @version     2021.12.09.0
 // @isitfast    yes
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
@@ -25,7 +25,8 @@ function onready() {
 		.sjo-number-zero {background-color: rgb(255, 230, 153);}
 		.sjo-collapsiblesection-buttons {font-size: small;}
 		.sjo-nowrap {white-space: nowrap;}
-		input.sjo-filter {display: inline-block; width: 30ex; padding: 5px; height: auto;}
+		#sjo-filter-wrapper label, #sjo-filter-wrapper input {display: inline-block;}
+		#sjo-filter {width: 50ex; padding: 5px; height: auto; margin-right: 1ex;}
 		.sjo-hidden {display: none;}
 	</style>`).appendTo('head');
 	
@@ -82,18 +83,33 @@ ${items}
 	});
 	
 	// Add filter
-	var filter = $('<input class="sjo-filter" id="sjo-filter" autocomplete="off">')
-		.insertBefore(sections.first())
-		.wrap('<label for="sjo-filter"></label>')
-		.before('Filter: ')
-		.focus().on('change keyup', event => {
-			console.log(event.originalEvent, filter.val());
-			var filterText = filter.val().trim().toLowerCase();
-			$('.sjo-stats tr').each((i,e) => {
-				var row = $(e);
-				row.toggleClass('sjo-hidden', !row.text().trim().toLowerCase().match(filterText));
-			});
+	$(`<div id="sjo-filter-wrapper"><label for="sjo-filter">Filter: <input id="sjo-filter" autocomplete="off"></label>
+	<label for="sjo-filter-exact"><input type="checkbox" class="sjo-filter-exact" id="sjo-filter-exact"> Exact match</label></div>`)
+		.insertBefore(sections.first());
+	
+	$('#sjo-filter').focus().on('change keyup', applyFilter);
+	$('#sjo-filter-exact').on('change', applyFilter);
+	
+	function applyFilter() {
+		
+		var rows = $('.sjo-stats tr');
+		var filterText = $('#sjo-filter').val().trim().toLowerCase();
+		if (filterText == '') {
+			rows.removeClass('sjo-hidden');
+			return;
+		}
+		
+		rows.each((i,e) => {
+			var row = $(e);
+			var rowText = row.text().replace(/\s+/g, ' ').trim().toLowerCase();
+			if ($('#sjo-filter-exact').is(':checked')) {
+				row.toggleClass('sjo-hidden', rowText.split(' ').indexOf(filterText) < 0);
+			} else {
+				row.toggleClass('sjo-hidden', rowText.indexOf(filterText) < 0);
+			}
 		});
+		
+	}
 	
 	// Sort lists of posts
 	var postsTableBody = $('.counts_table tbody');
