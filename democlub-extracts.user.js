@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.04.21.0
+// @version        2021.12.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -22,6 +22,7 @@ var maxTableRows = 100;
 var allCandidatesUrl = '/media/candidates-all.csv';
 var templateDropdown;
 var electionsList = {};
+var organisationsList = {};
 var datesList = {};
 
 // External stylesheets
@@ -36,6 +37,7 @@ $(`<style>
 	.sjo-api-option-extract {background-color: white; margin-right: 0.5rem; border: 1px solid black; padding: 1px 3px;}
 	.sjo-api-option-extract-selected {background-color: #77f; color: white;}
 	#sjo-api-select-election {width: 30rem;}
+	#sjo-api-select-organisation {width: 30rem;}
 	#sjo-api-select-date {width: 20rem;}
 	#sjo_api_select_election_chosen {margin-right: 0.5rem;}
 	#sjo-api-select-template {width: 15rem;}
@@ -166,11 +168,18 @@ function initialize() {
 	// Extract all
 	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
 	
+	// Extract single organisation
+	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-organisation" class="sjo-api-option-extract" value="Organisation">');
+	var organisationWrapper = $('<div id="sjo-api-params-wrapper-organisation" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
+	var organisationDropdown = $('<select id="sjo-api-select-organisation"></select>').appendTo(organisationWrapper)
+			.before('Organisation: ').change(event => $('#sjo-api-option-extract-organisation').click());
+	
 	// Extract single election
 	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">');
 	var electionWrapper = $('<div id="sjo-api-params-wrapper-election" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
 	var electionDropdown = $('<select id="sjo-api-select-election"></select>').appendTo(electionWrapper)
 			.before('Election: ').change(event => $('#sjo-api-option-extract-election').click());
+	
 	buildDownloadList();
 	
 	// Highlight elections in date picker
@@ -352,7 +361,7 @@ function addTemplateOption(key, template) {
 function buildDownloadList() {
 	
 	// Loop through groups of elections
-	var dropdownHtml = '';
+	var electionsHtml = '';
 	$('a[href$=".csv"]').closest('td').addClass('sjo-nowrap')
 		.closest('table').each(function(index, element) {
 		
@@ -380,7 +389,7 @@ function buildDownloadList() {
 		}
 		
 		// Process all links in this group
-		var groupHtml = '';
+		var electionsGroupHtml = '';
 		links.each((index, element) => {
 			
 			// Parse election ID
@@ -403,7 +412,7 @@ function buildDownloadList() {
 			}
 			
 			// Add option to group
-			groupHtml += `<option value="${element.href}">${electionName}</option>`;
+			electionsGroupHtml += `<option value="${element.href}">${electionName}</option>`;
 			
 			// Add election to list
 			electionsList[electionId] = {
@@ -413,6 +422,14 @@ function buildDownloadList() {
 				name: electionName,
 				url: element.href,
 			};
+			
+			if (!organisationsList[electionName]) {
+				organisationsList[electionName] = {
+					organisation: electionName,
+					urls: [],
+				};
+			}
+			organisationsList[electionName].urls.push(element.href);
 			
 			if (!datesList[electionDate]) {
 				datesList[electionDate] = {
@@ -424,14 +441,17 @@ function buildDownloadList() {
 		});
 		
 		// Add group to dropdown
-		groupHtml = `<optgroup label="${groupName}">${groupHtml}</option>`;
-		dropdownHtml += groupHtml;
+		electionsGroupHtml = `<optgroup label="${groupName}">${electionsGroupHtml}</option>`;
+		electionsHtml += electionsGroupHtml;
 		
 	});
 	console.log('buildDownloadList', electionsList, datesList);
 	
+	var organisationsHtml = Object.keys(organisationsList).sort().map(value => `<option value="${value}">${value}</option>`).join('');
+
 	// Add all downloads to dropdown
-	$('#sjo-api-select-election').html(dropdownHtml).chosen();
+	$('#sjo-api-select-election').html(electionsHtml).chosen();
+	$('#sjo-api-select-organisation').html(organisationsHtml).chosen();
 
 }
 
@@ -448,7 +468,15 @@ function startDownload(event) {
 	var extract = {}
 	var selectedButton = $('.sjo-api-option-extract-selected');
 	
-	if (selectedButton.is('#sjo-api-option-extract-election')) {
+	if (selectedButton.is('#sjo-api-option-extract-organisation')) {
+		
+		// Extract a single election
+		var organisation = $('#sjo-api-select-organisation').val();
+		extract.urls = organisationsList[organisation].urls.reverse();
+		localStorage.setItem('sjo-api-extract', 'organisation');
+		localStorage.setItem('sjo-api-url', extractURL);
+		
+	} else if (selectedButton.is('#sjo-api-option-extract-election')) {
 		
 		// Extract a single election
 		var extractURL = $('#sjo-api-select-election').val();
