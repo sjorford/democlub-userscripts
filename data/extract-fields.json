@@ -271,5 +271,11 @@
   },
   "party_description_text":{
 	  "display":"Party Description"
+  },
+  "organisation_name":{
+	  "display":"Organisation"
+  },
+  "NUTS1":{
+	  "display":"NUTS1"
   }
 }
