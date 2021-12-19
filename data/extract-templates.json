@@ -88,16 +88,16 @@
     ],
     "sort":[
       {
-        "column":"has:elected",
-        "order":1
-      },
-      {
         "column":"_post_label",
         "order":1
       },
       {
         "column":"name",
         "order":1
+      },
+      {
+        "column":"election_date",
+        "order":-1
       }
     ]
   },
