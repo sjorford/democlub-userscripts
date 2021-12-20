@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*/review/
-// @version     2021.11.13.1
+// @version     2021.12.20.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -18,6 +18,7 @@ function onready() {
 		thead th label {font-weight: bold;}
 		.sopn_adding_table input {margin-bottom: 0;}
 		.sjo-extra-row {display: none;}
+		.titleCaseNameField {display: none;}
 	</style>`).appendTo('head');
 	
 	// Sort europarl candidates by party
