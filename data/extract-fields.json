@@ -131,13 +131,13 @@
   "post_label":{
     "display":"Post",
     "filter":true,
-    "link":"/election/@@election@@/post/@@post_id@@/",
+    "link":"/elections/@@ballot_paper_id@@/",
     "width":"12em"
   },
   "_post_label":{
     "display":"Post",
     "filter":true,
-    "link":"/election/@@election@@/post/@@post_id@@/"
+    "link":"/elections/@@ballot_paper_id@@/"
   },
   "party_lists_in_use":{
     "boolean":true
