@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
-// @version     2021.12.08.0
+// @version     2021.12.29.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -232,7 +232,7 @@ function onready() {
 				.css({'zIndex': 99 - index})
 				.appendTo(timeline);
 		});
-		items.closest('.columns').hide();
+		items.closest('.columns').hide().prev('.columns').removeClass('large-9');
 		
 		$('.candidates-list').each((index, element) => {
 			formatResultsTable(element);
