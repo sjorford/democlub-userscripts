@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.04.26.0
+// @version     2022.01.09.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -93,7 +93,7 @@ function onready() {
 			
 			var changeRows = [];
 			var span = $(element);
-			var spanText = span.text().replace(/\n|\r/g, ' ').trim();
+			var spanText = span.text().trim();
 			
 			// Data added
 			if (span.hasClass('version-op-add')) {
@@ -148,13 +148,15 @@ function onready() {
 					.appendTo(versionTable);
 				
 				if (fieldName == 'biography' && dataFrom && dataTo) {
+					dataFrom = dataFrom.replace(/\\r/g, '\r').replace(/\\n/g, '\n').trim();
+					dataTo   = dataTo  .replace(/\\r/g, '\r').replace(/\\n/g, '\n').trim();
 					
 					// Add highlighted diffs for biographies
 					var diffMarkup = diffString(dataFrom, dataTo);
 					row.addCell('-', 'sjo-version-delete sjo-version-op')
-					   .addCellHTML(cleanData(diffMarkup), 'sjo-version-delete sjo-version-data')
+					   .addCellHTML(cleanData(diffMarkup, fieldName), 'sjo-version-delete sjo-version-data')
 					   .addCell('+', 'sjo-version-add sjo-version-op')
-					   .addCellHTML(cleanData(diffMarkup), 'sjo-version-add sjo-version-data');
+					   .addCellHTML(cleanData(diffMarkup, fieldName), 'sjo-version-add sjo-version-data');
 					  
 				} else {
 					
@@ -194,7 +196,7 @@ function onready() {
 		}
 		
 		function cleanData(data, fieldName) {
-			var cleanData = data.replace(/\\"/g, '"').replace(/\\r\\n/g, '<br>');
+			var cleanData = data.replace(/\\"/g, '"').replace(/\r\n|\n/g, '<br>');
 			if (fieldName == 'twitter_username') {
 				cleanData = `<a target="_blank" href="https://twitter.com/${cleanData}">${cleanData}</a>`;
 			}
