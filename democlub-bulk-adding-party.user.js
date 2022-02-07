@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/europarl*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2022.02.04.1
+// @version     2022.02.07.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -31,9 +31,10 @@ function onready() {
 		$('<th></th>').appendTo(row)
 			.append(div.find('h4').text());
 		$('<td></td>').appendTo(row)
-			.append(div.find('input[type="text"]'))
-			.append(div.find('li a'));
-		$('<td class="sjo-nowrap"></td>').appendTo(row).append(div.find('p').first().text().replace(/ contested.$/, ''));
+			.append(div.find('input[type="text"]'));
+		$('<td class="sjo-nowrap"></td>').appendTo(row)
+			.append(div.find('ul'))
+			.append(div.find('p').first().text().replace(/ contested.$/, ''));
 		div.hide();
 	});
 	
