@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.12.12.0
+// @version        2022.02.08.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -247,6 +247,7 @@ function initialize() {
 	
 	// Get previously selected values from local storage
 	var lastExtract = localStorage.getItem('sjo-api-extract');
+	var lastOrganisation = localStorage.getItem('sjo-api-organisation');
 	var lastUrl = localStorage.getItem('sjo-api-url');
 	var lastStartDate = localStorage.getItem('sjo-api-date-start');
 	var lastEndDate = localStorage.getItem('sjo-api-date-end');
@@ -256,6 +257,7 @@ function initialize() {
 	// Set previously selected values
 	$('.sjo-api-params-wrapper').hide();
 	if (lastExtract) $(`#sjo-api-option-extract-${lastExtract}`).click();
+	if (lastOrganisation) organisationDropdown.val(lastOrganisation).trigger('chosen:updated');
 	if (lastUrl) electionDropdown.val(lastUrl).trigger('chosen:updated');
 	if (lastStartDate) startDate.val(lastStartDate);
 	if (lastEndDate) endDate.val(lastEndDate);
@@ -470,11 +472,11 @@ function startDownload(event) {
 	
 	if (selectedButton.is('#sjo-api-option-extract-organisation')) {
 		
-		// Extract a single election
+		// Extract a single organisation
 		var organisation = $('#sjo-api-select-organisation').val();
 		extract.urls = organisationsList[organisation].urls.reverse();
 		localStorage.setItem('sjo-api-extract', 'organisation');
-		localStorage.setItem('sjo-api-url', extractURL);
+		localStorage.setItem('sjo-api-organisation', organisation);
 		
 	} else if (selectedButton.is('#sjo-api-option-extract-election')) {
 		
