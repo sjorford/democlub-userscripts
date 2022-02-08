@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2021.11.22.0
+// @version     2022.02.08.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -43,6 +43,7 @@ function onready() {
 		input.sjo-input[id^="id_party_list_position_"] {width: 100px;}
 		
 		input.sjo-input-invalid {background-color: #fcc;}
+		input.sjo-input-http {background-color: #e7e7e7;}
 		
 		select[id^="id_tmp_person_identifiers-"] {height: 2rem; margin-bottom: 0.25em; padding: 0.25rem;}
 		.sjo-linktype-duplicate {background-color: #fcc;}
@@ -93,8 +94,6 @@ function onready() {
 		'id_note':							'Note',
 		'id_start_date':					'Start date',
 		'id_end_date':						'End date',
-		
-		'id_tmp_person_identifiers-0-value': 'hello world',
 		
 	};
 	
@@ -336,11 +335,11 @@ function onready() {
 					href = `https://www.wikidata.org/wiki/${href}`;
 				} else if (valueType == 'twitter_username') {
 					href = `https://twitter.com/${href}`;
-				} else {
-					if (!(href.match(/^https?:/))) {
-						href = 'http://' + href;
-						input.addClass('sjo-input-invalid');
-					}
+				} else if (href.match(/^http:/)) {
+					input.addClass('sjo-input-http');
+				} else if (!(href.match(/^https?:/))) {
+					href = 'http://' + href;
+					input.addClass('sjo-input-invalid');
 				}
 				link.attr('href', href).show();
 			}
