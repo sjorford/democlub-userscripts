@@ -25,7 +25,7 @@
       "has:blog_url",
       "has:wikipedia_url",
       "has:wikidata_id",
-      "birth_date",
+      "_age_at_election_min",
       "_gender_icon",
       "has:image_url",
       "has:cancelled_poll",
