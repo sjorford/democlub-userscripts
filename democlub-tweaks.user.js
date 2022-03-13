@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2022.03.13.0
+// @version     2022.03.13.1
 // @grant       none
 // ==/UserScript==
 
@@ -64,12 +64,16 @@ window.setTimeout(onready, 0);
 
 function onready() {
 	
-	var url = location.href;
+	var pathname = window.location.pathname;
+	
+	// Add page type class
+	var slug = pathname.replace(/^\/|\/$/g, '').replace(/[\.:]/g, '_').replace(/\//g, '-');
+	$('html').addClass('sjo-page__' + slug);
 	
 	// Reformat various pages
-	if (url.indexOf(rootUrl + 'uk_results/posts/') === 0) {
+	if (pathname.indexOf('/uk_results/posts/') === 0) {
 		formatResultsPage();
-	} else if (url.indexOf(rootUrl + 'uk_results/') === 0) {
+	} else if (pathname.indexOf('/uk_results/') === 0) {
 		formatResultsPostList();
 	}
 	
