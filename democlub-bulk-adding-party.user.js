@@ -1,10 +1,10 @@
 // ==UserScript==
 // @name        Democracy Club bulk adding by party
 // @namespace   sjorford@gmail.com
-// @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*
+// @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*/*/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/europarl*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2022.02.07.0
+// @version     2022.03.13.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
