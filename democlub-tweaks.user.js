@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2022.03.13.1
+// @version     2022.03.13.2
 // @grant       none
 // ==/UserScript==
 
@@ -75,6 +75,8 @@ function onready() {
 		formatResultsPage();
 	} else if (pathname.indexOf('/uk_results/') === 0) {
 		formatResultsPostList();
+	} else if (pathname.indexOf('/moderation/photo/upload/') === 0) {
+		formatPhotoUpload();
 	}
 	
 	// Hide empty header
@@ -194,6 +196,48 @@ function formatResultsPage() {
 		validateResults();
 		
 	}
+	
+}
+
+// ================================================================
+// Photo upload page
+// ================================================================
+
+function formatPhotoUpload() {
+	
+	$(`<style class="sjo-styles">
+		.sjo-tab {padding: 0.5em; display: inline-block; width: 50%; color: #ccc;
+			border: 2px solid #ccc; margin-bottom: 0 !important;
+			border-bottom-width: 0; box-sizing: border-box;}
+		.sjo-tab-first {border-left-width: 2px;}
+		.sjo-active {color: black; border-color: black;}
+		.sjo-form {border: 2px solid black; padding: 0.5em;}
+		.sjo-notice {border: 2px solid black; padding: 0.5em; background-color: gold;
+			border-bottom-width: 0;}
+		.sjo-notice ul {margin-bottom: 0;}
+	</style>`).appendTo('head');
+	
+	var forms = $('.content form').addClass('sjo-form').hide();
+	var tabs = forms.prev('h2').addClass('sjo-tab').insertBefore(forms.first());
+	tabs.first().addClass('sjo-tab-first');
+	
+	if (forms.eq(0).children().first().is('p:has(strong)')) {
+		forms.eq(0).children().first().next('ul').addBack().insertBefore(forms.first())
+			.wrapAll('<div class="sjo-notice"></div>');
+	}
+	
+	forms.each((i,e) => {
+		var form = $(e);
+		var tab = tabs.eq(i)
+			.click(() => {
+				forms.hide();
+				form.show();
+				tabs.removeClass('sjo-active');
+				tab.addClass('sjo-active');
+			});
+	});
+	
+	tabs.eq(1).click();
 	
 }
 
