@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2021.05.19.0
+// @version     2022.03.13.0
 // @grant       none
 // ==/UserScript==
 
@@ -67,9 +67,7 @@ function onready() {
 	var url = location.href;
 	
 	// Reformat various pages
-	if (url.indexOf(rootUrl + 'moderation/suggest-lock') === 0) {
-		formatLockSuggestions();
-	} else if (url.indexOf(rootUrl + 'uk_results/posts/') === 0) {
+	if (url.indexOf(rootUrl + 'uk_results/posts/') === 0) {
 		formatResultsPage();
 	} else if (url.indexOf(rootUrl + 'uk_results/') === 0) {
 		formatResultsPostList();
@@ -192,27 +190,6 @@ function formatResultsPage() {
 		validateResults();
 		
 	}
-	
-}
-
-// ================================================================
-// Reformat lock suggestions page
-// ================================================================
-
-function formatLockSuggestions() {
-	
-	// Highlight my lock suggestions
-	$('.container li').filter((index, element) => element.innerText.indexOf('User sjorford suggested locking this') >= 0).addClass('sjo-mysuggestion');
-	
-	// Group by election and sort
-	var headings = $('.content h3');
-	var elections = headings.toArray().map(element => $('a', element).attr('href').match(/election\/(.*?)\.\d{4}-\d{2}-\d{2}\//)[1]).sort();
-	$.each(elections, (index, electionId) => {
-		if (index != elections.indexOf(electionId)) return;
-		var newHeading = $('<h2></h2>').text(electionId).appendTo('.content .container');
-		var headingsGroup = headings.filter(':has(a[href*="/' + electionId + '."])').toArray().sort((a, b) => a.innerText < b.innerText);
-		$.each(headingsGroup, (index, element) => $(element).next('ul').addBack().insertAfter(newHeading));
-	});
 	
 }
 
