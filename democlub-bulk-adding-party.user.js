@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*/*/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/europarl*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2022.03.13.0
+// @version     2022.03.21.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -46,8 +46,8 @@ function onready() {
 			var selector = `input:nth-of-type(${numRows}) ~ input`;
 		console.log(numRows, selector);
 			$('.sjo-table input').show().filter(selector).hide()
-		})
-		.change();
+		});
+		//.change();
 	
 	// Add a checkbox for reversed names
 	$('<input type="checkbox" id="sjo-reverse" value="reverse"><label for="sjo-reverse">Surname first</label>')
