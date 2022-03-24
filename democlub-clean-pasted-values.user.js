@@ -2,7 +2,7 @@
 // @name        Democracy Club clean pasted values
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2019.11.11.0
+// @version     2022.03.24.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -24,7 +24,11 @@ function onready() {
 function cleanInputValue(input) {
 	
 	// Trim all values
-	var value = input.value.trim().replace(/\s+/g, ' ');
+	var value = input.value.replace(/\s+/g, ' ').trim();
+	
+	// Trim trailing LTR isolate
+	// c.f. https://twitter.com/RBKIndependents/status/1505227320176615435
+	value = value.replace(/\s*\u2066\s*$/, '');
 	
 	// Replace Greek/Cyrillic characters
 	// c.f. https://twitter.com/NicolaFR_
