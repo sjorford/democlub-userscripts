@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.08.15.1
+// @version     2022.03.29.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -251,5 +251,8 @@ function onready() {
 	// Show last update time in header
 	var updateTime = $('dt:contains("Timestamp")').first().next('dd').text().trim();
 	$(`<div class="sjo-lastupdate">Last updated: ${updateTime}</div>`).insertAfter('.person__photo');
+	
+	// Disable button
+	$('a:contains("Request photo removal")').attr('disabled', true);
 	
 }
