@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*/review/
-// @version     2021.12.20.0
+// @version     2022.03.31.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -19,6 +19,7 @@ function onready() {
 		.sopn_adding_table input {margin-bottom: 0;}
 		.sjo-extra-row {display: none;}
 		.titleCaseNameField {display: none;}
+		.sopn_adding_table tbody + tbody::before {display: none;}
 	</style>`).appendTo('head');
 	
 	// Sort europarl candidates by party
@@ -43,8 +44,7 @@ function onready() {
 	);
 	table.find('thead').not(':first-of-type').remove();
 	table.find('tbody th').closest('tr').remove();
-	table.find('td').contents()
-		.filter((i,e) => e.nodeType == Node.TEXT_NODE)
+	table.find('p')
 		.filter((i,e) => e.textContent.trim() == 'If the party is blank on the SOPN, enter "Independent"')
 		.remove();
 	table.find('br').remove();
