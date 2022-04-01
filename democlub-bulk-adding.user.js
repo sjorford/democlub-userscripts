@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/sopn/*/review/
-// @version     2022.03.31.0
+// @version     2022.04.01.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -57,5 +57,9 @@ function onready() {
 				   && $('#sjo-show-extra-rows').hide())
 			.insertAfter(table).wrap('<div></div>');
 	}
+	
+	// Add a checkbox for reversed names
+	$('<input type="checkbox" id="sjo-reverse" value="reverse"><label for="sjo-reverse">Surname first</label>')
+		.insertBefore(table.last()).wrapAll('<div></div>');
 	
 }
