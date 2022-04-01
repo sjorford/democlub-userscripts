@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/bulk_adding/party/*/*/*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/party/europarl*
 // @exclude     https://candidates.democracyclub.org.uk/bulk_adding/*/review/
-// @version     2022.03.21.0
+// @version     2022.04.01.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
@@ -39,7 +39,7 @@ function onready() {
 	});
 	
 	// Add an option for number of rows
-	$('<label for="sjo-reverse">Number of candidates per ward: <input type="number" id="sjo-numrows" value="3" style="display: inline-block; width: 4em;"></label>')
+	$('<label for="sjo-numrows">Number of candidates per ward: <input type="number" id="sjo-numrows" value="3" style="display: inline-block; width: 4em;"></label>')
 		.insertAfter('#id_source').wrapAll('<div></div>')
 		.change(() => {
 			var numRows = $('#sjo-numrows').val();
