@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.02.08.0
+// @version        2022.04.05.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -69,8 +69,8 @@ $(`<style>
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
 	
-	.sjo-api-params-wrapper {height: 3rem; padding-top: 1rem;}
-	input.sjo-api-date {width: 100px; display: inline-block; margin-right: 1rem; height: auto; padding: 0.25rem;}
+	#sjo-api-filters label {display: inline-block;}
+	input.sjo-api-date {width: 6em; display: inline-block; margin-right: 1em; margin-left: 0.5em; height: auto; padding: 0.25rem;}
 	.sjo-api-date-normal a {background-color: #2ad581 !important;}
 	.sjo-api-date-weird  a {background-color: #7eeab5 !important;}
 	.sjo-api-date-normal a.ui-state-active {background-color: #007fff !important;}
@@ -153,34 +153,46 @@ function initialize() {
 	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
-	var buttonsWrapper = $('<div id="sjo-api-buttons"></div>').appendTo(wrapper);
-	
-	// Add extract options
-	/*
-	var extractWrapper = $('<div class="sjo-api-wrapper"></div>').appendTo(wrapper);
-	$.each(buttonSpecs, (key, extract) => {
-		extract.key = key;
-		var button = $(`<input type="button" id="sjo-api-option-extract-${key}" class="sjo-api-option-extract" value="${extract.text}">`).data('sjo-api-extract', JSON.stringify(extract)).appendTo(extractWrapper);
-		if (key == 'other') button.wrap('<div class="sjo-api-wrapper"></div>');
-	});
-	*/
-	
-	// Extract all
-	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
-	
-	// Extract single organisation
-	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-organisation" class="sjo-api-option-extract" value="Organisation">');
-	var organisationWrapper = $('<div id="sjo-api-params-wrapper-organisation" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
-	var organisationDropdown = $('<select id="sjo-api-select-organisation"></select>').appendTo(organisationWrapper)
-			.before('Organisation: ').change(event => $('#sjo-api-option-extract-organisation').click());
+	var filterWrapper = $('<div id="sjo-api-filters"></div>').appendTo(wrapper);
 	
 	// Extract single election
-	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-election" class="sjo-api-option-extract" value="Election">');
-	var electionWrapper = $('<div id="sjo-api-params-wrapper-election" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
-	var electionDropdown = $('<select id="sjo-api-select-election"></select>').appendTo(electionWrapper)
-			.before('Election: ').change(event => $('#sjo-api-option-extract-election').click());
+	var electionDropdown = $('<select id="sjo-api-select-election"></select>')
+			.change(event => {
+				$('[name="sjo-api-filter-checkbox"]').prop('checked', false);
+				$('#sjo-api-filter-checkbox-election').prop('checked', true);
+			})
+			.appendTo(filterWrapper)		
+			.wrap('<div></div>')
+			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-election" value="election">')
+			.before('<label for="sjo-api-filter-checkbox-election">Election: </label>');
 	
+	// Extract single organisation
+	var organisationDropdown = $('<select id="sjo-api-select-organisation"></select>')
+			.change(event => {
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').prop('checked', false);
+				$('#sjo-api-filter-checkbox-organisation').prop('checked', true);
+			})
+			.appendTo(filterWrapper)
+			.wrap('<div></div>')
+			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-organisation" value="organisation">')
+			.before('<label for="sjo-api-filter-checkbox-organisation">Organisation: </label>');
+	
+	// Build lists of elections and organisations
 	buildDownloadList();
+	
+	// Extract all of an election type
+	var electionTypes = 'all,all except local,parl,local,mayor,europarl,sp,naw/senedd,nia,gla,pcc'.split(',');
+	$('<select id="sjo-api-select-type"></select>')
+			.append(electionTypes.map(type => $('<option></option>').val(type).text(type)))
+			.change(event => {
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').not('#sjo-api-filter-checkbox-country').prop('checked', false);
+				$('#sjo-api-filter-checkbox-type').prop('checked', true);
+			})
+			.appendTo(filterWrapper)
+			.wrap('<div></div>')
+			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-type" value="type">')
+			.before('<label for="sjo-api-filter-checkbox-type">Type: </label>')
+			.chosen();
 	
 	// Highlight elections in date picker
 	var datePickerOptions = {
@@ -196,21 +208,40 @@ function initialize() {
 		};
 	
 	// Extract by date range
-	buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-date" class="sjo-api-option-extract" value="Date">');
-	var dateWrapper = $('<div id="sjo-api-params-wrapper-date" class="sjo-api-params-wrapper"></div>').appendTo(wrapper);
-	var startDate = $('<input type="text" id="sjo-api-date-start" class="sjo-api-date">').appendTo(dateWrapper)
-			.before('From: ').datepicker(datePickerOptions);
-	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">').appendTo(dateWrapper)
-			.before('To: ').datepicker(datePickerOptions);
+	var dateWrapper = $('<div></div>')
+			.appendTo(filterWrapper)
+			.append('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-date" value="date">')
+			.append('<label for="sjo-api-filter-checkbox-date">Date: </label>');
+	var startDate = $('<input type="text" id="sjo-api-date-start" class="sjo-api-date">')
+			.appendTo(dateWrapper)
+			.before('<label for="sjo-api-date-start">From: </label>')
+			.datepicker(datePickerOptions);
+	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">')
+			.appendTo(dateWrapper)
+			.before('<label for="sjo-api-date-end">To: </label>')
+			.datepicker(datePickerOptions);
 	
-	var electionTypes = 'all,all except local,parl,local,mayor,europarl,sp,naw/senedd,nia,gla,pcc'.split(',');
-	var typeSelect = $('<select id="sjo-api-select-type"></select>')
-			.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').before('Type: ');
-	$.each(electionTypes, (i,e) => $('<option></option>').val(e).text(e).appendTo(typeSelect));
-	typeSelect.chosen();
 	
+	
+	
+	
+	
+	
+	
+	
+	
+	// Extract all
+	//buttonsWrapper.append('<input type="button" id="sjo-api-option-extract-all" class="sjo-api-option-extract" value="All">');
+	
+	
+	
+	
+	
+	// Include cancelled elections
 	$('<input type="checkbox" id="sjo-api-cancelled" value="cancelled" checked>')
-		.appendTo(dateWrapper).wrap('<span class="sjo-api-type-wrapper"></span>').after('<label for="sjo-api-cancelled">Include cancelled</label>');
+		.appendTo(filterWrapper)
+		.wrap('<div></div>')
+		.after('<label for="sjo-api-cancelled">Include cancelled</label>');
 	
 	// Highlight selected option
 	$('.sjo-api-option-extract').click(event => {
@@ -468,17 +499,9 @@ function gotoPage(newPageNo) {
 function startDownload(event) {
 	
 	var extract = {}
-	var selectedButton = $('.sjo-api-option-extract-selected');
+	var selectedButton = $('[name="sjo-api-filter-checkbox"]:checked');
 	
-	if (selectedButton.is('#sjo-api-option-extract-organisation')) {
-		
-		// Extract a single organisation
-		var organisation = $('#sjo-api-select-organisation').val();
-		extract.urls = organisationsList[organisation].urls.reverse();
-		localStorage.setItem('sjo-api-extract', 'organisation');
-		localStorage.setItem('sjo-api-organisation', organisation);
-		
-	} else if (selectedButton.is('#sjo-api-option-extract-election')) {
+	if (selectedButton.is('#sjo-api-filter-checkbox-election')) {
 		
 		// Extract a single election
 		var extractURL = $('#sjo-api-select-election').val();
@@ -486,7 +509,15 @@ function startDownload(event) {
 		localStorage.setItem('sjo-api-extract', 'election');
 		localStorage.setItem('sjo-api-url', extractURL);
 		
-	} else if (selectedButton.is('#sjo-api-option-extract-date')) {
+	} else if (selectedButton.is('#sjo-api-filter-checkbox-organisation')) {
+		
+		// Extract a single organisation
+		var organisation = $('#sjo-api-select-organisation').val();
+		extract.urls = organisationsList[organisation].urls.reverse();
+		localStorage.setItem('sjo-api-extract', 'organisation');
+		localStorage.setItem('sjo-api-organisation', organisation);
+		
+	} else if (selectedButton.is('#sjo-api-filter-checkbox-date')) {
 		
 		// Extract all elections in date range
 		var startDate = $('#sjo-api-date-start').val();
