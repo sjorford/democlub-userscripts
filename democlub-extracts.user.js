@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.04.05.0
+// @version        2022.04.06.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -36,12 +36,11 @@ $(`<style>
 	.sjo-api-wrapper {margin-top: 0.5rem;}
 	.sjo-api-option-extract {background-color: white; margin-right: 0.5rem; border: 1px solid black; padding: 1px 3px;}
 	.sjo-api-option-extract-selected {background-color: #77f; color: white;}
-	#sjo-api-select-election {width: 30rem;}
-	#sjo-api-select-organisation {width: 30rem;}
-	#sjo-api-select-date {width: 20rem;}
-	#sjo_api_select_election_chosen {margin-right: 0.5rem;}
-	#sjo-api-select-template {width: 15rem;}
-	#sjo-api-select-type {width: 15rem;}
+	
+	#sjo-api-filters select      {width: 15rem;}
+	#sjo-api-filters select#sjo-api-select-election     {width: 30rem;}
+	#sjo-api-filters select#sjo-api-select-organisation {width: 30rem;}
+	#sjo-api-select-template     {width: 15rem;}
 	#sjo-api-status {font-style: italic; margin-right: 1rem;}
 	#sjo-api-error {font-weight: bold; color: red;}
 	#sjo-api-button-truncate {margin-right: 1rem;}
@@ -69,6 +68,7 @@ $(`<style>
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
 	
+	#sjo-api-filters input[type="checkbox"] + label {min-width: 6em;}
 	#sjo-api-filters label {display: inline-block;}
 	input.sjo-api-date {width: 6em; display: inline-block; margin-right: 1em; margin-left: 0.5em; height: auto; padding: 0.25rem;}
 	.sjo-api-date-normal a {background-color: #2ad581 !important;}
@@ -153,14 +153,12 @@ function initialize() {
 	
 	// Insert wrapper at top of page
 	var wrapper = $('<div id="sjo-api-header"></div>').prependTo('.content');
+	
+	// Add filters
 	var filterWrapper = $('<div id="sjo-api-filters"></div>').appendTo(wrapper);
 	
 	// Extract single election
 	var electionDropdown = $('<select id="sjo-api-select-election"></select>')
-			.change(event => {
-				$('[name="sjo-api-filter-checkbox"]').prop('checked', false);
-				$('#sjo-api-filter-checkbox-election').prop('checked', true);
-			})
 			.appendTo(filterWrapper)		
 			.wrap('<div></div>')
 			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-election" value="election">')
@@ -168,31 +166,37 @@ function initialize() {
 	
 	// Extract single organisation
 	var organisationDropdown = $('<select id="sjo-api-select-organisation"></select>')
-			.change(event => {
-				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').prop('checked', false);
-				$('#sjo-api-filter-checkbox-organisation').prop('checked', true);
-			})
 			.appendTo(filterWrapper)
 			.wrap('<div></div>')
 			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-organisation" value="organisation">')
 			.before('<label for="sjo-api-filter-checkbox-organisation">Organisation: </label>');
 	
-	// Build lists of elections and organisations
-	buildDownloadList();
-	
 	// Extract all of an election type
 	var electionTypes = 'all,all except local,parl,local,mayor,europarl,sp,naw/senedd,nia,gla,pcc'.split(',');
 	$('<select id="sjo-api-select-type"></select>')
 			.append(electionTypes.map(type => $('<option></option>').val(type).text(type)))
-			.change(event => {
-				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').not('#sjo-api-filter-checkbox-country').prop('checked', false);
-				$('#sjo-api-filter-checkbox-type').prop('checked', true);
-			})
 			.appendTo(filterWrapper)
 			.wrap('<div></div>')
 			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-type" value="type">')
-			.before('<label for="sjo-api-filter-checkbox-type">Type: </label>')
-			.chosen();
+			.before('<label for="sjo-api-filter-checkbox-type">Type: </label>');
+	
+	// Extract all of a local election subtype
+	var localSubtypes = 'LBO,MBO,UTA,DIS,CTY,WAL,SCO,NIR'.split(',');
+	$('<select id="sjo-api-select-subtype"></select>')
+			.append(localSubtypes.map(subtype => $('<option></option>').val(subtype).text(subtype)))
+			.appendTo(filterWrapper)
+			.wrap('<div></div>')
+			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-subtype" value="subtype">')
+			.before('<label for="sjo-api-filter-checkbox-subtype">Subtype: </label>');
+	
+	// Extract all of a country
+	var countries = [['EN', 'England'], ['WA', 'Wales'], ['SC', 'Scotland'], ['NI', 'Northern Ireland']];
+	$('<select id="sjo-api-select-country"></select>')
+			.append(countries.map(country => $('<option></option>').val(country[0]).text(country[1])))
+			.appendTo(filterWrapper)
+			.wrap('<div></div>')
+			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-country" value="country">')
+			.before('<label for="sjo-api-filter-checkbox-country">Country: </label>');
 	
 	// Highlight elections in date picker
 	var datePickerOptions = {
@@ -221,9 +225,61 @@ function initialize() {
 			.before('<label for="sjo-api-date-end">To: </label>')
 			.datepicker(datePickerOptions);
 	
+	// Build lists of elections
+	buildDownloadList();
+	
+	$('#sjo-api-filters select').chosen();
 	
 	
 	
+	
+	
+	
+	
+	
+	// Deselect incompatible filters
+	$('select, input', '#sjo-api-filters').change(event => {
+		if (event.target.type == 'checkbox' && event.target.checked == false) return;
+		
+		var filter = event.target.id.replace(/.*-/, '');
+		console.log(filter);
+		
+		switch (filter) {
+				
+			case 'election':
+				$('[name="sjo-api-filter-checkbox"]').prop('checked', false);
+				$('#sjo-api-filter-checkbox-election').prop('checked', true);
+				break;
+				
+			case 'organisation':
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').prop('checked', false);
+				$('#sjo-api-filter-checkbox-organisation').prop('checked', true);
+				break;
+				
+			case 'subtype':
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').prop('checked', false);
+				$('#sjo-api-filter-checkbox-subtype').prop('checked', true);
+				break;
+				
+			case 'type':
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').not('#sjo-api-filter-checkbox-country').prop('checked', false);
+				$('#sjo-api-filter-checkbox-type').prop('checked', true);
+				break;
+				
+			case 'country':
+				$('[name="sjo-api-filter-checkbox"]').not('#sjo-api-filter-checkbox-date').not('#sjo-api-filter-checkbox-type').prop('checked', false);
+				$('#sjo-api-filter-checkbox-country').prop('checked', true);
+				break;
+				
+			case 'date':
+				$('#sjo-api-filter-checkbox-election').prop('checked', false);
+				break;
+				
+		}
+		
+	});
+		
+		
 	
 	
 	
@@ -483,8 +539,8 @@ function buildDownloadList() {
 	var organisationsHtml = Object.keys(organisationsList).sort().map(value => `<option value="${value}">${value}</option>`).join('');
 
 	// Add all downloads to dropdown
-	$('#sjo-api-select-election').html(electionsHtml).chosen();
-	$('#sjo-api-select-organisation').html(organisationsHtml).chosen();
+	$('#sjo-api-select-election').html(electionsHtml);
+	$('#sjo-api-select-organisation').html(organisationsHtml);
 
 }
 
@@ -497,6 +553,57 @@ function gotoPage(newPageNo) {
 }
 
 function startDownload(event) {
+	
+	// TODO
+	// Filter combinations:
+	//   - single election
+	//   - organisation
+	//       + date range
+	//   - subtype [LBO, MBO...]
+	//       + date range
+	//   - type [local, parl...]
+	//   -   + date range
+	//   -   + country
+	//   - country
+	//   -   + date range
+	//   - date range
+	
+	// single election:
+	//   extract the single CSV for that election
+	
+	// organisation:
+	//   extract all CSVs for that organisation
+	//     optionally filtered by date range
+	
+	// subtype:
+	//   extract all CSVs for that subtype
+	//     optionally filtered by date range
+	//     if there are few dates, consider extracting the CSVs for those dates and filtering afterwards
+	//     if there are a lot, consider extracting the all-candidates CSV and filtering afterwards
+	
+	// type:
+	//   extract all CSVs for that type
+	//     optionally filtered by date range
+	//     optionally filtered by country
+	//     if there are few dates, consider extracting the CSVs for those dates and filtering afterwards
+	//     if there are a lot, consider extracting the all-candidates CSV and filtering afterwards
+	
+	// country:
+	//   extract all CSVs for that country
+	//     optionally filtered by date range
+	//     if there are few dates, consider extracting the CSVs for those dates and filtering afterwards
+	//     if there are a lot, consider extracting the all-candidates CSV and filtering afterwards
+	
+	// date range:
+	//   extract all CSVs in that date range
+	//     if there are a lot, consider extracting the all-candidates CSV and filtering afterwards
+	
+	
+	
+	
+	
+	
+	
 	
 	var extract = {}
 	var selectedButton = $('[name="sjo-api-filter-checkbox"]:checked');
