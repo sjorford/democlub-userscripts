@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2022.03.03.0
+// @version     2022.04.07.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -312,7 +312,7 @@ function onready() {
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
 			var partyCol = table.getTableHeaders().indexOf('Party');
-			var party = tr.find('td').eq(partyCol).text().trim();
+			var party = tr.find('td').eq(partyCol).contents().first().text().trim();
 			var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
 			tr.prepend(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
 		});
