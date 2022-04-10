@@ -2,7 +2,7 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.06.13.0
+// @version        2022.04.10.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -57,7 +57,7 @@ function onready() {
 			.appendTo(item.find('.person-name-and-party'));
 		
 		// Add party colour
-		var party = item.find('.party').text().trim().match(/(.*) \(.*\)/)[1];
+		var party = item.find('.party').text().trim().match(/^(.+?)( \([^()]+\))?$/)[1];
 		var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
 		item.prepend(`<div class="sjo-party-bar sjo-party-${partySlug}"></div>`);
 
