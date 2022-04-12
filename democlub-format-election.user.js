@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2022.04.07.0
+// @version     2022.04.12.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -193,12 +193,13 @@ function onready() {
 			});
 			
 			var actions = $('<div></div>').insertBefore('.sjo-view:first-of-type');
-			$('<a href="#" class="sjo-action">By ward</a>').click(event => toggleViews() && false).appendTo(actions).addClass('sjo-action-selected');
-			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews() && false).appendTo(actions);
+			$('<a href="#" class="sjo-action">By ward</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
+			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews(event)).appendTo(actions);
 			
 			function toggleViews() {
 				$('.sjo-action').toggleClass('sjo-action-selected');
 				$('.sjo-view').toggle();
+				return false;
 			}
 			
 		}
