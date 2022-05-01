@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.03.29.0
+// @version     2022.05.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -254,5 +254,8 @@ function onready() {
 	
 	// Disable button
 	$('a:contains("Request photo removal")').attr('disabled', true);
+	
+	// Disable autocomplete
+	$('#other_person_id').attr('autocomplete', 'off');
 	
 }
