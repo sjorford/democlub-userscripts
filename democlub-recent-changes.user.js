@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.11.02.0
+// @version        2022.05.03.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -26,6 +26,7 @@ function onready() {
 	// Get table and headings
 	var table = $('.container table').addClass('sjo-changes');
 	table.find('th').addClass('sjo-nowrap');
+	table.closest('.container').css({maxWidth: 'fit-content'});
 	var headings = Utils.tableHeadings(table);
 	
 	table.find('tr').each(function(index, element) {
