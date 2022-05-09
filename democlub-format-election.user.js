@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2022.04.12.0
+// @version     2022.05.09.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -236,10 +236,17 @@ function onready() {
 		});
 		items.closest('.columns').hide().prev('.columns').removeClass('large-9');
 		
-		$('.candidates-list').each((index, element) => {
+		// Format candidates tables
+		var tables = $('.candidates-list').each((index, element) => {
 			formatResultsTable(element);
 		});
 		
+		// Add results link
+		$('<a class="button small">Edit results</a>')
+			.attr('href', `https://candidates.democracyclub.org.uk/uk_results/${slug}/`)
+			.insertAfter(tables.first());
+		
+		// Shorten PCC description
 		$('h1').html((index, text) => text.replace('Police and Crime Commissioner', 'PCC'));
 		
 		// Shrink panel
