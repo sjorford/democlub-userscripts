@@ -3,7 +3,8 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2021.05.27.0
+// @version     2022.05.06.0
+// @comment     good morning it's Friday
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -12,6 +13,7 @@
 // ==/UserScript==
 
 $(`<style class="sjo-styles">
+	
 	.sjo-posts td {padding: .25rem; vertical-align: top;}
 	.sjo-post-incomplete {background-color: #fdd !important;}
 	.sjo-post-complete {background-color: #ffb !important;}
@@ -50,6 +52,15 @@ $(`<style class="sjo-styles">
 	.ds-filter-label {min-width: 10em;}
 	#id_for_postcode {display: inline; width: 8em; margin-bottom: 0;}
 	
+	.sjo-summary-wrapper {
+		column-count: 3;
+	}
+	
+	.sjo-summary-table {
+		
+		
+	}
+	
 </style>`).appendTo('head');
 
 $(function() {
@@ -80,20 +91,19 @@ $(function() {
 		// Format heading
 		var heading = table.prev('h3').addClass('sjo-posts-heading');
 		var date = moment(heading.text(), 'Do MMM YYYY');
-		heading.html(date.format('D MMMM YYYY') 
-			+ (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
+		heading.html(date.format('D MMMM YYYY') + (date.day() == 4 ? '' : ` <small>(${date.format('dddd')})</small>`));
 		
 		// Wrap table
 		var wrapper = $('<div class="sjo-posts-wrapper"></div>').insertBefore(table).append(table);
 		heading.click(() => wrapper.toggle());
-		if (date.month() == 4 && date.date() <= 7) heading.click();
+		// if (date.month() == 4 && date.date() <= 7) heading.click();
 		
 		// Get collection of all rows
 		var rowsAllSets = {};
 		var electionSlug, electionType, electionName, electionGroup;
 		table.find('tbody tr').each((i,e) => {
 			
-			var links = $('a[href^="/elections/"]', e);
+			var links = $('a[href^="/elections/"]', e).not('.button');
 			if (links.length >= 2) {
 				
 				electionSlug = links[0].href.match(/([^\/]+)\/$/)[1];
@@ -123,10 +133,71 @@ $(function() {
 		$.each(electionTypes, (electionType, description) => {
 			var rows = rowsAllSets[electionType];
 			if (!rows) return;
-			var elections = Object.values(rows).sort((a,b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
-			console.log(electionType, elections);
 			
-			$.each(elections, (i,election) => {
+			var fullElections = [];
+			var otherElections = [];
+			
+			$.each(rows, (electionGroup, groupObj) => {
+				if (electionType == 'local' && groupObj.rows.length >= 5) {
+					fullElections.push(groupObj);
+				} else {
+					otherElections.push(groupObj);
+				}
+			});
+			
+			var summaryHTML = '';
+			if (fullElections.length > 1) {
+				summaryHTML += `<h4 class="sjo-posts-subhead">${description} - summary</h4>`;
+				summaryHTML += `<div class="sjo-summary-wrapper">`;
+				summaryHTML += `<table class="sjo-summary-table">`;
+			}
+
+			var fullElectionsHTML = '';
+			$.each(fullElections, (index, election) => {
+
+				var subheadText = description + (electionType == 'local' ? ` - ${election.name}` : '');
+				fullElectionsHTML += `<h4 class="sjo-posts-subhead">${subheadText}</h4>`;
+				fullElectionsHTML += `<table class="ballot_table">`;
+				fullElectionsHTML += theadHTML;
+
+				var rowsHTML = election.rows
+				.sort((a,b) => a.postName > b.postName ? 1 : a.postName < b.postName ? -1 : 0)
+				.map(row => row.html).join('\n');
+				fullElectionsHTML += rowsHTML;
+
+				fullElectionsHTML += `</table>`;
+
+				if (summaryHTML) {
+					var totalKnown = election.rows
+							.map(e => parseInt(e.html.match(/<td>(\d+)</)[1], 10))
+							.reduce((total, value) => total + value);
+					summaryHTML += `<tr><td><a href="#slughere">${election.name}</a></td><td>${totalKnown}</td></tr>`;
+					//summaryHTML += `<p><a href="#slughere">${election.name}</a></p>`;
+				}
+				
+			});
+				
+			if (false && summaryHTML) {
+				summaryHTML += `</table>`;
+				summaryHTML += `</div>`;
+				newHTML += summaryHTML;
+			}
+				
+			newHTML += fullElectionsHTML;
+				
+				
+				
+			
+			
+			//var elections = Object.values(rows).sort((a,b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
+			
+			
+			
+			
+			
+			
+			
+			$.each(otherElections, (index, election) => {
 				
 				var subheadText = description + (electionType == 'local' ? ` - ${election.name}` : '');
 				newHTML += `<h4 class="sjo-posts-subhead">${subheadText}</h4>`;
@@ -139,7 +210,7 @@ $(function() {
 				newHTML += rowsHTML;
 				
 				newHTML += `</table>`;
-
+				
 			});
 			
 		});
