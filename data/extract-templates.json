@@ -101,6 +101,35 @@
       }
     ]
   },
+  "merging":{
+    "display":"Standard",
+    "columns":[
+      "id",
+      "name",
+      "_first_name",
+      "_last_name",
+      "election_date",
+      "_election_type",
+      "_election_name",
+      "_post_label",
+      "party_name",
+      "has:email",
+      "has:twitter_username",
+      "has:facebook_page_url",
+      "has:facebook_personal_url",
+      "has:party_ppc_page_url",
+      "has:homepage_url",
+      "has:wikipedia_url",
+      "_age_at_election_min",
+      "has:image_url",
+      "has:cancelled_poll",
+      "has:elected"
+    ],
+    "sort":[
+      {"column":"id",            "order":-1},
+      {"column":"election_date", "order":-1}
+    ]
+  },
   "wikidata":{
     "display":"Wikidata",
     "columns":[
