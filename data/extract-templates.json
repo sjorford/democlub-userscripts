@@ -102,7 +102,7 @@
     ]
   },
   "merging":{
-    "display":"Standard",
+    "display":"Merging",
     "columns":[
       "id",
       "name",
