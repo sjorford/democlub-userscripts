@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.05.03.0
+// @version        2022.05.15.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -15,12 +15,13 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style class="sjo-styles">
+		.recent-changes {margin-top: 1.25rem;}
 		.sjo-changes td, .sjo-changes th {padding: 4px;}
 		.sjo-nowrap {white-space: nowrap;}
 		.sjo-number {text-align: right;}
 	</style>`).appendTo('head');
 	
-	var maxUrlLength = 40;
+	var maxUrlLength = 80;
 	var username = $('.nav-links__item:contains("Signed in as") strong').text().trim();
 	
 	// Get table and headings
@@ -65,14 +66,8 @@ function onready() {
 		
 	});
 	
-	// Fix next/previous page links
-	$('.step-links a').each((i,e) => {
-		var currentParams = new URLSearchParams(window.location.search);
-		var targetParams = new URLSearchParams((new URL(e.href)).search);
-		currentParams.set('page', targetParams.get('page'));
-		e.href = '?' + currentParams.toString();
-	})
-	
+	// Copy pagination links to top
+	$('.pagination').clone().insertBefore('.recent-changes');
 	
 	// Convert action types to buttons
 	var actionSelect = $('#id_action_type').hide();
