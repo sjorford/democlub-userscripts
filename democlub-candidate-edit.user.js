@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2022.06.12.0
+// @version     2022.06.14.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -210,6 +210,16 @@ function onready() {
 		// Trim party selection
 		if (input.is('select.party-select')) {
 			Utils.formatPartySelects(input);
+		}
+		
+		// Make year of birth a standard text field so numbers with trailing whitespace can be pasted in
+		if (id == 'id_birth_date') {
+			input.attr('type', 'text');
+		}
+		
+		// Disable autocomplete for date fields
+		if (id == 'id_birth_date' || id == 'id_death_date') {
+			input.attr('autocomplete', 'off');
 		}
 		
 		// Show date pickers
