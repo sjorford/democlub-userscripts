@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.05.01.0
+// @version     2022.06.14.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -65,6 +65,9 @@ function onready() {
 			background-size: 15px;
 			background-position-y: center;
 		}
+		
+		.header {position: sticky; top: 0px; z-index: 9999;}
+		body {height: fit-content; }
 		
 	</style>`).appendTo('head');
 	
@@ -143,12 +146,6 @@ function onready() {
 			
 			// Trim labels
 			if (labelMappings[dt.text()]) dt.text(labelMappings[dt.text()]);
-			
-			// Hide reversion button to prevent accidental clicking
-			//if (dt.text() == 'Revert to this') {
-			//	dt.hide();
-			//	dd.hide();
-			//}
 			
 			// Add links
 			if (dd.find('a').length == 0) {
@@ -236,6 +233,7 @@ function onready() {
 	// https://candidates.democracyclub.org.uk/person/768/martin-mcguinness
 	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
 	
+	/*
 	// Add button to copy as link
 	$('<button class="sjo-copyaslink">🔗</button>').insertAfter('.person__photo').click(event => {
 		var personName = $('.person__hero h1').text();
@@ -247,6 +245,7 @@ function onready() {
 		temp.remove();
 		return false;
 	});
+	*/
 	
 	// Show last update time in header
 	var updateTime = $('dt:contains("Timestamp")').first().next('dd').text().trim();
