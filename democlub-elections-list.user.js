@@ -3,8 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2022.05.06.0
-// @comment     good morning it's Friday
+// @version     2022.07.01.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -182,36 +181,22 @@ $(function() {
 				summaryHTML += `</div>`;
 				newHTML += summaryHTML;
 			}
-				
+			
 			newHTML += fullElectionsHTML;
-				
-				
-				
 			
-			
-			//var elections = Object.values(rows).sort((a,b) => a.name > b.name ? 1 : a.name < b.name ? -1 : 0);
-			
-			
-			
-			
-			
-			
+			var subheadText = description; // + (electionType == 'local' ? ` - ${election.name}` : '');
+			newHTML += `<h4 class="sjo-posts-subhead">${subheadText}</h4>`;
+			newHTML += `<table class="ballot_table">`;
+			newHTML += theadHTML;
 			
 			$.each(otherElections, (index, election) => {
-				
-				var subheadText = description + (electionType == 'local' ? ` - ${election.name}` : '');
-				newHTML += `<h4 class="sjo-posts-subhead">${subheadText}</h4>`;
-				newHTML += `<table class="ballot_table">`;
-				newHTML += theadHTML;
-				
 				var rowsHTML = election.rows
 								.sort((a,b) => a.postName > b.postName ? 1 : a.postName < b.postName ? -1 : 0)
 								.map(row => row.html).join('\n');
 				newHTML += rowsHTML;
-				
-				newHTML += `</table>`;
-				
 			});
+			
+			newHTML += `</table>`;
 			
 		});
 		
