@@ -2,7 +2,7 @@
 // @name           Democracy Club homepage
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.10.27.0
+// @version        2022.10.28.0
 // @match          https://candidates.democracyclub.org.uk/
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -12,26 +12,31 @@
 $(function() {
 	
 	$(`<style class="sjo-styles">
-		.sjo-table th, .sjo-table td {padding: .35rem}
+		.sjo-elections-table th, .sjo-elections-table td {padding: .35rem}
+		.sjo-elections-table th+th~th, .sjo-elections-table td+td~td {text-align: center;}
 		.sjo-filename {font-size: 8pt;}
 		.sjo-filename-button {
 			padding: 0.5em;
 			font-size: 100%;
 			margin: 0 0.5em;
 			border-radius: 0.5em;
+			background-color: lightblue;
+			color: inherit;
 		}
 	</style>`).appendTo('head');
 	
 	var futureTable = $('h3:contains("Upcoming by-elections")').next('table');
 	futureTable.find('thead tr:first-of-type th:contains("Candidates known")').text('Known');
+	futureTable.find('thead tr:first-of-type').append('<th>Links</th>');
 	formatElectionsTable(futureTable);
 	
 	var pastTable = $('h3:contains("Recently past elections")').next('table');
+	pastTable.find('thead tr:first-of-type').append('<th>Links</th>');
 	formatElectionsTable(pastTable);
 	
 	function formatElectionsTable(table) {
 		
-		table.addClass('sjo-table');
+		table.addClass('sjo-elections-table');
 		
 		var headerRows = table.find('tbody tr:has(th)');
 		headerRows.each((index, element) => {
