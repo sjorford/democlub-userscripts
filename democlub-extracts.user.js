@@ -643,15 +643,17 @@ function startDownload(event) {
 		localStorage.setItem('sjo-api-date-start', startDate);
 		localStorage.setItem('sjo-api-date-end', endDate);
 		
-	} else if (selectedButton.is('#sjo-api-option-extract-all')) {
+	} else { //if (selectedButton.is('#sjo-api-option-extract-all')) {
 		
 		extract.urls = [allCandidatesUrl];
 		localStorage.setItem('sjo-api-extract', 'all');
 		
+		/*
 	} else if (selectedButton.is('#sjo-api-option-extract-results_ge2019')) {
 		
 		extract.urls = [resultsGE2019Url];
 		localStorage.setItem('sjo-api-extract', 'results_ge2019');
+		*/
 		
 	}
 	
