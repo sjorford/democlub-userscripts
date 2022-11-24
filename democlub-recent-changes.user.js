@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.11.24.1
+// @version        2022.11.24.2
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -43,9 +43,24 @@ function onready() {
 	var table = $('.container table').addClass('sjo-changes');
 	table.find('th').addClass('sjo-nowrap');
 	table.closest('.container').css({maxWidth: 'fit-content'});
+	
+	var rows = table.find('tbody:not(.diff-row) > tr');
+	
+	// Split date into separate column
+	rows.each(function(index, element) {
+		var row = $(element);
+		var td = row.find('td').first();
+		$('<td></td>').append(td.find('a')).insertAfter(td);
+	});
+	
+	table.find('th').first().each((i,e) => {
+		var th = $(e);
+		$('<th class="sjo-nowrap">Date</th>').insertBefore(th);
+	});
+	
 	var headings = Utils.tableHeadings(table);
 	
-	table.find('tbody:not(.diff-row) > tr').each(function(index, element) {
+	rows.each(function(index, element) {
 		var row = $(element);
 		var cells = row.find('td');
 		if (cells.length === 0) return;
