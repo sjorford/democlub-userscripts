@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.05.15.0
+// @version        2022.11.24.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -15,10 +15,25 @@ window.setTimeout(onready, 0);
 function onready() {
 	
 	$(`<style class="sjo-styles">
+		
 		.recent-changes {margin-top: 1.25rem;}
 		.sjo-changes td, .sjo-changes th {padding: 4px;}
 		.sjo-nowrap {white-space: nowrap;}
 		.sjo-number {text-align: right;}
+		.sjo-changes > tbody + tbody::before {display: none;}
+		
+		.sjo-fieldname {
+			background-color: #ffb;
+			font-style: normal;
+			font-size: 8pt;
+			padding: 0 5px;
+			border: thin lightgray solid;
+			border-radius: 5px;
+			white-space: nowrap;
+			margin: 3px 3px 0 0;
+			display: inline-block;
+		}
+
 	</style>`).appendTo('head');
 	
 	var maxUrlLength = 80;
@@ -30,17 +45,17 @@ function onready() {
 	table.closest('.container').css({maxWidth: 'fit-content'});
 	var headings = Utils.tableHeadings(table);
 	
-	table.find('tr').each(function(index, element) {
+	table.find('tbody:not(.diff-row) > tr').each(function(index, element) {
 		var row = $(element);
 		var cells = row.find('td');
 		if (cells.length === 0) return;
 		
 		// Stop columns wrapping
-		cells.eq(headings['Date and time']).addClass('sjo-nowrap');
-		cells.eq(headings['Action']).addClass('sjo-nowrap');
+		//cells.eq(headings['Date and time']).addClass('sjo-nowrap');
+		//cells.eq(headings['Action']).addClass('sjo-nowrap');
 		
 		// Add links
-		var sourceCell = cells.eq(headings['Information source']);
+		var sourceCell = cells.eq(headings['Source']);
 		sourceCell.html(Utils.formatLinks(sourceCell.html(), maxUrlLength));
 		
 		// Flag internally-sourced edits
@@ -54,7 +69,7 @@ function onready() {
 		}
 		
 		// Flag all rows by action
-		row.addClass('sjo-changes-' + slugify(cells.eq(headings['Action']).text()));
+		row.addClass('sjo-changes-' + slugify(cells.eq(headings['Change']).text()));
 		
 		// Flag bot edits
 		if (cells.eq(headings['User']).text().trim().match(/Bot$/)) {
@@ -63,6 +78,15 @@ function onready() {
 				row.addClass('sjo-changes-twitter-removed');
 			}
 		}
+		
+		// Format field names
+		cells.eq(headings['Change']).find('em').each((i,e) => {
+			var em = $(e);
+			em.html(em.html().replace(/Ppc/g, 'PPC').replace(/Url/g, 'URL')
+					.replace(/([^\s,][^,]+)(, )?/g, '<span class="sjo-fieldname">$1</span>'));
+		});
+		
+		// TODO: format diffs like candidate pages
 		
 	});
 	
