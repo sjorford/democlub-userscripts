@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.06.14.0
+// @version     2022.11.25.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -93,7 +93,7 @@ function onready() {
 		
 			// Format election headers
 			var headingText = dt.html().trim();
-			var date = moment(headingText.match(/\((.*?)\)$/)[1], 'Do MMMM YYYY');
+			var date = moment(headingText.match(/\((\d+ \w+ \d{4}|\w+ \d+, \d{4})\)$/)[1]);
 			headingText = headingText.replace(/^Contest(ed|ing) the (\d{4} )?/, '');
 			headingText = headingText.replace(/ \([^\(\)]+ \d{4}\)$/, '');
 			
