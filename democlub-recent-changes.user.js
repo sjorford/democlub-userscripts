@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.11.24.2
+// @version        2022.12.01.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -17,10 +17,14 @@ function onready() {
 	$(`<style class="sjo-styles">
 		
 		.recent-changes {margin-top: 1.25rem;}
-		.sjo-changes td, .sjo-changes th {padding: 4px;}
+		.recent-changes td, .recent-changes th {padding: 4px;}
 		.sjo-nowrap {white-space: nowrap;}
 		.sjo-number {text-align: right;}
-		.sjo-changes > tbody + tbody::before {display: none;}
+		.recent-changes > tbody + tbody::before {display: none;}
+		.recent-changes th:nth-of-type(3) {min-width: 10em;}
+		.recent-changes th:nth-of-type(5) {width: 50%;}
+		.sjo-changes-photo-uploaded [id^="diff-button-"],
+		.sjo-changes-photo-approved [id^="diff-button-"] {display: none;}
 		
 		.sjo-fieldname {
 			background-color: #ffb;
@@ -39,11 +43,10 @@ function onready() {
 	var maxUrlLength = 80;
 	var username = $('.nav-links__item:contains("Signed in as") strong').text().trim();
 	
-	// Get table and headings
-	var table = $('.container table').addClass('sjo-changes');
+	// Get table
+	var table = $('.container table');
 	table.find('th').addClass('sjo-nowrap');
 	table.closest('.container').css({maxWidth: 'fit-content'});
-	
 	var rows = table.find('tbody:not(.diff-row) > tr');
 	
 	// Split date into separate column
@@ -52,22 +55,18 @@ function onready() {
 		var td = row.find('td').first();
 		$('<td></td>').append(td.find('a')).insertAfter(td);
 	});
+	table.find('th').first().before('<th class="sjo-nowrap">Date</th>');
 	
-	table.find('th').first().each((i,e) => {
-		var th = $(e);
-		$('<th class="sjo-nowrap">Date</th>').insertBefore(th);
-	});
-	
+	// Get headings
 	var headings = Utils.tableHeadings(table);
+	table.find('th').eq(headings['Edited']).text('Candidate');
+	table.find('th').eq(headings['Flagged']).text('');
+	table.find('th').eq(headings['View diff']).text('Diff');
 	
 	rows.each(function(index, element) {
 		var row = $(element);
 		var cells = row.find('td');
 		if (cells.length === 0) return;
-		
-		// Stop columns wrapping
-		//cells.eq(headings['Date and time']).addClass('sjo-nowrap');
-		//cells.eq(headings['Action']).addClass('sjo-nowrap');
 		
 		// Add links
 		var sourceCell = cells.eq(headings['Source']);
