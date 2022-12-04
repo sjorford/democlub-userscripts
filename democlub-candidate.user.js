@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.11.25.1
+// @version     2022.12.04.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -93,6 +93,7 @@ function onready() {
 			
 			// Format election headers
 			var headingText = dt.html().trim();
+			var date = moment(headingText.match(/\((\d+ \w+ \d{4}|\w+\.? \d+, \d{4})\)$/)[1].replace(/\./, ''));
 			headingText = headingText.replace(/^Contest(ed|ing) the (\d{4} )?/, '');
 			headingText = headingText.replace(/ \([^\(\)]+ \d{4}\)$/, '');
 			
@@ -111,7 +112,8 @@ function onready() {
 				dt.addClass('sjo-parl');
 			}
 			
-			var date = moment(slug.match(/\d{4}-\d{2}-\d{2}/)[0]);
+			// Can't use slug for date, as there may be no election link
+			//var date = moment(slug.match(/\d{4}-\d{2}-\d{2}/)[0]);
 			dt.html(`${council} <span class="sjo-heading-note">(${date.format("D MMM YYYY")})</span>`);
 			link.text(Utils.shortPostName(link.text()));
 			
