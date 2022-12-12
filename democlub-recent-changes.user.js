@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.12.12.0
+// @version        2022.12.12.1
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -23,6 +23,16 @@ function onready() {
 		.recent-changes > tbody + tbody::before {display: none;}
 		.recent-changes th:nth-of-type(3) {min-width: 10em;}
 		.recent-changes th:nth-of-type(5) {width: 50%;}
+		
+		.sjo-changes-mine {background-color: #ffeb99 !important;}
+		.sjo-changes-bot {background-color: #e7e7e7 !important;}
+		.sjo-changes-internal {background-color: #d5646496 !important;}
+		.sjo-changes-candidacy-delete {background-color: pink !important;}
+		.sjo-changes-photo-uploaded *, .sjo-changes-photo-approved *, 
+		.sjo-changes-photo-rejected *, .sjo-changes-photo-ignored * {color: #ccc !important;}
+		
+		.sjo-filters label {display: inline; font-weight: bold;}
+		.sjo-filters-detail {display: inline-block; margin-right: 2em; font-size: .875rem;}
 		
 		.sjo-fieldname {
 			background-color: #ffb;
@@ -77,7 +87,7 @@ function onready() {
 		
 		// Highlight my changes
 		if (cells.eq(headings['User']).text().trim() == username) {
-			row.addClass('sjo-mychanges');
+			row.addClass('sjo-changes-mine');
 		}
 		
 		// Flag all rows by action
@@ -109,6 +119,11 @@ function onready() {
 			row.find('[id^=diff-button-]').hide();
 		}
 		
+		// Add missing cell
+		if (row.find('[id^=diff-button-]').length == 0) {
+			row.append('<td></td>');
+		}
+		
 		// TODO: format diffs like candidate pages
 		
 	});
@@ -136,6 +151,26 @@ function onready() {
 		return false;
 	});
 	
+	// Close panel by default
+	$('.ds-filter details').removeAttr('open');
+	
+	// Display filter text
+	$('<div class="sjo-filters"></div>').appendTo('.ds-filter');
+	$('.ds-advanced-filters ul').each((i,e) => {
+		var ul = $(e);
+		var filters = ul.find('a[aria-current="true"]').not((i,e) => e.innerText.trim() == 'All');
+		var username = ul.find('#id_username').val() || '';
+		console.log(username);
+		if (filters.length > 0 || username.length > 0) {
+			$('<span class="sjo-filters-detail"></div>')
+				.append('<label>' + ul.find('.ds-filter-label').text().trim() + '</label> ')
+				.append(filters.toArray().map(e => e.innerText.trim()).join(', '))
+				.append(username)
+				.appendTo('.sjo-filters');
+		}
+	});
+	
+	// Utility functions
 	function slugify(text) {
 		return text.toLowerCase().replace(/^[^a-z0-9]+|[^a-z0-9]+$/, '').replace(/[^a-z0-9]+/, '-');
 	}
