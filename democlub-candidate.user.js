@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.12.04.0
+// @version     2022.12.12.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -51,7 +51,6 @@ function onready() {
 		.sjo-marker-byelection        {background-color: darkgoldenrod;}
 		.sjo-marker-main              {background-color: royalblue;}
 		.sjo-heading-past .sjo-marker {background-color: darkgrey;} /* wtf is darkgrey lighter than grey? */
-		.sjo-marker-main.sjo-marker-replacement {background-color: red;}
 		
 		.sjo-copyaslink {float: right; clear: right; background: transparent; border-radius: 12px;}
 		.sjo-copyaslink:hover {background: white;}
@@ -122,14 +121,6 @@ function onready() {
 				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
 			} else if (date.month() == 4 && date.day() <= 7 && date.year() >= moment().year()) {
 				dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
-				
-				if (href.match(/2020/)) {
-					if ($('.sjo-marker-main:contains("2021")').length == 0) {
-						var href2021 = href.replace(/2020-05-07/, '2021-05-06');
-						dt.append(` <span class="sjo-marker sjo-marker-main sjo-marker-replacement"><a href="${href2021}">2021</a></span>`);
-					}
-				}
-				
 			}
 			
 			// Highlight future elections
