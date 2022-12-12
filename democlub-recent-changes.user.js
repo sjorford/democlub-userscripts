@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.12.01.0
+// @version        2022.12.12.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -23,8 +23,6 @@ function onready() {
 		.recent-changes > tbody + tbody::before {display: none;}
 		.recent-changes th:nth-of-type(3) {min-width: 10em;}
 		.recent-changes th:nth-of-type(5) {width: 50%;}
-		.sjo-changes-photo-uploaded [id^="diff-button-"],
-		.sjo-changes-photo-approved [id^="diff-button-"] {display: none;}
 		
 		.sjo-fieldname {
 			background-color: #ffb;
@@ -105,6 +103,11 @@ function onready() {
 			var a = $(e);
 			a.after(' (' + a.attr('href').match(/(\d+)/)[1] + ')');
 		});
+		
+		// Hide buttons with no diff
+		if (row.closest('tbody').next('tbody.diff-row').text().trim().match(/^Couldn't find version/)) {
+			row.find('[id^=diff-button-]').hide();
+		}
 		
 		// TODO: format diffs like candidate pages
 		
