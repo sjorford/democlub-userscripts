@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2022.05.09.0
+// @version     2022.12.20.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -62,7 +62,7 @@ function onready() {
 		.sjo-page-election .sjo-results-party {width: 300px;}
 		.sjo-page-election .sjo-results-ward  {width: 300px;}
 		.sjo-page-election .sjo-results-votes {width: 100px;}
-		td.sjo-results-id, .sjo-results-votes {text-align: right;}
+		td.sjo-results-id, .sjo-results-votes, .sjo-results-share {text-align: right;}
 		th.sjo-results-id                     {text-align: center;}
 		.sjo-results-votes-missing            {background-color: lightgray;}
 		.sjo-results-pos                      {text-align: center;}
@@ -84,7 +84,7 @@ function onready() {
 		
 		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
 		
-		.sjo-results-name, .sjo-results-party, .sjo-results-actions {width: 33%;}
+		.sjo-results-name, .sjo-results-party {width: 40%;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
@@ -292,74 +292,80 @@ function onready() {
 		var table = $(selector);
 		var tbody = table.find('tbody:first-of-type');
 		
+		// Add cell classes
+		var headers = table.getTableHeaders();
+		table.find('tr').each((i,e) => {
+			$(e).find('td, th').each((i,e) => {
+				var td = $(e);
+				if (headers[i] == 'Name')     td.addClass('sjo-results-name');
+				if (headers[i] == 'List position')      td.addClass('sjo-results-pos'); // FIXME: missing?
+				if (headers[i] == 'Party')    td.addClass('sjo-results-party');
+				if (headers[i] == 'Results')  td.addClass('sjo-results-votes');
+				if (headers[i] == 'Votes')    td.addClass('sjo-results-votes');
+				if (headers[i] == 'Elected?') td.addClass('sjo-results-elected');
+				if (headers[i] == 'Actions')  td.addClass('sjo-results-actions');
+			});
+		});
+		
 		// Add table classes
 		table.addClass('sjo-election-results');
-		var posCol = table.getTableHeaders().indexOf('List position');
-		if (posCol >= 0) {
-			table.find('th').eq(posCol).text('Pos');
+		if (table.has('.sjo-results-pos').length > 0) {
 			$('body').addClass('sjo-election-haslists');
 		}
 		
 		// Add blank party column to not-standing table
-		if (table.getTableHeaders().indexOf('Party') < 0) {
-			var nameCol = table.getTableHeaders().indexOf('Name');
-			table.find(`thead tr th:nth-of-type(${nameCol+1})`).after('<th>Party</th>');
-			table.find(`tbody tr td:nth-of-type(${nameCol+1})`).after('<td></td>');
+		if (table.has('.sjo-results-party').length == 0) {
+			table.find('th.sjo-results-name').after('<th>Party</th>');
+			table.find('td.sjo-results-name').after('<td></td>');
 		}
 		
-		// Add IDs column
+		// Add ID column
+		table.find('th.sjo-results-name').before('<th class="sjo-results-id">ID</th>');
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
-			var nameCol = table.getTableHeaders().indexOf('Name');
-			var id = tr.find('td').eq(nameCol).find('a').attr('href').match(/\/(\d+)\//)[1];
-			tr.prepend(`<td class="sjo-results-id">${id}</td>`);
+			var nameCell = tr.find('td.sjo-results-name');
+			var id = nameCell.find('a').attr('href').match(/\/(\d+)\//)[1];
+			nameCell.before(`<td class="sjo-results-id">${id}</td>`);
 		});
-		table.find('thead tr').prepend('<th class="sjo-results-id">ID</th>');
 		
 		// Add colour bar
+		table.find('th.sjo-results-id').before('<th class="sjo-party-bar"></th>');
 		table.find('tbody tr').each((index, element) => {
 			var tr = $(element);
-			var partyCol = table.getTableHeaders().indexOf('Party');
-			var party = tr.find('td').eq(partyCol).contents().first().text().trim();
+			var party = tr.find('td.sjo-results-party').contents().first().text().trim();
 			var partySlug = party == '' ? 'notstanding' : Utils.slugify(party);
-			tr.prepend(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
+			tr.find('td.sjo-results-id').before(`<td class="sjo-party-bar sjo-party-${partySlug}"></td>`);
 		});
-		table.find('thead tr').prepend('<th class="sjo-party-bar"></th>');
 		
 		// Highlight elected candidates
-		var electedCol = table.getTableHeaders().indexOf('Elected?');
-		if (electedCol >= 0) {
+		if (table.has('.sjo-results-elected').length > 0) {
 			
-			table.find('th').eq(electedCol).text('').addClass('sjo-results-elected');
-			tbody.find('tr').each((i,e) => {
-				var cell = $(e).find('td').eq(electedCol).addClass('sjo-results-elected');
+			table.find('td.sjo-results-elected').each((i,e) => {
+				var cell = $(e);
 				cell.text(cell.text().replace(/^Yes$/, '★').replace(/^No$/, ''));
 			});
 			
-		} else {
+		} else if (table.has('.sjo-results-votes').length > 0) {
 			
 			// Split out new column
-			var resultsCol = table.getTableHeaders().indexOf('Results');
-			if (resultsCol >= 0) {
-				table.find('th').eq(resultsCol).text('Votes');
-				table.find('tr').each((i,e) => {
-					var tr = $(e);
-					var resultsCell = tr.find('td, th').eq(resultsCol);
-					var electedCell = resultsCell.is('th') ? $('<th></th>') : $('<td></td>');
-					electedCell.addClass('sjo-results-elected').insertAfter(resultsCell);
-					if (resultsCell.text().match(/ \(elected\)/)) {
-						electedCell.text('★');
-						resultsCell.text(resultsCell.text().replace(/ \(elected\)/, ''));
-					}
-				});
-			}
+			table.find('th.sjo-results-votes').after('<th class="sjo-results-elected"></th>');
+			table.find('tbody tr').each((i,e) => {
+				console.log(i,e);
+				var tr = $(e);
+				var votesCell = tr.find('.sjo-results-votes');
+				var electedCell = $('<td class="sjo-results-elected"></td>').insertAfter(votesCell);
+				if (votesCell.text().match(/ \(elected\)/)) {
+					electedCell.text('★');
+					votesCell.text(votesCell.text().replace(/ \(elected\)/, ''));
+				}
+			});
 			
 		}
 		
 		// Flag tied results
-		var votesCol = table.getTableHeaders().indexOf('Votes');
 		table.find('tr').each((i,e) => {
 			var tr = $(e);
+			var votesCol = table.getTableHeaders().indexOf('Votes');
 			
 			var votesCell = tr.find('td, th').eq(votesCol);
 			var tiedCell = (votesCell.is('th') ? $('<th></th>') : $('<td></td>')).addClass('sjo-results-tied').appendTo(tr);
@@ -386,34 +392,41 @@ function onready() {
 			
 		});
 		
-		// Add cell classes
-		var headers = table.getTableHeaders();
-		table.find('tr').each((i,e) => {
-			$(e).find('td, th').each((i,e) => {
-				var td = $(e);
-				if (headers[i] == 'Name')    td.addClass('sjo-results-name');
-				if (headers[i] == 'Pos')     td.addClass('sjo-results-pos');
-				if (headers[i] == 'Party')   td.addClass('sjo-results-party');
-				if (headers[i] == 'Actions') td.addClass('sjo-results-actions');
-				
-				// Format votes
-				if (headers[i] == 'Votes') {
-					td.addClass('sjo-results-votes');
-					if (td.is('td') && td.text().trim() !== '') {
-						var votes = td.text().trim() - 0;
-						var votesSort = ('0000000000' + votes).substr('-10');
-						var votesFormatted = votes.toLocaleString();
-						td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
-					}
-				}
-				
+		// Calculate vote shares
+		var sumVotes = table.find('td.sjo-results-votes').toArray().map(e => parseInt('0' + e.innerText.trim(), 10)).reduce((sum,val) => sum + val, 0);
+		var numElected = table.find('td.sjo-results-elected:contains("★")').length;
+		console.log(sumVotes, numElected);
+		if (sumVotes > 0 && numElected > 0) {
+			table.find('th.sjo-results-votes').after('<th class="sjo-results-share">Share</th>');
+			table.find('tbody tr').each((i,e) => {
+				var tr = $(e);
+				var votesCell = tr.find('.sjo-results-votes');
+				var share = (parseInt('0' + votesCell.text().trim(), 10)) / (sumVotes / numElected);
+				$(`<td class="sjo-results-share">${(share * 100).toFixed(2)}%</td>`).insertAfter(votesCell);
 			});
+		}
+		
+		// Format votes
+		table.find('td.sjo-results-votes').each((i,e) => {
+			var td = $(e);
+			if (td.text().trim() !== '') {
+				var votes = parseInt(td.text().trim(), 10);
+				var votesSort = ('0000000000' + votes).substr('-10');
+				var votesFormatted = votes.toLocaleString();
+				td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
+			}
 		});
 		
+		// Shorten table headers
+		table.find('th.sjo-results-pos').text('Pos');
+		table.find('th.sjo-results-votes').text('Votes');
+		table.find('th.sjo-results-elected').text('');
+		
+		// Click to sort
 		table.on('click', 'th', sortResultsTable);
 		
 		// Default sort by votes first, name second
-		if (posCol < 0 && !window.location.href.match(/\.[ar]\./)) {
+		if (table.find('.sjo-results-pos').length == 0 && !window.location.href.match(/\.[ar]\./)) {
 			table.find('th.sjo-results-name').click();
 			table.find('th.sjo-results-votes').click();
 		}
