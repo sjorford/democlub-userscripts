@@ -2,7 +2,7 @@
 // @name           Democracy Club recent changes
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.12.12.1
+// @version        2022.12.23.0
 // @match          https://candidates.democracyclub.org.uk/recent-changes*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -27,7 +27,7 @@ function onready() {
 		.sjo-changes-mine {background-color: #ffeb99 !important;}
 		.sjo-changes-bot {background-color: #e7e7e7 !important;}
 		.sjo-changes-internal {background-color: #d5646496 !important;}
-		.sjo-changes-candidacy-delete {background-color: pink !important;}
+		.sjo-changes-candidacy-deleted {background-color: pink !important;}
 		.sjo-changes-photo-uploaded *, .sjo-changes-photo-approved *, 
 		.sjo-changes-photo-rejected *, .sjo-changes-photo-ignored * {color: #ccc !important;}
 		
@@ -133,14 +133,15 @@ function onready() {
 	
 	// Convert action types to buttons
 	var actionSelect = $('#id_action_type').hide();
-	var actionOptions = actionSelect.find('option').each((i,e) => {
+	actionSelect.append(actionSelect.find('option').toArray().sort((a,b) => a.innerText < b.innerText ? -1 : a.innerText > b.innerText ? 1 : 0));
+	actionSelect.find('option').each((i,e) => {
 		$(`<a href="#" data-value="${e.value}" ${e.selected ? ' aria-current="true"' : ''}>${e.innerText}</a>`)
 			.insertBefore(actionSelect).wrap('<li class="sjo-changes-action"></li>');
 	});
 	
 	$('.sjo-changes-action').click(event => {
 		var button = $(event.target);
-		var option = actionOptions.filter((i,e) => e.value == button.data('value'));
+		var option = actionSelect.find('option').filter((i,e) => e.value == button.data('value'));
 		if (button.attr('aria-current')) {
 			option.prop('selected', false);
 			button.removeAttr('aria-current');
