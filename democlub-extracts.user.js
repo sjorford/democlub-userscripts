@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.11.06.0
+// @version        2022.12.13.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -206,7 +206,7 @@ function initialize() {
 			beforeShowDay: date => {
 				var dateISO = date.toISOString().split('T')[0];
 				var elections = $.grep(Object.values(electionsList), element => element.date == dateISO);
-				var className = elections.length == 0 ? '' : (_date.day() == 4 ? 'sjo-api-date-normal' : 'sjo-api-date-weird');
+				var className = elections.length == 0 ? '' : (date.getDay() == 4 ? 'sjo-api-date-normal' : 'sjo-api-date-weird');
 				return [true, className, ''];
 			},
 		};
