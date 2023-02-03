@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.12.13.0
+// @version        2022.12.13.1
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -956,6 +956,16 @@ function cleanData(index, candidate, isResults) {
 		candidate._suffix = suffixMatch[2];
 		trimmedName = suffixMatch[1];
 	}
+	
+	// TODO: split double-barrelled surnames
+	// watch out for hyphenated prefixes, including the list below and also:
+	// Charlie O-Macauley
+	// Pol Oh-Again
+	// Sue Ap-Roberts
+	// Ateeque Ur-Rehman
+	// Motin Uz-Zaman
+	// Lilian El-Doufani
+	// Leila Ben-Hassel
 	
 	var surnameMatch = trimmedName.match(/^(.*?) ((van de|van der|van den|van|von|de la|de|la|le|di|al) [^ ]+)$/i);
 	if (!surnameMatch) surnameMatch = trimmedName.match(/^(.*?) ([^ ]+)$/);
