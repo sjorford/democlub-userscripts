@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.12.13.1
+// @version        2023.02.03.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -28,7 +28,7 @@ var datesList = {};
 // External stylesheets
 $('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/chosen/1.6.2/chosen.css">').appendTo('head');
 $('<link href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css" rel="stylesheet" type="text/css">').appendTo('head');
-	
+
 // Styles
 $(`<style>
 	
@@ -40,6 +40,7 @@ $(`<style>
 	#sjo-api-filters select      {width: 15rem;}
 	#sjo-api-filters select#sjo-api-select-election     {width: 30rem;}
 	#sjo-api-filters select#sjo-api-select-organisation {width: 30rem;}
+	#sjo-api-filters select#sjo-api-select-common-dates {width: 7.5rem;}
 	#sjo-api-select-template     {width: 15rem;}
 	#sjo-api-status {font-style: italic; margin-right: 1rem;}
 	#sjo-api-error {font-weight: bold; color: red;}
@@ -68,9 +69,9 @@ $(`<style>
 	
 	#sjo-api-textarea-raw {min-height: 10em;}
 	
-	#sjo-api-filters input[type="checkbox"] + label {min-width: 6em;}
-	#sjo-api-filters label {display: inline-block;}
-	input.sjo-api-date {width: 6em; display: inline-block; margin-right: 1em; margin-left: 0.5em; height: auto; padding: 0.25rem;}
+	#sjo-api-filters input[type="checkbox"] + label {min-width: 7em;}
+	#sjo-api-filters label {display: inline-block; margin-right: 0.5em;}
+	input.sjo-api-date {width: 6em; display: inline-block; margin-right: 1em; height: auto; padding: 0.25rem;}
 	.sjo-api-date-normal a {background-color: #2ad581 !important;}
 	.sjo-api-date-weird  a {background-color: #7eeab5 !important;}
 	.sjo-api-date-normal a.ui-state-active {background-color: #007fff !important;}
@@ -120,7 +121,7 @@ var configList = [
 
 $(function() {
 	$.each(configList, (i, config) => {
-
+		
 		GM_xmlhttpRequest({
 			method: 'GET',
 			responseType: 'json',
@@ -212,9 +213,10 @@ function initialize() {
 		};
 	
 	// Extract by date range
+	var dateCheckbox = $('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-date" value="date">');
 	var dateWrapper = $('<div></div>')
 			.appendTo(filterWrapper)
-			.append('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-date" value="date">')
+			.append(dateCheckbox)
 			.append('<label for="sjo-api-filter-checkbox-date">Date: </label>');
 	var startDate = $('<input type="text" id="sjo-api-date-start" class="sjo-api-date">')
 			.appendTo(dateWrapper)
@@ -227,6 +229,24 @@ function initialize() {
 	
 	// Build lists of elections
 	buildDownloadList();
+	
+	// List of common dates
+	var commonDatesPicker = $('<select id="sjo-api-select-common-dates"></select>')
+			.append('<option value="" disabled>Select...</option>').val("")
+			.appendTo(dateWrapper)
+			.before('<label for="sjo-api-select-common-dates">Common dates: </label>')
+			.change(event => {
+				var date = commonDatesPicker.val();
+				if (!date) return;
+				startDate.val(date);
+				endDate.val(date);
+				if (!dateCheckbox.is(':checked')) dateCheckbox.click();
+			});
+	for (date in datesList) {
+		if (datesList[date].count > 20) {
+			$(`<option value="${date}">${date}</option>`).appendTo(commonDatesPicker);
+		}
+	}
 	
 	$('#sjo-api-filters select').chosen();
 	
@@ -524,8 +544,10 @@ function buildDownloadList() {
 				datesList[electionDate] = {
 					date: electionDate,
 					url: `/media/candidates-${electionDate}.csv`,
+					count: 0,
 				};
 			}
+			datesList[electionDate].count++;
 			
 		});
 		
