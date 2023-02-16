@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.12.12.0
+// @version     2023.02.16.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -164,7 +164,7 @@ function onready() {
 				var dobMatch = dd.first().find('.dob').text().match(/\(Born: (.*)\)/);
 				if (dobMatch) {
 					var dob = dobMatch[1].trim().replace(/(\d+)(st|nd|rd|th)/, '$1');
-					var age = dd.first().text().match(/[-\d]+/)[0];
+					var age = dd.first().text().match(/\d+( or \d+)?/)[0];
 					dt.text('Born');
 				}
 				
@@ -175,16 +175,8 @@ function onready() {
 				}
 				
 				if (dob && dod) {
-					
-					// Recalculate age at death
-					age = dod.substr(-4) - dob.substr(-4);
-					if (dod.length > 4 && dob.length > 4) {
-						if (moment(dob).add(age, 'years').isAfter(dod)) age--;
-					}
-					
 					dd.first().text(`${dob}`);
 					dd.last().text(`${dod} (age ${age})`);
-					
 				} else if (dob) {
 					dd.first().text(`${dob} (age ${age})`);
 				} else if (dod) {
