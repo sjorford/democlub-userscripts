@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.02.03.0
+// @version        2023.02.18.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -159,14 +159,14 @@ function initialize() {
 	var filterWrapper = $('<div id="sjo-api-filters"></div>').appendTo(wrapper);
 	
 	// Extract single election
-	var electionDropdown = $('<select id="sjo-api-select-election"></select>')
+	$('<select id="sjo-api-select-election"></select>')
 			.appendTo(filterWrapper)		
 			.wrap('<div></div>')
 			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-election" value="election">')
 			.before('<label for="sjo-api-filter-checkbox-election">Election: </label>');
 	
 	// Extract single organisation
-	var organisationDropdown = $('<select id="sjo-api-select-organisation"></select>')
+	$('<select id="sjo-api-select-organisation"></select>')
 			.appendTo(filterWrapper)
 			.wrap('<div></div>')
 			.before('<input type="checkbox" name="sjo-api-filter-checkbox" id="sjo-api-filter-checkbox-organisation" value="organisation">')
@@ -218,11 +218,11 @@ function initialize() {
 			.appendTo(filterWrapper)
 			.append(dateCheckbox)
 			.append('<label for="sjo-api-filter-checkbox-date">Date: </label>');
-	var startDate = $('<input type="text" id="sjo-api-date-start" class="sjo-api-date">')
+	$('<input type="text" id="sjo-api-date-start" class="sjo-api-date">')
 			.appendTo(dateWrapper)
 			.before('<label for="sjo-api-date-start">From: </label>')
 			.datepicker(datePickerOptions);
-	var endDate = $('<input type="text" id="sjo-api-date-end" class="sjo-api-date">')
+	$('<input type="text" id="sjo-api-date-end" class="sjo-api-date">')
 			.appendTo(dateWrapper)
 			.before('<label for="sjo-api-date-end">To: </label>')
 			.datepicker(datePickerOptions);
@@ -238,8 +238,7 @@ function initialize() {
 			.change(event => {
 				var date = commonDatesPicker.val();
 				if (!date) return;
-				startDate.val(date);
-				endDate.val(date);
+				$('.sjo-api-date').val(date);
 				if (!dateCheckbox.is(':checked')) dateCheckbox.click();
 			});
 	for (date in datesList) {
@@ -248,6 +247,7 @@ function initialize() {
 		}
 	}
 	
+	// Apply Chosen to all selects
 	$('#sjo-api-filters select').chosen();
 	
 	
@@ -332,7 +332,7 @@ function initialize() {
 	
 	// Add template dropdown
 	templateDropdown = $('<select id="sjo-api-select-template"></select>')
-		.appendTo(wrapper).wrap('<div class="sjo-api-wrapper"></div>').before('Template: ');
+		.appendTo(filterWrapper).wrap('<div class="sjo-api-wrapper"></div>').before('Template: ');
 	$.each(templates, (key, template) => {
 		addTemplateOption(key, template);
 	});
@@ -353,22 +353,21 @@ function initialize() {
 	$('<div class="sjo-api-wrapper" id="sjo-api-error"></div>').appendTo(wrapper).hide();
 	
 	// Get previously selected values from local storage
-	var lastExtract = localStorage.getItem('sjo-api-extract');
-	var lastOrganisation = localStorage.getItem('sjo-api-organisation');
-	var lastUrl = localStorage.getItem('sjo-api-url');
-	var lastStartDate = localStorage.getItem('sjo-api-date-start');
-	var lastEndDate = localStorage.getItem('sjo-api-date-end');
-	var lastTemplate = localStorage.getItem('sjo-api-template');
-	console.log('localStorage', lastExtract, lastUrl, lastStartDate, lastEndDate, lastTemplate);
+	var lastFilters = JSON.parse(localStorage.getItem('sjo-api-filters'));
+	console.log('lastFilters', lastFilters);
 	
 	// Set previously selected values
-	$('.sjo-api-params-wrapper').hide();
-	if (lastExtract) $(`#sjo-api-option-extract-${lastExtract}`).click();
-	if (lastOrganisation) organisationDropdown.val(lastOrganisation).trigger('chosen:updated');
-	if (lastUrl) electionDropdown.val(lastUrl).trigger('chosen:updated');
-	if (lastStartDate) startDate.val(lastStartDate);
-	if (lastEndDate) endDate.val(lastEndDate);
-	if (lastTemplate) templateDropdown.val(lastTemplate).trigger('chosen:updated');
+	if (lastFilters) {
+		$('input, select', '#sjo-api-filters').each((i,e) => {
+			var input = $(e);
+			if (input.is('[type=checkbox]')) {
+				input.prop('checked', lastFilters[input.attr('id')]);
+			} else {
+				input.val(lastFilters[input.attr('id')]);
+				if (input.is('select')) input.trigger('chosen:updated');
+			}
+		});
+	}
 	
 	
 	
@@ -624,6 +623,20 @@ function startDownload(event) {
 	
 	
 	
+	// Write selected filters to local storage
+	var filters = {};
+	$('input, select', '#sjo-api-filters').each((i,e) => {
+		var input = $(e);
+		if (input.is('[type=checkbox]')) {
+			filters[input.attr('id')] = input.prop('checked');
+		} else {
+			filters[input.attr('id')] = input.val();
+		}
+	});
+	console.log('filters', filters);
+	localStorage.setItem('sjo-api-filters', JSON.stringify(filters));
+	
+	
 	
 	
 	
@@ -635,25 +648,21 @@ function startDownload(event) {
 		// Extract a single election
 		var extractURL = $('#sjo-api-select-election').val();
 		extract.urls = [extractURL];
-		localStorage.setItem('sjo-api-extract', 'election');
-		localStorage.setItem('sjo-api-url', extractURL);
 		
 	} else if (selectedButton.is('#sjo-api-filter-checkbox-organisation')) {
 		
 		// Extract a single organisation
 		var organisation = $('#sjo-api-select-organisation').val();
 		extract.urls = organisationsList[organisation].urls.reverse();
-		localStorage.setItem('sjo-api-extract', 'organisation');
-		localStorage.setItem('sjo-api-organisation', organisation);
 		
 	} else if (selectedButton.is('#sjo-api-filter-checkbox-date')) {
 		
 		// Extract all elections in date range
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
-		var electionType = $('#sjo-api-select-type').val();
+		var electionType = $('#sjo-api-select-type').val() || 'all';
 		if (electionType == 'all') {
-			extract.urls = $.grep(Object.values(datesList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
+			extract.urls = $.grep(Object.values(datesList),     element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
 		} else if (electionType == 'all except local') {
 			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && element.type !== 'local').map(element => element.url);
 		} else {
@@ -661,25 +670,12 @@ function startDownload(event) {
 			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && electionTypes.indexOf(element.type) >= 0).map(element => element.url);
 		}
 		console.log(startDate, endDate, extract.urls);
-		localStorage.setItem('sjo-api-extract', 'date');
-		localStorage.setItem('sjo-api-date-start', startDate);
-		localStorage.setItem('sjo-api-date-end', endDate);
 		
-	} else { //if (selectedButton.is('#sjo-api-option-extract-all')) {
+	} else {
 		
 		extract.urls = [allCandidatesUrl];
-		localStorage.setItem('sjo-api-extract', 'all');
-		
-		/*
-	} else if (selectedButton.is('#sjo-api-option-extract-results_ge2019')) {
-		
-		extract.urls = [resultsGE2019Url];
-		localStorage.setItem('sjo-api-extract', 'results_ge2019');
-		*/
 		
 	}
-	
-	localStorage.setItem('sjo-api-template', $('#sjo-api-select-template').val());
 	
 	if ($('#sjo-api-cancelled:checked').val() != 'cancelled') {
 		extract.limits = extract.limits || {};
