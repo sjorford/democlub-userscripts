@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2022.12.20.0
+// @version     2023.03.01.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -217,8 +217,14 @@ function onready() {
 		var slugParts = slug.match(/^([^\.]+(?:\.[acr])?)((\.[^\.]+)?\.[^\.]{3,}(?:\.by)?)?(\.\d\d\d\d-\d\d-\d\d)$/);
 		if (slugParts[2]) {
 			var parentSlug = slugParts[1] + (slugParts[3] ? slugParts[3] : '') + slugParts[4];
-			$('<a></a>').text('➢ ' + electionName).attr('href', `/elections/${parentSlug}`)
+			var electionLink = $('<a></a>').text('➢ ' + electionName).attr('href', `/elections/${parentSlug}`)
 				.prependTo($('.candidates-list, .no-candidates').closest('.columns')).wrap('<h3></h3>');
+		}
+		
+		// Add link to 2023 election
+		if (slug.match(/2019-05-02/)) {
+			$('<a></a>').text('2023').attr('href', location.href.replace(/2019-05-02/, '2023-05-04'))
+				.insertAfter(electionLink).wrap('<span class="sjo-election-link-next"></span>').before(' • ');
 		}
 		
 		// Convert the timeline to a breadcrumb type thing
