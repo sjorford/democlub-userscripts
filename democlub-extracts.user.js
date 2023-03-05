@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.02.18.0
+// @version        2023.03.05.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -660,7 +660,7 @@ function startDownload(event) {
 		// Extract all elections in date range
 		var startDate = $('#sjo-api-date-start').val();
 		var endDate = $('#sjo-api-date-end').val();
-		var electionType = $('#sjo-api-select-type').val() || 'all';
+		var electionType = (selectedButton.is('#sjo-api-filter-checkbox-election') ? $('#sjo-api-select-type').val() : '') || 'all';
 		if (electionType == 'all') {
 			extract.urls = $.grep(Object.values(datesList),     element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate)).map(element => element.url);
 		} else if (electionType == 'all except local') {
@@ -669,7 +669,6 @@ function startDownload(event) {
 			var electionTypes = electionType.split('/');
 			extract.urls = $.grep(Object.values(electionsList), element => (startDate == '' || element.date >= startDate) && (endDate == '' || element.date <= endDate) && electionTypes.indexOf(element.type) >= 0).map(element => element.url);
 		}
-		console.log(startDate, endDate, extract.urls);
 		
 	} else {
 		
