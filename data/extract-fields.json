@@ -125,6 +125,9 @@
   "_party":{
     "display":"Party"
   },
+  "_party_short":{
+    "display":"Party"
+  },
   "_party_group_id":{
     "display":"Grp ID"
   },
