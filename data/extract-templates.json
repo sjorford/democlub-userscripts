@@ -12,6 +12,7 @@
       "_post_label",
       "party_id",
       "party_name",
+      "_party_short",
       "party_list_position",
       "has:email",
       "has:twitter_username",
