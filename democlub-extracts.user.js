@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.03.05.0
+// @version        2023.03.12.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -11,6 +11,7 @@
 // @require        https://cdnjs.cloudflare.com/ajax/libs/chosen/1.8.7/chosen.jquery.min.js
 // @require        https://cdnjs.cloudflare.com/ajax/libs/PapaParse/4.1.4/papaparse.min.js
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
+// @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/parties.js
 // @require        https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
 // ==/UserScript==
 
@@ -961,6 +962,9 @@ function cleanData(index, candidate, isResults) {
 	// Parse Wikidata ID
 	urlMatch = candidate.wikidata_url ? candidate.wikidata_url.match(/\/wiki\/(.*)$/) : null;
 	candidate._wikidata = !candidate.wikidata_url ? '' : !urlMatch ? '?' : urlMatch[1];
+	
+	// Party short codes
+	candidate._party_short = Parties[candidate.party_name] ? Parties[candidate.party_name].abbr : 'Oth';
 	
 	// Party groups
 	candidate._party_group_id = parties[candidate.party_id] ? parties[candidate.party_id].group : candidate.party_id;
