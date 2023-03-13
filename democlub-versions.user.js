@@ -5,10 +5,11 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2022.01.09.0
+// @version     2023.03.13.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
+// @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
@@ -197,12 +198,15 @@ function onready() {
 		
 		function cleanData(data, fieldName) {
 			var cleanData = data.replace(/\\"/g, '"').replace(/\r\n|\n/g, '<br>');
-			if (fieldName == 'twitter_username') {
-				cleanData = `<a target="_blank" href="https://twitter.com/${cleanData}">${cleanData}</a>`;
-			}
 			var partyMatch = cleanData.match(/^stood for (\S+)$/);
-			if (partyMatch && partyList[partyMatch[1]]) {
-				cleanData += ` (${partyList[partyMatch[1]]})`;
+			if (partyMatch) {
+				if (partyList[partyMatch[1]]) {
+					cleanData += ` (${partyList[partyMatch[1]]})`;
+				}
+			} else if (fieldName == 'twitter_username') {
+				cleanData = `<a target="_blank" href="https://twitter.com/${cleanData}">${cleanData}</a>`;
+			} else {
+				cleanData = Utils.formatLinks(cleanData, 200);
 			}
 			return cleanData;
 		}
