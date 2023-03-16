@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.03.12.0
+// @version        2023.03.16.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -206,7 +206,7 @@ function initialize() {
 			showOtherMonths: true,
 			selectOtherMonths: true,
 			beforeShowDay: date => {
-				var dateISO = date.toISOString().split('T')[0];
+				var dateISO = date.toLocaleDateString('sv'); // cast to Swedish 🤷
 				var elections = $.grep(Object.values(electionsList), element => element.date == dateISO);
 				var className = elections.length == 0 ? '' : (date.getDay() == 4 ? 'sjo-api-date-normal' : 'sjo-api-date-weird');
 				return [true, className, ''];
