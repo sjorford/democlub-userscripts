@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2022.06.14.0
+// @version     2023.03.18.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -83,12 +83,23 @@ function onready() {
 		'id_honorific_prefix':				'Title',
 		'id_name':							'Name',
 		'id_honorific_suffix':				'Suffix',
+
+		'id_tmp_person_identifiers-0-value':	'',
+		'id_tmp_person_identifiers-1-value':	'',
+		'id_tmp_person_identifiers-2-value':	'',
+		'id_tmp_person_identifiers-3-value':	'',
+		'id_tmp_person_identifiers-4-value':	'',
+		'id_tmp_person_identifiers-5-value':	'',
+		'id_tmp_person_identifiers-6-value':	'',
+		'id_tmp_person_identifiers-7-value':	'',
+		'id_tmp_person_identifiers-8-value':	'',
+		'id_tmp_person_identifiers-9-value':	'',
+		
 		'id_gender':						'Gender',
 		'id_birth_date':					'Year of birth',
 		'id_death_date':					'Date of death',
 		'id_biography':						'Statement',
 		'id_favourite_biscuit':				'Biscuit \u{1F36A}',
-		'add_more_elections':				'Election',
 		
 		// Additional fields for /other-names page
 		'id_note':							'Note',
@@ -97,25 +108,8 @@ function onready() {
 		
 	};
 	
-	var electionFields = {
-		'id_standing_{slug}':				'Standing',
-		'id_constituency_{slug}':			'Constituency',
-		'id_party_GB_{slug}':				'Party',
-		'id_party_NI_{slug}':				'Party',
-		'id_party_list_position_GB_{slug}':	'Position',
-		'id_party_list_position_NI_{slug}':	'Position',
-	};
-	
-	// Format general candidate fields
-	//$.each(candidateFields, (key, value) => formatField(key, value, null));
-	$('input[type="text"], input[type="number"], textarea', '#person-details').each((i,e) => formatField(e.id));
-	
-	// Find heading of candidacy section
-	var heading = $('#add_election_button').closest('div:has(h2)').find('h2');
-	
-	// Add a checkbox to show all parties
-	//$('<input type="checkbox" id="sjo-allparties" value="allparties"><label for="sjo-allparties">Show all parties</label>')
-	//	.insertAfter(heading).wrapAll('<div></div>').change(Utils.showAllParties);
+	// Format candidate fields
+	$.each(candidateFields, (key, value) => formatField(key, value));
 	
 	// Format current election headings
 	heading.closest('div').find('h3').each((index, element) => {
@@ -127,71 +121,15 @@ function onready() {
 		subHeading.text(electionName);
 	});
 	
-	// Format election fields on page load
-	$('[id^="id_standing_"]')
-		.each((index, element) => 
-			$.each(electionFields, (key, value) => formatField(key, value, element.id.replace('id_standing_', ''))))
-		.closest('p').hide();
-	
-	// Detect new election
-	var refreshTimerChange;
-	$('body').on('change', '#add_more_elections', electionChanged);
-	$('body').on('click', '#add_election_button', () => formatField('add_more_elections', 'Election'));
-	
-	function electionChanged(event) {
-		var slug = event.target.value;
-		console.log('electionChanged', slug);
-		
-		// Update saved election
-		localStorage.setItem('sjo-addperson-button', 'sjo-addperson-button-' + slug.replace(/\./g, '_'));
-		
-		// Wait for form to load
-		if (!refreshTimerChange) {
-			refreshTimerChange = setInterval(checkFieldsLoaded, 0);
-		}
-		
-		// Check if fields have loaded
-		function checkFieldsLoaded() {
-			console.log('checkFieldsLoaded', slug);
-			var select = $(`[id="id_standing_${slug}"]`);
-			if (select.length > 0) {
-				clearInterval(refreshTimerChange);
-				refreshTimerChange = null;
-				
-				select.val('standing').change().closest('p').hide();
-				$.each(electionFields, (key, value) => formatField(key, value, slug));
-				hideWarning();
-				
-				selectSinglePost(slug);
-				
-			}
-		}
-		
-	}
-	
-	var newElectionID = location.pathname.match(/(\/election\/(.+?)\/person\/create\/)?/)[2];
-	if (newElectionID) selectSinglePost(newElectionID);
-	
-	// If there is only one post, select it automatically
-	function selectSinglePost(id) {
-		console.log('selectSinglePost', id);
-		var postSelect = $(`[id="id_constituency_${id}"]`);
-		var options = postSelect.find('option[value!=""]');
-		if (options.length == 1) postSelect.val(options.val()).change();
-	}
-	
 	// Format an input field
 	function formatField(id, labelText, slug) {
 		if (slug) id = id.replace('{slug}', slug);
-		if (!labelText) labelText = candidateFields[id];
 		//console.log('formatField', id, labelText, slug);
 		
 		// Find wrapper and label
 		var input = $(`[id="${id}"]`);
-		var formItem = input.closest('.form-item, .row');
-		if (formItem.length == 0 && input.closest('.extra_elections_forms').length > 0) {
-			formItem = input.closest('p');
-		}
+		var formItem = input.closest('.form-item, .row'); // FIXME: .row is too generic
+		if (formItem.length == 0) return;
 		var label = $('label', formItem).first();
 		
 		// Reformat field
@@ -205,11 +143,6 @@ function onready() {
 		// Add placeholder
 		if (input.val() != '') {
 			input.attr('placeholder', input.val());
-		}
-		
-		// Trim party selection
-		if (input.is('select.party-select')) {
-			Utils.formatPartySelects(input);
 		}
 		
 		// Make year of birth a standard text field so numbers with trailing whitespace can be pasted in
@@ -375,69 +308,6 @@ function onready() {
 		}
 		
 	});
-	
-	// ================================================================
-	// Format list of elections
-	// ================================================================
-	
-	var refreshTimerAdd;
-	$('body').on('click', '#add_election_button', getElectionsList);
-	
-	function getElectionsList(event) {
-		console.log('getElectionsList');
-		
-		// Wait for form to load
-		if (!refreshTimerAdd) {
-			refreshTimerAdd = setInterval(checkElectionsLoaded, 0);
-		}
-		
-		// Check if fields have loaded
-		function checkElectionsLoaded() {
-			console.log('checkElectionsLoaded');
-			if ($(`#select2-add_more_elections-container`).length > 0) {
-				clearInterval(refreshTimerAdd);
-				refreshTimerAdd = null;
-				$.getJSON('/api/current-elections/', formatElectionsList);
-			}
-		}
-		
-	}
-	
-	function formatElectionsList(data) {
-		console.log('formatElectionsList');
-		//console.log(data);
-		
-		var elections = $.map(data, (value, key) => {
-			return {
-				id: key,
-				name: Utils.shortOrgName(value.name.replace(/ local election$/, ''), key),
-				election_date: value.election_date
-			};
-		});
-		//console.log(elections);
-		
-		elections = elections.sort((a, b) => 
-			a.id.match(/^parl\./) && !b.id.match(/^parl\./) ? -1 : 
-			!a.id.match(/^parl\./) && b.id.match(/^parl\./) ? 1 : 
-			a.election_date < b.election_date ? -1 : 
-			a.election_date > b.election_date ? +1 : 
-			a.name < b.name ? -1 : 
-			a.name > b.name ? +1 : 
-			0
-		);
-		//console.log(elections);
-		
-		elections = $.map(elections, function(value, index) {
-			return {
-				id: value.id,
-				text: value.name + ' (' + value.election_date + ')'
-			};
-		});
-		//console.log(elections);
-		
-		$("#add_more_elections").select2({data: elections});
-		
-	}
 	
 	// Warn on unload
 	var initialFormData = JSON.stringify(getFormData('#person-details'));
