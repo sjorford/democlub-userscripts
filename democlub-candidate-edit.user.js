@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2023.03.18.0
+// @version     2023.03.18.1
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -110,16 +110,6 @@ function onready() {
 	
 	// Format candidate fields
 	$.each(candidateFields, (key, value) => formatField(key, value));
-	
-	// Format current election headings
-	heading.closest('div').find('h3').each((index, element) => {
-		var subHeading = $(element);
-		var select = subHeading.next('.form-item').find('.standing-select');
-		if (select.length == 0) return; // something changed
-		var slug = select.attr('name').replace(/^standing_/, '');
-		var electionName = Utils.shortOrgName(subHeading.text(), slug);
-		subHeading.text(electionName);
-	});
 	
 	// Format an input field
 	function formatField(id, labelText, slug) {
