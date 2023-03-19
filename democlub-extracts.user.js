@@ -2,7 +2,7 @@
 // @name           Democracy Club extracts
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.03.16.0
+// @version        2023.03.19.0
 // @match          https://candidates.democracyclub.org.uk/help/api
 // @match          https://candidates.democracyclub.org.uk/api/docs/csv/
 // @grant          GM_xmlhttpRequest
@@ -243,7 +243,7 @@ function initialize() {
 				if (!dateCheckbox.is(':checked')) dateCheckbox.click();
 			});
 	for (date in datesList) {
-		if (datesList[date].count > 20) {
+		if (datesList[date].count > 20 || date == '2023-05-18') {
 			$(`<option value="${date}">${date}</option>`).appendTo(commonDatesPicker);
 		}
 	}
@@ -359,7 +359,7 @@ function initialize() {
 	
 	// Set previously selected values
 	if (lastFilters) {
-		$('input, select', '#sjo-api-filters').each((i,e) => {
+		$('input, select', '#sjo-api-filters').not('#sjo-api-select-common-dates').each((i,e) => {
 			var input = $(e);
 			if (input.is('[type=checkbox]')) {
 				input.prop('checked', lastFilters[input.attr('id')]);
@@ -626,7 +626,7 @@ function startDownload(event) {
 	
 	// Write selected filters to local storage
 	var filters = {};
-	$('input, select', '#sjo-api-filters').each((i,e) => {
+	$('input, select', '#sjo-api-filters').not('#sjo-api-select-common-dates').each((i,e) => {
 		var input = $(e);
 		if (input.is('[type=checkbox]')) {
 			filters[input.attr('id')] = input.prop('checked');
