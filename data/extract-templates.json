@@ -24,6 +24,7 @@
       "has:instagram_url",
       "has:youtube_profile",
       "has:blog_url",
+      "has:mastodon_username",
       "has:wikipedia_url",
       "has:wikidata_id",
       "_age_at_election_min",

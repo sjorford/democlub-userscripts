@@ -243,6 +243,12 @@
     "link":"@@youtube_profile@@",
     "group":"links"
   },
+  "mastodon_username":{
+    "display":"Mastodon",
+    "abbr":"md",
+    "link":"@@mastodon_username@@",
+    "group":"links"
+  },
   "twitter_user_id":{},
   "image_url":{
     "display":"Image",
