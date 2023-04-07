@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2022.03.13.3
+// @version     2023.04.07.0
 // @grant       none
 // ==/UserScript==
 
@@ -55,8 +55,6 @@ $(`<style class="sjo-styles">
 	.finder__forms__container {max-width: 1000px; width: auto !important;}
 	
 	.leaderboard {width: auto !important; margin-right: 2em;}
-	
-	.sjo-page__moderation-suggest-lock .content > .container > table > tbody > tr > td {vertical-align: top;}
 	
 </style>`).appendTo('head');
 
