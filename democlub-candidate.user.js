@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2023.02.16.0
+// @version     2023.04.14.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -14,7 +14,7 @@
 
 // temporary fix due to c.dc script errors
 // $(onready);
-window.setTimeout(onready, 0);
+window.setTimeout(onready, 50); // https://candidates.democracyclub.org.uk/person/97997
 
 function onready() {
 	
@@ -87,6 +87,9 @@ function onready() {
 		var dt = $(element);
 		var dd = dt.nextUntil(':not(dd)', 'dd');
 		var heading = dt.parent('dl').prev('h2');
+		
+		//console.log(dt, dt.text().replace(/\s+/g, ' ').trim(), 
+		//			dd, dd.text().replace(/\s+/g, ' ').trim().substr(0, 50));
 		
 		if (heading.text() == 'Candidacies:') {
 			
@@ -206,6 +209,9 @@ function onready() {
 
 		}
 		
+		//console.log(dt, dt.text().replace(/\s+/g, ' ').trim(), 
+		//			dd, dd.text().replace(/\s+/g, ' ').trim().substr(0, 50));
+		
 	});
 	
 	var personID = window.location.href.match(/\/person\/(\d+)/)[1];
@@ -217,20 +223,6 @@ function onready() {
 	// Hide long data URI
 	// https://candidates.democracyclub.org.uk/person/768/martin-mcguinness
 	$('.person__photo-credit').text((index,text) => text.replace(/(data:image\/jpeg;base64,.{20}).*(.{3}==)/, '$1[...]$2'));
-	
-	/*
-	// Add button to copy as link
-	$('<button class="sjo-copyaslink">🔗</button>').insertAfter('.person__photo').click(event => {
-		var personName = $('.person__hero h1').text();
-		var partyName = $('.party').first().text();
-		var linkHTML = `<a href="${window.location.href}">${personName} (${personID}) - ${partyName}</a>`;
-		var temp = $('<div contenteditable></div>').insertAfter('.sjo-copyaslink').html(linkHTML).focus();
-		document.execCommand('selectAll');
-		document.execCommand('copy');
-		temp.remove();
-		return false;
-	});
-	*/
 	
 	// Show last update time in header
 	var updateTime = $('dt:contains("Timestamp")').first().next('dd').text().trim();
