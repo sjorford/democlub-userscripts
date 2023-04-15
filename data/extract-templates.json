@@ -86,6 +86,7 @@
       "_post_label",
       "id",
       "name",
+      "party_name",
       "has:elected"
     ],
     "sort":[
