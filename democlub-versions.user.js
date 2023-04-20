@@ -5,7 +5,9 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2023.03.13.0
+// @include     https://candidates.democracyclub.org.uk/recent-changes
+// @include     https://candidates.democracyclub.org.uk/recent-changes?*
+// @version     2023.04.20.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -211,6 +213,12 @@ function onready() {
 			return cleanData;
 		}
 		
+		// If this is a flagged edit, open the diff automatically
+		var prevRow = diffsPara.closest('tbody.diff-row').prev('tbody');
+		if (prevRow.find('td:contains("⚠")').length > 0) {
+			prevRow.find('button.js-toggle-diff-row:contains("Show")').click();
+		}
+		
 	});
 	
 	// Display previous names in header
@@ -230,9 +238,12 @@ function onready() {
 	});
 	
 	// Format name prefix and suffix
+	// FIXME?
+	/*
 	var nameItem = $('.sjo-list-dt').filter((i,e) => e.innerText == 'Name').next('dd').text(latestVersion.name);
 	if (latestVersion.honorific_prefix) nameItem.prepend(`<span class="sjo-name-prefix">${latestVersion.honorific_prefix}</span> `);
 	if (latestVersion.honorific_suffix) nameItem.append(` <span class="sjo-name-suffix">${latestVersion.honorific_suffix}</span>`);
+	*/
 	
 	// Clean white space and non-printing chars
 	function cleanChars(text) {
