@@ -2,7 +2,7 @@
 // @name           Democracy Club SOPN
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2019.04.25.0
+// @version        2023.04.27.0
 // @match          https://candidates.democracyclub.org.uk/elections/*/sopn/
 // @grant          none
 // ==/UserScript==
@@ -17,5 +17,26 @@ $(function() {
 	title = title.replace(/\s+/g, ' ').trim();
 	
 	document.title = title;
+	
+	// Page up/down
+	$('body').on('keydown', event => {
+		if (!(event.key == 'PageDown' || event.key == 'PageUp')) return;
+		console.log(event);
+		event.preventDefault();
+		
+		var pages = $('.page_container');
+		
+		if (event.key == 'PageDown') {
+			var nextPage = pages.filter((i,e) => e.offsetTop > window.scrollY + 1).first();
+			if (nextPage.length == 1) nextPage[0].scrollIntoView();
+			
+		} else if (event.key == 'PageUp') {
+			var prevPage = pages.filter((i,e) => e.offsetTop < window.scrollY - 1).last();
+			if (prevPage.length == 1) prevPage[0].scrollIntoView();
+			
+		}
+		
+	});
+	
 	
 });
