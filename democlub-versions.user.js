@@ -7,7 +7,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
 // @include     https://candidates.democracyclub.org.uk/recent-changes
 // @include     https://candidates.democracyclub.org.uk/recent-changes?*
-// @version     2023.04.20.0
+// @version     2023.04.29.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -222,20 +222,23 @@ function onready() {
 	});
 	
 	// Display previous names in header
-	var prevNamesLabel;
-	var latestVersion = JSON.parse($('.full-version-json').first().text());
-	var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => cleanChars(a.name)) : [];
-	currentNames.push(cleanChars(latestVersion.name));
-	$.each(oldNames, (index, name) => {
-		if (!currentNames.includes(name)) {
-			if (!prevNamesLabel) {
-				prevNamesLabel = $('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
-				$('.person__details dt').filter((i,e) => ['Name', 'Also known as'].includes(e.innerText.trim())).last()
-					.nextUntil('dt', 'dd').last().after(prevNamesLabel);
+	var headerAnchor = $('.person__details dt').filter((i,e) => ['Name', 'Also known as'].includes(e.innerText.trim())).last()
+							.nextUntil('dt', 'dd').last();
+	if (headerAnchor.length > 0) {
+		var prevNamesLabel;
+		var latestVersion = JSON.parse($('.full-version-json').first().text());
+		var currentNames = latestVersion.other_names ? latestVersion.other_names.map(a => cleanChars(a.name)) : [];
+		currentNames.push(cleanChars(latestVersion.name));
+		$.each(oldNames, (index, name) => {
+			if (!currentNames.includes(name)) {
+				if (!prevNamesLabel) {
+					prevNamesLabel = $('<dt class="sjo-list-dt sjo-former-name">Previous names</dt>');
+					headerAnchor.after(prevNamesLabel);
+				}
+				$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertAfter(prevNamesLabel);
 			}
-			$('<dd class="sjo-list-dd sjo-former-name"></dd>').text(name).insertAfter(prevNamesLabel);
-		}
-	});
+		});
+	}
 	
 	// Format name prefix and suffix
 	// FIXME?
