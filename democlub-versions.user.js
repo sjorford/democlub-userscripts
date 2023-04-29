@@ -7,7 +7,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
 // @include     https://candidates.democracyclub.org.uk/recent-changes
 // @include     https://candidates.democracyclub.org.uk/recent-changes?*
-// @version     2023.04.29.2
+// @version     2023.04.29.3
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
@@ -123,7 +123,6 @@ function onready() {
 			// Data removed
 			} else if (span.hasClass('version-op-remove')) {
 				var matchDelete = spanText.match(/^Removed: (.+)\s+\(previously it was (.*)\)$/s);
-				console.log(matchDelete, spanText);
 				if (matchDelete) {
 					$.each(parseValue(matchDelete[1], matchDelete[2]), (key, oldValue) => {
 						changeRows.push({fieldName: key, 
