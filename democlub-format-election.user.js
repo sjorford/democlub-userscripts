@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.03.01.0
+// @version     2023.05.05.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -344,11 +344,17 @@ function onready() {
 		});
 		
 		// Highlight elected candidates
+		var numElected = 0;
 		if (table.has('.sjo-results-elected').length > 0) {
 			
 			table.find('td.sjo-results-elected').each((i,e) => {
 				var cell = $(e);
-				cell.text(cell.text().replace(/^Yes$/, '★').replace(/^No$/, ''));
+				if (cell.text().trim() == 'Yes') {
+					cell.text('★');
+					numElected++;
+				} else if (cell.text().trim() == 'No') {
+					cell.text('');
+				}
 			});
 			
 		} else if (table.has('.sjo-results-votes').length > 0) {
@@ -356,52 +362,50 @@ function onready() {
 			// Split out new column
 			table.find('th.sjo-results-votes').after('<th class="sjo-results-elected"></th>');
 			table.find('tbody tr').each((i,e) => {
-				console.log(i,e);
 				var tr = $(e);
 				var votesCell = tr.find('.sjo-results-votes');
 				var electedCell = $('<td class="sjo-results-elected"></td>').insertAfter(votesCell);
 				if (votesCell.text().match(/ \(elected\)/)) {
 					electedCell.text('★');
 					votesCell.text(votesCell.text().replace(/ \(elected\)/, ''));
+					numElected++
 				}
 			});
 			
 		}
 		
-		// Flag tied results
-		table.find('tr').each((i,e) => {
-			var tr = $(e);
-			var votesCol = table.getTableHeaders().indexOf('Votes');
+		if (table.has('.sjo-results-votes').length > 0) {
 			
-			var votesCell = tr.find('td, th').eq(votesCol);
-			var tiedCell = (votesCell.is('th') ? $('<th></th>') : $('<td></td>')).addClass('sjo-results-tied').appendTo(tr);
-			var votes = parseInt(votesCell.text().trim(), 10);
-			if (votes === NaN) return;
+			// Flag tied results
+			table.find('thead tr').append('<th class="sjo-results-tied"></th>');
+			table.find('tbody tr').append('<td class="sjo-results-tied"></td>');
 			
-			var ties = table.find('tr').not(tr).filter((i,e) => {
-				var votesTied = parseInt($(e).find('td, th').eq(votesCol).text().trim(), 10);
-				if (votes === NaN) return false;
-				return (Math.abs(votes - votesTied) == 0);
+			var rows = table.find('tbody tr').toArray().sort((a,b) => {
+				if (getVotes(a) === NaN && getVotes(b) === NaN) return 0;
+				if (getVotes(a) === NaN) return 1;
+				if (getVotes(b) === NaN) return -1;
+				return getVotes(b) - getVotes(a);
 			});
 			
-			var nearTies = table.find('tr').not(tr).filter((i,e) => {
-				var votesTied = parseInt($(e).find('td, th').eq(votesCol).text().trim(), 10);
-				if (votes === NaN) return false;
-				return (Math.abs(votes - votesTied) == 1);
-			});
+			var tieThreshold = numElected === 0 ? 0 : getVotes(rows[numElected - 1]) - 1;
 			
-			if (ties.length > 0) {
-				tiedCell.text('(tie)');
-			} else if (nearTies.length > 0) {
-				tiedCell.text('(tie?)');
+			function getVotes(row) {
+				var votesCol = table.find('th.sjo-results-votes')[0].cellIndex;
+				return parseInt(row.cells[votesCol].innerText.trim(), 10);
 			}
 			
-		});
+			$.each(rows, (i,row) => {
+				if (getVotes(row) < tieThreshold) return;
+				if ((i > 0 && getVotes(row) === getVotes(rows[i-1])) || (i < rows.length-1 && getVotes(row) === getVotes(rows[i+1]))) {
+					$(row).find('.sjo-results-tied').text('(tie)');
+				} else if ((i > 0 && Math.abs(getVotes(row) - getVotes(rows[i-1])) === 1) || (i < rows.length-1 && Math.abs(getVotes(row) - getVotes(rows[i+1])) === 1)) {
+					$(row).find('.sjo-results-tied').text('(tie?)');
+				}
+			});
 		
 		// Calculate vote shares
 		var sumVotes = table.find('td.sjo-results-votes').toArray().map(e => parseInt('0' + e.innerText.trim(), 10)).reduce((sum,val) => sum + val, 0);
 		var numElected = table.find('td.sjo-results-elected:contains("★")').length;
-		console.log(sumVotes, numElected);
 		if (sumVotes > 0 && numElected > 0) {
 			table.find('th.sjo-results-votes').after('<th class="sjo-results-share">Share</th>');
 			table.find('tbody tr').each((i,e) => {
@@ -422,6 +426,8 @@ function onready() {
 				td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
 			}
 		});
+		
+		}
 		
 		// Shorten table headers
 		table.find('th.sjo-results-pos').text('Pos');
