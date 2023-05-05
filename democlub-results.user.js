@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.05.05.1
+// @version        2023.05.05.2
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -137,5 +137,15 @@ $(function() {
 			$('#id_turnout_percentage').attr('placeholder', (100 * turnout / electorate).toFixed(2));
 		}
 	});
+	
+	// Link usernames
+	$('h3:contains("Older version")').nextAll().find('caption tt').each((i,e) => {
+		var username = e.innerText;
+		$(e).empty();
+		$('<a></a>').text(username).attr('href', '/recent-changes?username=' + encodeURIComponent(username)).appendTo(e);
+	});
+	
+	
+	//
 	
 });
