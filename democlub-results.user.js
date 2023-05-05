@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2021.05.10.0
+// @version        2023.05.05.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -25,9 +25,19 @@ $(function() {
 		// (Stratts) https://candidates.democracyclub.org.uk/uk_results/pcc.gloucestershire.2021-05-06/
 		
 		if (cells.closest('tbody').is(firstBody)) {
+			
 			var candMatch = cells.first().text().trim().match(/^(.+)\s+\(([^\(\)]+|[^\(\)]*\([^\(\)]+\)[^\(\)]*)\)$/i); // just the two problems
 			var nameSplit = Utils.splitName(candMatch[1]);
-			cells.first().text(nameSplit[0]).after(`<td><strong>${nameSplit[1]}</strong></td><td>${candMatch[2]}</td>`);
+			
+			var id = cells.closest('tr').find('input[type="number"]').attr('id').match(/^id_memberships_(\d+)$/)[1];
+			
+			var forenamesCell = cells.first().empty();
+			var surnameCell = $('<td></td>').insertAfter(forenamesCell);
+			var partyCell = $('<td></td>').insertAfter(surnameCell).text(candMatch[2]);
+			
+			$('<a></a>').text(nameSplit[0]).attr('href', '/person/' + id).attr('target', '_blank').appendTo(forenamesCell);
+			$('<a></a>').text(nameSplit[1]).attr('href', '/person/' + id).attr('target', '_blank').appendTo(surnameCell).wrap('<strong></strong>');
+			
 		} else if (cells.find('#id_source').length > 0) {
 			cells.last().attr('colspan', '3');
 		} else {
