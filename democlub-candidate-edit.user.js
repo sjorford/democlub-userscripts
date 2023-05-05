@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2023.03.18.1
+// @version     2023.05.05.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -222,7 +222,7 @@ function onready() {
 			var href = input.val().trim();
 			
 			// Strip tracking links
-			href = href.replace(/\?(originalSubdomain|fbclid|ref|utm_source|hl|lang)=.*/, '');
+			href = href.replace(/\?(originalSubdomain|fbclid|ref|utm_source|hl|lang|locale)=.*/, '');
 			
 			input.val(href).removeClass('sjo-input-invalid sjo-input-http');
 			
