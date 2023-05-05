@@ -402,31 +402,31 @@ function onready() {
 					$(row).find('.sjo-results-tied').text('(tie?)');
 				}
 			});
-		
-		// Calculate vote shares
-		var sumVotes = table.find('td.sjo-results-votes').toArray().map(e => parseInt('0' + e.innerText.trim(), 10)).reduce((sum,val) => sum + val, 0);
-		var numElected = table.find('td.sjo-results-elected:contains("★")').length;
-		if (sumVotes > 0 && numElected > 0) {
-			table.find('th.sjo-results-votes').after('<th class="sjo-results-share">Share</th>');
-			table.find('tbody tr').each((i,e) => {
-				var tr = $(e);
-				var votesCell = tr.find('.sjo-results-votes');
-				var share = (parseInt('0' + votesCell.text().trim(), 10)) / (sumVotes / numElected);
-				$(`<td class="sjo-results-share">${(share * 100).toFixed(2)}%</td>`).insertAfter(votesCell);
-			});
-		}
-		
-		// Format votes
-		table.find('td.sjo-results-votes').each((i,e) => {
-			var td = $(e);
-			if (td.text().trim() !== '') {
-				var votes = parseInt(td.text().trim(), 10);
-				var votesSort = ('0000000000' + votes).substr('-10');
-				var votesFormatted = votes.toLocaleString();
-				td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
+			
+			// Calculate vote shares
+			var sumVotes = table.find('td.sjo-results-votes').toArray().map(e => parseInt('0' + e.innerText.trim(), 10)).reduce((sum,val) => sum + val, 0);
+			var numElected = table.find('td.sjo-results-elected:contains("★")').length;
+			if (sumVotes > 0 && numElected > 0) {
+				table.find('th.sjo-results-votes').after('<th class="sjo-results-share">Share</th>');
+				table.find('tbody tr').each((i,e) => {
+					var tr = $(e);
+					var votesCell = tr.find('.sjo-results-votes');
+					var share = (parseInt('0' + votesCell.text().trim(), 10)) / (sumVotes / numElected);
+					$(`<td class="sjo-results-share">${(share * 100).toFixed(2)}%</td>`).insertAfter(votesCell);
+				});
 			}
-		});
-		
+			
+			// Format votes
+			table.find('td.sjo-results-votes').each((i,e) => {
+				var td = $(e);
+				if (td.text().trim() !== '') {
+					var votes = parseInt(td.text().trim(), 10);
+					var votesSort = ('0000000000' + votes).substr('-10');
+					var votesFormatted = votes.toLocaleString();
+					td.html(`<span class="sjo-sort-hidden">${votesSort}</span> ${votesFormatted}`);
+				}
+			});
+			
 		}
 		
 		// Shorten table headers
