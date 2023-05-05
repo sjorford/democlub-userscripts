@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.05.05.0
+// @version     2023.05.05.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
