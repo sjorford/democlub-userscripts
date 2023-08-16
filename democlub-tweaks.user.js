@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2023.04.07.0
+// @version     2023.08.16.0
 // @grant       none
 // ==/UserScript==
 
@@ -108,7 +108,7 @@ function onready() {
 	$('form[action="/search"] button[type="submit"]').click(event => {
 		var input = $(event.target).closest('form').find('input[name="q"]');
 		var value = input.val().trim();
-		if (value == 'v') return false;
+		if (value.toLowerCase() == 'v' || value.length == 0) return false;
 		if (value.match(/^[\d ]+$/)) {
 			var ids = [...new Set(value.split(' '))];
 			$.each(ids.slice(1), (i,id) => window.open('/person/' + id));
