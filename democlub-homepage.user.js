@@ -2,7 +2,7 @@
 // @name           Democracy Club homepage
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.10.28.0
+// @version        2023.08.19.0
 // @match          https://candidates.democracyclub.org.uk/
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -90,9 +90,7 @@ $(function() {
 					0);
 
 			});
-
-			console.log(sortedRows);
-
+			
 			headerRow.after(sortedRows);
 
 		});
