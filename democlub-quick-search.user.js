@@ -2,7 +2,7 @@
 // @name        Democracy Club quick search
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2023.08.19.0
+// @version     2023.08.23.0
 // @grant       none
 // ==/UserScript==
 
@@ -42,7 +42,7 @@ $(function() {
 		//console.log(id, name);
 		
 		// Find candidate by ID
-		if (!candidates[id]) candidates[id] = {id: id, names: []};
+		if (!candidates[id]) candidates[id] = {id: id, names: [], parties: [], areas: []};
 		
 		// Update primary name and url
 		candidates[id].name = name;
@@ -79,16 +79,15 @@ $(function() {
 	searchBox.on('keyup', event => {
 		
 		var searchBox = $(event.target);
-		var q = event.target.value.trim().toLowerCase();
-		if (q.length < 1) {
-			dropdown.hide();
-			return;
-		}
+		var query = event.target.value.replace(/\s+/, ' ').trim().toLowerCase();
+		if (query.length < 3) return dropdown.hide();
+		query = query.split(' ');
 		
-		var matching = Object.values(candidates).filter(c => c.names.filter(n => n.toLowerCase().indexOf(q) >= 0).length > 0); //.slice(0, 50);
+		var matching = Object.values(candidates).filter(c => c.names.filter(n => query.filter(q => n.toLowerCase().indexOf(q) >= 0).length == query.length).length > 0); //.slice(0, 50);
 		//console.log(q, matching)
 		
 		//if no change don't flash
+		if (matching.length == 0) return dropdown.hide();
 		
 		dropdown.empty().show();
 		$.each(matching, (i,c) => {
