@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2023.04.20.0
+// @version     2023.09.17.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -65,7 +65,10 @@ function onready() {
 			background-position-y: center;
 		}
 		
-		.header {position: sticky; top: 0px; z-index: 9999;}
+		@media (min-width: 800px) {
+			.header {position: sticky; top: 0px; z-index: 9999;}
+		}
+		
 		body {height: fit-content; }
 		
 	</style>`).appendTo('head');
