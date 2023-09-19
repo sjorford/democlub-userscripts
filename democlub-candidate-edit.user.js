@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2023.05.05.2
+// @version     2023.09.19.0
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -84,17 +84,6 @@ function onready() {
 		'id_name':							'Name',
 		'id_honorific_suffix':				'Suffix',
 
-		'id_tmp_person_identifiers-0-value':	'',
-		'id_tmp_person_identifiers-1-value':	'',
-		'id_tmp_person_identifiers-2-value':	'',
-		'id_tmp_person_identifiers-3-value':	'',
-		'id_tmp_person_identifiers-4-value':	'',
-		'id_tmp_person_identifiers-5-value':	'',
-		'id_tmp_person_identifiers-6-value':	'',
-		'id_tmp_person_identifiers-7-value':	'',
-		'id_tmp_person_identifiers-8-value':	'',
-		'id_tmp_person_identifiers-9-value':	'',
-		
 		'id_gender':						'Gender',
 		'id_birth_date':					'Year of birth',
 		'id_death_date':					'Date of death',
@@ -110,6 +99,9 @@ function onready() {
 	
 	// Format candidate fields
 	$.each(candidateFields, (key, value) => formatField(key, value));
+	
+	var linkFieldIDs = $('[id^="id_tmp_person_identifiers-"][id$="-value"]').toArray().map(e => e.id);
+	$.each(linkFieldIDs, (key, value) => formatField(value, ''));
 	
 	// Format an input field
 	function formatField(id, labelText, slug) {
