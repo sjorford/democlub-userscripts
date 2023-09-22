@@ -54,6 +54,7 @@
       "id",
       "name",
       "election",
+      "ballot_paper_id",
       "election_date",
       "_election_type",
       "_election_name",
