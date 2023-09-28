@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.09.06.0
+// @version     2023.09.28.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -260,6 +260,9 @@ function onready() {
 		var panel = $('h3 + .panel:contains("🔄 This ballot replaces")');
 		panel.find('a').insertBefore(panel.prev('h3')).addClass('sjo-previous-ballot');
 		panel.remove();
+		
+		// Remove panel
+		$('.panel:contains("candidates have been confirmed by the official")').hide();
 		
 		// Split lists into parties
 		if (window.location.pathname.match(/\/(sp.r|senedd.r|naw.r|gla.a|europarl)\./)) {
