@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.09.28.0
+// @version     2023.10.03.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -84,7 +84,7 @@ function onready() {
 		
 		.sjo-election-link-next a {border: 1px solid gray; padding: 5px; border-radius: 8px; background-color: gold; color: black;}
 		
-		.sjo-results-name, .sjo-results-party {width: 40%;}
+		.sjo-results-name, .sjo-results-party {width: 50%;}
 		.sjo-results-actions {width: 12%;}
 		
 		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
