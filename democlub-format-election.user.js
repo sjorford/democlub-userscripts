@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.10.03.0
+// @version     2023.10.13.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -213,19 +213,14 @@ function onready() {
 		$('body').addClass('sjo-page-post');
 		
 		// Add election link
-		var electionName = document.title.match(/ in the (.*)/)[1];
-		var slug = window.location.pathname.match(/\/elections\/(.*?)\//)[1];
-		var slugParts = slug.match(/^([^\.]+(?:\.[acr])?)((\.[^\.]+)?\.[^\.]{3,}(?:\.by)?)?(\.\d\d\d\d-\d\d-\d\d)$/);
-		if (slugParts[2]) {
-			var parentSlug = slugParts[1] + (slugParts[3] ? slugParts[3] : '') + slugParts[4];
-			var electionLink = $('<a></a>').text('➢ ' + electionName).attr('href', `/elections/${parentSlug}`)
+		var election = {name: document.title.match(/ in the (.*)/)[1]};
+		var ballotID = window.location.pathname.match(/\/elections\/(.*?)\//)[1];
+		[, election.type, election.subType, election.election, election.post, election.by, election.date] = 
+					ballotID.match(/^(?:([^\.]+)(?:\.([acr]))?)(?:(?:\.([^\.]+))?\.([^\.]{3,})(?:\.(by))?)?\.(\d{4}-\d{2}-\d{2})$/);
+		if (election.type && election.type != 'mayor' && election.type != 'pcc' && !election.by) {
+			var electionID = election.type + (election.subType ? '.' + election.subType : '') + (election.election ? '.' + election.election : '') + '.' + election.date;
+			var electionLink = $('<a></a>').text('➢ ' + election.name).attr('href', `/elections/${electionID}`)
 				.prependTo($('.candidates-list, .no-candidates').closest('.columns')).wrap('<h3></h3>');
-		}
-		
-		// Add link to 2023 election
-		if (slug.match(/2019-05-02/)) {
-			$('<a></a>').text('2023').attr('href', location.href.replace(/2019-05-02/, '2023-05-04'))
-				.insertAfter(electionLink).wrap('<span class="sjo-election-link-next"></span>').before(' • ');
 		}
 		
 		// Convert the timeline to a breadcrumb type thing
@@ -250,7 +245,7 @@ function onready() {
 		
 		// Add results link
 		$('<a class="button small">Edit results</a>')
-			.attr('href', `https://candidates.democracyclub.org.uk/uk_results/${slug}/`)
+			.attr('href', `https://candidates.democracyclub.org.uk/uk_results/${ballotID}/`)
 			.insertAfter(tables.first());
 		
 		// Shorten PCC description
@@ -262,7 +257,7 @@ function onready() {
 		panel.remove();
 		
 		// Remove panel
-		$('.panel:contains("candidates have been confirmed by the official")').hide();
+		$('.panel').filter(':contains("candidates have been confirmed by the official"), :contains("candidates will not be confirmed until")').hide();
 		
 		// Split lists into parties
 		if (window.location.pathname.match(/\/(sp.r|senedd.r|naw.r|gla.a|europarl)\./)) {
