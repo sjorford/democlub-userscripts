@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2023.10.14.0
+// @version     2023.10.14.1
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -10,12 +10,14 @@
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // ==/UserScript==
 
-// temporary fix due to c.dc script errors
- $(onready);
-//window.setTimeout(onready, 0);
-
-function onready() {
+$(function() {
 	
+	$(`<style>
+		a[href="/accounts/login/"] {border: 1px solid black !important; background-color: yellow; border-radius: 5px;}
+		li.active {font-weight: bold;}
+	</style>`).appendTo('head');
+	
+	// Submit radar without reloading page
 	if (location.pathname.indexOf('/election_radar/') == 0) {
 		$('button[type=submit]').click(event => {
 			var button = $(event.target);
@@ -25,8 +27,17 @@ function onready() {
 			$.post(location.href, formData);
 			return false;
 		});
-		
 	}
+	
+	// Link directly to new radar
+	$('header nav a[href$="/election_radar/"]').attr('href', '/election_radar/?status=new');
+	
+	// Remove link from active menu item
+	$('li.active').text((i,text) => text);
+	
+	
+	
+	
 	
 	/*
 	$(`<style>
@@ -44,9 +55,6 @@ function onready() {
 		a[href="/accounts/login/"] {border: 3px solid black; background-color: yellow; border-radius: 5px; margin-left: 0.5rem;}
 		
 	</style>`).appendTo('head');
-	
-	// Add link to radar
-	//$('.menu').append('<li><a href="/election_radar/?status=new">Radar</a></li>');
 	
 	if (location.href == 'https://elections.democracyclub.org.uk/') {
 		//displaySubIDs();
@@ -73,7 +81,7 @@ function onready() {
 	}
 	*/
 	
-}
+});
 
 /*
 function displaySubIDs() {
