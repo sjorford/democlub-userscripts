@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2021.11.17.0
+// @version     2023.10.14.0
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -11,11 +11,24 @@
 // ==/UserScript==
 
 // temporary fix due to c.dc script errors
-// $(onready);
-window.setTimeout(onready, 0);
+ $(onready);
+//window.setTimeout(onready, 0);
 
 function onready() {
 	
+	if (location.pathname.indexOf('/election_radar/') == 0) {
+		$('button[type=submit]').click(event => {
+			var button = $(event.target);
+			var form = button.closest('form');
+			var formData = form.serialize();
+			console.log(button, form, formData);
+			$.post(location.href, formData);
+			return false;
+		});
+		
+	}
+	
+	/*
 	$(`<style>
 		
 		.sjo-election-sublist {font-size: 10pt;}
@@ -58,9 +71,11 @@ function onready() {
 	function updateTitle(newText) {
 		window.document.title = newText + window.document.title;
 	}
+	*/
 	
 }
 
+/*
 function displaySubIDs() {
 	
 	// Display sub-IDs on front page
@@ -188,3 +203,4 @@ function formatDivisions() {
 	});
 	
 }
+*/
