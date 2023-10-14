@@ -2,7 +2,7 @@
 // @name        Democracy Club Every Election tweaks
 // @namespace   sjorford@gmail.com
 // @include     https://elections.democracyclub.org.uk/*
-// @version     2023.10.14.1
+// @version     2023.10.14.2
 // @grant       none
 // @require     https://code.jquery.com/jquery-3.2.1.min.js
 // @require     https://code.jquery.com/ui/1.12.1/jquery-ui.min.js
@@ -23,7 +23,6 @@ $(function() {
 			var button = $(event.target);
 			var form = button.closest('form');
 			var formData = form.serialize();
-			console.log(button, form, formData);
 			$.post(location.href, formData);
 			return false;
 		});
@@ -34,6 +33,18 @@ $(function() {
 	
 	// Remove link from active menu item
 	$('li.active').text((i,text) => text);
+	
+	// Fix pagination links
+	$('.pagination a').each((i,e) => {
+		var page = e.href.match(/\d+$/)[0];
+		var url = new URL(location);
+		url.searchParams.set('page', page);
+		e.href = url.href;
+	});
+	
+	
+	
+	
 	
 	
 	
