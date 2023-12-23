@@ -7,7 +7,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
 // @include     https://candidates.democracyclub.org.uk/recent-changes
 // @include     https://candidates.democracyclub.org.uk/recent-changes?*
-// @version     2023.12.23.0
+// @version     2023.12.23.1
 // @grant       none
 // @require     https://cdn.jsdelivr.net/npm/luxon@3.4.3/build/global/luxon.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -267,7 +267,7 @@ function onready() {
 		versionBioField.closest('.version').find('dt:contains("Timestamp") + dd').each((i,e) => {
 			var versionDate = luxon.DateTime.fromFormat(e.innerText, 'yyyy-MM-dd hh:mm:ss');
 			var diffMinutes = versionDate.diff(bioDate, 'minutes');
-			if (Math.abs(diffMinutes) <= 1) {
+			if (Math.abs(diffMinutes.values.minutes) <= 1) {
 				versionFound = true;
 				return false;
 			}
