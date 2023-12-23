@@ -7,8 +7,9 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
 // @include     https://candidates.democracyclub.org.uk/recent-changes
 // @include     https://candidates.democracyclub.org.uk/recent-changes?*
-// @version     2023.04.29.3
+// @version     2023.12.23.0
 // @grant       none
+// @require     https://cdn.jsdelivr.net/npm/luxon@3.4.3/build/global/luxon.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/diff-string.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -34,6 +35,7 @@ function onready() {
 		.sjo-version-add del    {display: none;} 
 		.sjo-former-name        {color: red; border: solid red; border-width: 1px 0;}
 		.sjo-name-suffix        {font-size: 75%;}
+		.sjo-invalid-bio-date   {background-color: pink;}
 	</style>`).appendTo('head');
 	
 	var partyList = {
@@ -251,6 +253,30 @@ function onready() {
 	// Clean white space and non-printing chars
 	function cleanChars(text) {
 		return text.replace(/[\s\u200F\u200B]+/g, ' ').replace(/’/g, "'").trim();
+	}
+	
+	// Highlight unexpected statement dates
+	var bioDateField = $('.person_biography ~ dd')
+	if (bioDateField.length > 0) {
+		
+		var bioDateString = bioDateField.text().match(/\d\d? \w+ \d{4} \d\d:\d\d/)[0];
+		var bioDate = luxon.DateTime.fromFormat(bioDateString, 'd MMMM yyyy hh:mm');
+		
+		var versionFound = false;
+		var versionBioField = $('.sjo-version-field:contains("biography")')
+		versionBioField.closest('.version').find('dt:contains("Timestamp") + dd').each((i,e) => {
+			var versionDate = luxon.DateTime.fromFormat(e.innerText, 'yyyy-MM-dd hh:mm:ss');
+			var diffMinutes = versionDate.diff(bioDate, 'minutes');
+			if (Math.abs(diffMinutes) <= 1) {
+				versionFound = true;
+				return false;
+			}
+		});
+		
+		if (!versionFound) {
+			bioDateField.addClass('sjo-invalid-bio-date');
+		}
+		
 	}
 	
 }
