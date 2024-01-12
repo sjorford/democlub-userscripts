@@ -1,10 +1,9 @@
 // ==UserScript==
 // @name           GE2024: Reform UK
 // @namespace      sjorford@gmail.com
-// @version        2024.01.12.0
+// @version        2024.01.12.1
 // @author         Stuart Orford
-// @match          https://www.reformparty.uk/find-my-candidate
-// @match          https://en.wikipedia.org/w/index.php?title=Wikipedia:Sandbox*
+// @match          https://www.reformparty.uk/*
 // @grant          none
 // ==/UserScript==
 
@@ -15,94 +14,19 @@ $(function() {
 		.sjo-urls-box a {white-space: nowrap;}
 	</style>`).appendTo('head');
 	
-	var box = $('<div class="sjo-urls-box"></div>').insertAfter('#intro');
-	var constituencies = getConstituencies();
-	$.each(constituencies, (i,e) => {
-		if (i > 0) box.append(' • ');
-		var url = `https://www.reformparty.uk/${e.slug}`;
-		if (e.slug != 'east-grinstead-and-uckfield') url += '-constituency';
-		var link = $('<a></a>').attr('href', url).text(e.name);
-		link.appendTo(box);
-	});
+	$('span > a[href^="mailto:"]').each((i,e) => $(e).after(e.textContent).unwrap().remove());
 	
-	/*
-	$.ajaxPrefilter(function(options, originalOptions, jqXHR) {
-		console.log('options', options);
-		//delete options.headers['Cookie'];
-	});
-	
-	var regionURLs = $('#intro a[href$="-region"]').toArray().map(e => e.href);
-	console.log('regionURLs', regionURLs);
-	
-	var constituencyURLs = $('a[href$="-constituency"]').toArray().map(e => e.href);
-	console.log('constituencyURLs', constituencyURLs);
-	
-	if (regionURLs.length > 0) {
-		downloadRegion();
-	} else if (constituencyURLs.length > 0) {
-		downloadConstituency();
-	}
-	
-	function downloadRegion() {
-		if (regionURLs.length == 0) {
-			downloadConstituency();
-			return;
-		}
-		var url = regionURLs.shift();
-		console.log('url', url);
-		$.get({
-			url: url,
-			xhr: xhr,
-			success: parseRegion,
+	if (window.location == 'https://www.reformparty.uk/find-my-candidate') {
+		var box = $('<div class="sjo-urls-box"></div>').insertAfter('#intro');
+		var constituencies = getConstituencies();
+		$.each(constituencies, (i,e) => {
+			if (i > 0) box.append(' • ');
+			var url = `https://www.reformparty.uk/${e.slug}`;
+			if (e.slug != 'east-grinstead-and-uckfield') url += '-constituency';
+			var link = $('<a></a>').attr('href', url).text(e.name);
+			link.appendTo(box);
 		});
-		
 	}
-	
-	function parseRegion(data) {
-		console.log('data', data);
-	}
-	
-	function downloadConstituency() {
-		if (constituencyURLs.length == 0) {
-			return;
-		}
-		var url = constituencyURLs.shift();
-		console.log('url', url);
-		$.get(url, parseConstituency);
-	}
-	
-	function parseConstituency(data) {
-		console.log('data', data);
-	}
-	
-	// hack: https://stackoverflow.com/questions/3372962/can-i-remove-the-x-requested-with-header-from-ajax-requests
-	function xhr() {
-		
-		var unwantedHeaders = [
-			'X-Requested-With',
-			'Cookie',
-			'Referer',
-		];
-		
-        // Get new xhr object using default factory
-        var xhr = jQuery.ajaxSettings.xhr();
-		console.log('xhr', xhr);
-        // Copy the browser's native setRequestHeader method
-        var setRequestHeader = xhr.setRequestHeader;
-        // Replace with a wrapper
-        xhr.setRequestHeader = function(name, value) {
-			console.log('setRequestHeader', name, value);
-            // Ignore the X-Requested-With header
-            if (unwantedHeaders.indexOf(name) >= 0) return;
-            // Otherwise call the native setRequestHeader method
-            // Note: setRequestHeader requires its 'this' to be the xhr object,
-            // which is what 'this' is here when executed.
-            setRequestHeader.call(this, name, value);
-        }
-        // pass it on to jQuery
-        return xhr;
-    }
-	*/
 	
 	function getConstituencies() {
 		var constituencies = [
