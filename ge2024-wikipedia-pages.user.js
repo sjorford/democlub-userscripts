@@ -1,9 +1,9 @@
 // ==UserScript==
 // @name           GE2024: Wikipedia pages
 // @namespace      sjorford@gmail.com
-// @version        2024.01.24.0
+// @version        2024.02.11.0
 // @author         Stuart Orford
-// @match          https://en.wikipedia.org/wiki/User:*/sandbox
+// @match          https://en.wikipedia.org/wiki/User:*/sandbox*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
