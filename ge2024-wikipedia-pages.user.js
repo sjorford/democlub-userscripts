@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           GE2024: Wikipedia pages
 // @namespace      sjorford@gmail.com
-// @version        2024.02.11.1
+// @version        2024.02.17.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/User:*/sandbox*
 // @grant          none
@@ -32,7 +32,7 @@ $(function() {
 			var row = $('<tr></tr>').appendTo(outputTable);
 			var party = vcard.find('.org').text().trim();
 			var name = vcard.find('.fn') .text().trim();
-			if (name === '' && party === '') return; 
+			if (name === '' || party === '') return; 
 			$('<td></td>').appendTo(row).text(caption);
 			$('<td></td>').appendTo(row).text(party);
 			$('<td></td>').appendTo(row).text(name);
