@@ -1,17 +1,18 @@
 // ==UserScript==
 // @name           GE2024: Zero Hour
 // @namespace      sjorford@gmail.com
-// @version        2024.02.19.0
+// @version        2024.02.19.1
 // @author         Stuart Orford
 // @match          https://action.zerohour.uk/
 // @grant          none
+// @require        https://code.jquery.com/jquery-3.4.1.min.js
 // ==/UserScript==
 
 (function($) {
 $(function() {
 	
 	$(`<style>
-		.sjo-urls-box a {white-space: nowrap;}
+		.sjo-urls-box a {white-space: nowrap; color: white;}
 	</style>`).appendTo('head');
 	
 	var box = $('<div class="sjo-urls-box"></div>');
