@@ -1,21 +1,23 @@
 // ==UserScript==
 // @name           GE2024: Wikipedia pages
 // @namespace      sjorford@gmail.com
-// @version        2024.02.17.0
+// @version        2024.03.10.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/User:*/sandbox*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
-(function($) {
+window.setTimeout(onready, 500);
+
+function onready() {
 $(function() {
 	
 	$(`<style>
-		
+		.sjo-wrapper {max-height: 10em; overflow-y: scroll; border: 1px solid black;}
 	</style>`).appendTo('head');
 	
-	var outputTable = $('<table></table>').appendTo('#mw-content-container')
+	var outputTable = $('<table></table>').prependTo('#mw-content-text')
 			.wrap('<div class="sjo-wrapper"></div>').click(event => outputTable.selectRange());
 	
 	$('.vcard').closest('table').each((i,e) => {
@@ -39,6 +41,6 @@ $(function() {
 		});
 		
 	});
-	
+
 });
-})(jQuery);
+};
