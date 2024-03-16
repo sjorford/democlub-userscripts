@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           GE2024: Zero Hour
 // @namespace      sjorford@gmail.com
-// @version        2024.03.09.0
+// @version        2024.03.16.0
 // @author         Stuart Orford
 // @match          https://action.zerohour.uk/sitemap
 // @grant          none
@@ -15,7 +15,7 @@ jQuery.noConflict();
 $(function() {
 	
 	$(`<style>
-		.sjo-wrapper {background-color: white; color: black}
+		.sjo-wrapper {background-color: white; color: black; max-height: 10em; overflow-y: scroll;}
 		.sjo-wrapper td {padding: 0 0.5em;}
 	</style>`).appendTo('head');
 	
