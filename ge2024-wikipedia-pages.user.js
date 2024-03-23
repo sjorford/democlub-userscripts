@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           GE2024: Wikipedia pages
 // @namespace      sjorford@gmail.com
-// @version        2024.03.10.0
+// @version        2024.03.23.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/User:*/sandbox*
 // @grant          none
@@ -25,7 +25,7 @@ $(function() {
 		
 		var caption = electionTable.find('caption').text().trim();
 		if (caption.toLowerCase().match('by-election')) return;
-		var match = caption.match(/^Next (?:United Kingdom )?(?:[Gg]eneral )?[Ee]lection: (.+?)(?:\[\d+\])*$/);
+		var match = caption.match(/^(?:Next|202[45]) (?:United Kingdom )?(?:[Gg]eneral )?[Ee]lection: (.+?)(?:\[\d+\])*$/);
 		console.log(caption, match);
 		caption = match ? match[1].trim() : caption;
 		
