@@ -2,7 +2,7 @@
 // @name        Democracy Club quick search
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
-// @version     2023.08.23.0
+// @version     2024.04.06.0
 // @grant       none
 // ==/UserScript==
 
@@ -21,9 +21,9 @@ $(function() {
 	</style>`).appendTo('head');
 	
 	// Get storage
-	//localStorage.setItem('sjo-candidates-index', '');
-	var candidates = JSON.parse(localStorage.getItem('sjo-candidates-index') || '{}');
-	//console.log(Object.keys(candidates).length, candidates);
+	var storage = localStorage.getItem('sjo-candidates-index');
+	var candidates = JSON.parse(storage || '[]');
+	//console.log('candidates', candidates.length, candidates);
 	
 	// Add names to storage
 	$('a[href*="/person/"]').each((i,e) => {
@@ -42,14 +42,19 @@ $(function() {
 		//console.log(id, name);
 		
 		// Find candidate by ID
-		if (!candidates[id]) candidates[id] = {id: id, names: [], parties: [], areas: []};
+		var matching = candidates.filter(c => c.id == id);
+		if (matching.length == 0) {
+			var newCand = {id: id, name: name, names: []};
+			//console.log('adding', newCand);
+			candidates.push(newCand);
+			matching = [newCand];
+		}
 		
-		// Update primary name and url
-		candidates[id].name = name;
-		candidates[id].url = url;
+		// Update primary name
+		matching[0].name = name;
 		
 		// Add name to list of names
-		if (candidates[id].names.indexOf(name) < 0) candidates[id].names.push(name);
+		if (matching[0].names.indexOf(name) < 0) matching[0].names.push(name);
 		
 	});
 	
@@ -70,8 +75,10 @@ $(function() {
 	// election post
 	
 	// Write back to storage
-	console.log(Object.keys(candidates).length, candidates);
-	localStorage.setItem('sjo-candidates-index', JSON.stringify(candidates));
+	//console.log(Object.keys(candidates).length, candidates);
+	storage = JSON.stringify(candidates);
+	//console.log('writing storage', storage.length);
+	localStorage.setItem('sjo-candidates-index', storage);
 	
 	// Add hook to search boxes
 	var searchBox = $('input[name="q"]').attr('autocomplete', 'off'); // TODO: front screen
@@ -83,7 +90,7 @@ $(function() {
 		if (query.length < 3) return dropdown.hide();
 		query = query.split(' ');
 		
-		var matching = Object.values(candidates).filter(c => c.names.filter(n => query.filter(q => n.toLowerCase().indexOf(q) >= 0).length == query.length).length > 0); //.slice(0, 50);
+		var matching = candidates.filter(c => c.names.filter(n => query.filter(q => n.toLowerCase().indexOf(q) >= 0).length == query.length).length > 0); //.slice(0, 50);
 		//console.log(q, matching)
 		
 		//if no change don't flash
@@ -93,7 +100,7 @@ $(function() {
 		$.each(matching, (i,c) => {
 			
 			var link = $('<a></a>')
-				.attr('href', c.url || `/person/${c.id}`)
+				.attr('href', `/person/${c.id}`)
 				.appendTo(dropdown).wrap('<div></div>');
 			
 			link.append(c.id + ' - ' + c.name);
