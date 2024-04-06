@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2023.10.13.0
+// @version     2024.04.06.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -265,7 +265,7 @@ function onready() {
 			var table = $('.candidates-list').first();
 			var head = table.children('thead');
 			var rows = table.find('tbody > tr');
-			var parties = $('td.sjo-results-party', rows).toArray().map(e => e.innerText.trim());
+			var parties = $('td.sjo-results-party', rows).toArray().map(e => $(e).text().trim());
 			parties = [...new Set(parties)].sort().sort((a,b) => a == 'Independent' ? 1 : b == 'Independent' ? -1 : 0);
 			
 			$.each(parties, (index,party) => {
