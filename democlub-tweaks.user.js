@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2023.11.03.0
+// @version     2024.05.01.0
 // @grant       none
 // ==/UserScript==
 
@@ -116,6 +116,10 @@ function onready() {
 			return false;
 		}
 	});
+	
+	// Add link to new user changes
+	$('.header__masthead .nav-links__item').last()
+		.before('<li class="nav-links__item"><a href="https://candidates.democracyclub.org.uk/recent-changes?flagged_type=needs_review_due_to_first_edits">New user changes</a></li>');
 	
 }
 
