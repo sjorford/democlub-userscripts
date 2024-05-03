@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2023.05.12.0
+// @version        2024.05.03.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -32,7 +32,8 @@ $(function() {
 			var candMatch = cells.first().text().trim().match(/^(.+)\s+\(([^\(\)]+|[^\(\)]*\([^\(\)]+\)[^\(\)]*)\)$/i); // just the two problems
 			var nameSplit = Utils.splitName(candMatch[1]);
 			
-			var id = cells.closest('tr').find('input[type="number"]').attr('id').match(/^id_memberships_(\d+)$/)[1];
+			//var id = cells.closest('tr').find('input[type="number"]').attr('id').match(/^id_memberships_(\d+)$/)[1];
+			var id = cells.closest('tr').find('input[id^="id_memberships_"]').attr('id').match(/^id_memberships_(\d+)$/)[1];
 			
 			var forenamesCell = cells.first().empty();
 			var surnameCell = $('<td></td>').insertAfter(forenamesCell);
@@ -62,7 +63,8 @@ $(function() {
 		return result;
 	}));
 	
-	$('.ballot_paper_results_form input[type="number"]')
+	//$('.ballot_paper_results_form input[type="number"]')
+	$('.ballot_paper_results_form input[type="text"]')
 		.each((index, element) => element.type = 'text')
 		.css({marginBottom: '0'})
 		.addClass('sjo-results-number')
