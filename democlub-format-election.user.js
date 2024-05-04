@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.04.06.0
+// @version     2024.05.04.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -107,7 +107,8 @@ function onready() {
 	
 	var dateMatch = window.location.href.match(/\d{4}-\d{2}-\d{2}/);
 	if (dateMatch) {
-		$('<span class="sjo-date-heading"><span>').text(moment(dateMatch[0]).format("D MMM YYYY")).insertBefore('h1');
+		var dateFormatted = moment(dateMatch[0]).format("D MMM YYYY");
+		$('<span class="sjo-date-heading"><span>').text(dateFormatted).insertBefore('h1');
 	}
 	
 	if (document.title.trim() == 'All ballots in current or future elections') {
@@ -159,6 +160,11 @@ function onready() {
 			}
 			
 		} else {
+			
+			// Remove date from post headings
+			if (dateMatch) {
+				$('.container h3 a').text((i,text) => text.replace(` on ${dateFormatted}`, ''));
+			}
 			
 			// Highlight missing results
 			$('.sjo-results-votes').filter((i,e) => e.innerText.trim() != '')
