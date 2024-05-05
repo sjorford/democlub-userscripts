@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.05.03.0
+// @version        2024.05.05.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -56,21 +56,21 @@ $(function() {
 		var surnameB = b.cells[1].innerText.toLowerCase();
 		var forenamesA = a.cells[0].innerText.toLowerCase();
 		var forenamesB = b.cells[0].innerText.toLowerCase();
-		console.log(surnameA, surnameB, surnameA > surnameB);
 		var result = 
 			surnameA > surnameB ? 1 : surnameA < surnameB ? -1 : 
 			forenamesA > forenamesB ? 1 : forenamesA < forenamesB ? -1 : 0;
 		return result;
 	}));
 	
-	//$('.ballot_paper_results_form input[type="number"]')
+	// Reformat input fields
 	$('.ballot_paper_results_form input[type="text"]')
-		.each((index, element) => element.type = 'text')
 		.css({marginBottom: '0'})
 		.addClass('sjo-results-number')
 		.attr('autocomplete', 'off')
 		.first().focus();
-	$('body').on('paste', '.sjo-results-number', event => setTimeout(() => event.target.value = event.target.value.replace(/[^0-9\.]+/g, ''), 0));
+	
+	// Remove non-numeric values on paste
+	$('body').on('paste', '.sjo-results-number', event => setTimeout(() => event.target.value = event.target.value.match(/[0-9]+[0-9\., ]*[0-9]+|[0-9]/)[0], 0));
 	
 	// Format sources
 	$('caption q').each((index, element) => {
