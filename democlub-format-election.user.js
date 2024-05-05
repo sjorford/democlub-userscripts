@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.05.04.0
+// @version     2024.05.05.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -461,7 +461,7 @@ function onready() {
 		var cell = $(event.target);
 		var sort = 
 			(cell.is('.sjo-results-name')) ? nameSort : 
-			(cell.is('.sjo-results-votes') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
+			(cell.is('.sjo-results-votes') || cell.is('.sjo-results-share') || cell.is('.sjo-results-elected')) ? inverseSort : plainSort;
 		var tbody = cell.closest('table').find('tbody');
 		tbody.append(tbody.find('tr').toArray().sort(sort));
 		return false;
@@ -486,10 +486,11 @@ function onready() {
 		}
 		
 		function _plainSort(a, b, order) {
-			var aText = a.cells[index].textContent.trim();
-			var bText = b.cells[index].textContent.trim();
+			var aText = a.cells[index].textContent.trim().replace(/%$|,/, '');
+			var bText = b.cells[index].textContent.trim().replace(/%$|,/, '');
+			console.log(aText, bText)
 			var sort;
-			if (aText.match(/^\d+$/) && bText.match(/^\d+$/)) {
+			if (aText.match(/^[\d\.]+$/) && bText.match(/^[\d\.]+$/)) {
 				var aNum = aText - 0;
 				var bNum = bText - 0;
 				sort = aNum > bNum ? 1 : aNum < bNum ? -1 : 0;
