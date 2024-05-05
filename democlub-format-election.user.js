@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.05.05.0
+// @version     2024.05.05.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -99,6 +99,8 @@ function onready() {
 		
 		.sjo-date-heading {float: right; font-size: larger; margin-top: 0.8rem !important;}
 		
+		.sjo-summary-cand {text-align: right;}
+		
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
@@ -162,8 +164,9 @@ function onready() {
 		} else {
 			
 			// Remove date from post headings
+			var postHeadings = $('.content .container h3');
 			if (dateMatch) {
-				$('.container h3 a').text((i,text) => text.replace(` on ${dateFormatted}`, ''));
+				postHeadings.find('a').text((i,text) => text.replace(` on ${dateFormatted}`, ''));
 			}
 			
 			// Highlight missing results
@@ -172,8 +175,11 @@ function onready() {
 				.find('.sjo-results-votes').filter((i,e) => e.innerText.trim() == '')
 				.addClass('sjo-results-votes-missing');
 			
+			// Summary table
+			var summaryTable = $('<table><tr><th colspan="2">Party</th><th>Candidates</th><th>Elected</th></table>').insertBefore(postHeadings.first());
+			
 			// Group by party
-			$('.container h3').first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
+			postHeadings.first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
 			var wrapper = $('<div class="sjo-view"></div>').insertAfter('.sjo-view').hide();
 			var tableHeader = $('.sjo-election-results thead').first();
 			
@@ -187,8 +193,9 @@ function onready() {
 				tableHeader.clone().appendTo(table)
 					.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
 				
-				$('td.sjo-results-party').filter((i,e) => e.innerText.trim().replace(/^Labour and Co-operative Party$/, 'Labour Party') == party).each((i,e) => {
-					var row = $(e).closest('tr');
+				var partyRows = $('td.sjo-results-party').filter((i,e) => e.innerText.trim().replace(/^Labour and Co-operative Party$/, 'Labour Party') == party).closest('tr');
+				partyRows.each((i,e) => {
+					var row = $(e);
 					var wardLink = row.closest('table').prevAll('h3').first().find('a'); //.text().replace(/🔐/, '').trim();
 					var newRow = row.clone().appendTo(table);
 					if (newRow.find('.sjo-results-party').text().trim() == 'Labour and Co-operative Party') {
@@ -196,6 +203,15 @@ function onready() {
 					}
 					newRow.find('.sjo-results-party').empty().append(wardLink.clone()).removeClass('sjo-results-party').addClass('sjo-results-ward');
 				});
+				
+				
+				// Add party to summary table
+				var numElected = partyRows.find('.sjo-results-elected').filter((i,e) => e.innerText.trim() != '').length;
+				var summaryRow = $('<tr></tr>').appendTo(summaryTable);
+				$(`<td class="sjo-party-bar sjo-party-${Utils.slugify(party)}"></td>`).appendTo(summaryRow);
+				$('<td></td>').text(party).appendTo(summaryRow);
+				$('<td class="sjo-summary-cand"></td>').text(partyRows.length).appendTo(summaryRow);
+				$('<td class="sjo-summary-cand"></td>').text(numElected).appendTo(summaryRow);
 				
 			});
 			
@@ -488,7 +504,6 @@ function onready() {
 		function _plainSort(a, b, order) {
 			var aText = a.cells[index].textContent.trim().replace(/%$|,/, '');
 			var bText = b.cells[index].textContent.trim().replace(/%$|,/, '');
-			console.log(aText, bText)
 			var sort;
 			if (aText.match(/^[\d\.]+$/) && bText.match(/^[\d\.]+$/)) {
 				var aNum = aText - 0;
