@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.05.05.1
+// @version     2024.05.27.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -109,7 +109,7 @@ function onready() {
 	
 	var dateMatch = window.location.href.match(/\d{4}-\d{2}-\d{2}/);
 	if (dateMatch) {
-		var dateFormatted = moment(dateMatch[0]).format("D MMM YYYY");
+		var dateFormatted = moment(dateMatch[0]).format("D MMMM YYYY");
 		$('<span class="sjo-date-heading"><span>').text(dateFormatted).insertBefore('h1');
 	}
 	
@@ -215,8 +215,9 @@ function onready() {
 				
 			});
 			
+			// TODO: add history entry so back button works
 			var actions = $('<div></div>').insertBefore('.sjo-view:first-of-type');
-			$('<a href="#" class="sjo-action">By ward</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
+			$('<a href="#" class="sjo-action">By post</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
 			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews(event)).appendTo(actions);
 			
 			function toggleViews() {
