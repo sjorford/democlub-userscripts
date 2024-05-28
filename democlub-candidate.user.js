@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2023.09.17.0
+// @version     2024.04.28.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -91,9 +91,6 @@ function onready() {
 		var dd = dt.nextUntil(':not(dd)', 'dd');
 		var heading = dt.parent('dl').prev('h2');
 		
-		//console.log(dt, dt.text().replace(/\s+/g, ' ').trim(), 
-		//			dd, dd.text().replace(/\s+/g, ' ').trim().substr(0, 50));
-		
 		if (heading.text() == 'Candidacies:') {
 			
 			// Format election headers
@@ -102,7 +99,7 @@ function onready() {
 			headingText = headingText.replace(/^Contest(ed|ing) the (\d{4} )?/, '');
 			headingText = headingText.replace(/ \([^\(\)]+ \d{4}\)$/, '');
 			
-			var link = dd.find('a');
+			var link = dd.find('a').first();
 			var href = link.attr('href') || '';
 			var slug = (href.match(/\/elections\/(.*)\//) || [])[1];
 			var council = Utils.shortOrgName(headingText, slug);
@@ -125,6 +122,8 @@ function onready() {
 			// Add markers for current elections and by-elections
 			if (href.match(/\.by\./)) {
 				dt.append(' <span class="sjo-marker sjo-marker-byelection">by</span>');
+			} else if (href.match(/\/parl\./)) {
+				dt.append(' <span class="sjo-marker sjo-marker-main">general</span>');
 			} else if (date.month() == 4 && date.day() <= 7 && date.year() >= moment().year()) {
 				dt.append(` <span class="sjo-marker sjo-marker-main">${date.year()}</span>`);
 			}
@@ -211,9 +210,6 @@ function onready() {
 			}
 
 		}
-		
-		//console.log(dt, dt.text().replace(/\s+/g, ' ').trim(), 
-		//			dd, dd.text().replace(/\s+/g, ' ').trim().substr(0, 50));
 		
 	});
 	
