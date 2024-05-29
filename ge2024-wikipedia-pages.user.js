@@ -1,17 +1,25 @@
 // ==UserScript==
 // @name           GE2024: Wikipedia pages
 // @namespace      sjorford@gmail.com
-// @version        2024.05.26.0
+// @version        2024.05.29.0
 // @author         Stuart Orford
 // @match          https://en.wikipedia.org/wiki/User:*/sandbox*
 // @grant          none
-// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
+//// @require        https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
 // ==/UserScript==
 
-window.setTimeout(onready, 500);
+var timer = window.setInterval(jQueryCheck, 100);
 
-function onready() {
-$(function() {
+function jQueryCheck() {
+	if (!$) return;
+	window.clearInterval(timer);
+	//$('<script src="https://sjorford.github.io/js/sjo-jq.js"></script>').appendTo('head');
+	timer = window.setInterval(sjoQueryCheck, 100);
+}
+
+function sjoQueryCheck() {
+	if (!$.fn.indexCells) return;
+	window.clearInterval(timer);
 	
 	$(`<style>
 		.sjo-wrapper {max-height: 10em; overflow-y: scroll; border: 1px solid black;}
@@ -42,5 +50,5 @@ $(function() {
 		
 	});
 
-});
-};
+//});
+}
