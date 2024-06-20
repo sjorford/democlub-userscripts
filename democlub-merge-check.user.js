@@ -2,13 +2,13 @@
 // @name        Democracy Club merge check
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2021.04.26.1
+// @version     2024.06.20.0
 // @grant       none
 // ==/UserScript==
 
 $(function() {
 	
-	$('#suggestion').hide();
+	//$('#suggestion').hide();
 	
 	var nameRow = $('td').filter((i,e) => e.innerText.trim() == 'Name').closest('tr');
 	var thisName = nameRow.find('td').eq(1).text().trim();
