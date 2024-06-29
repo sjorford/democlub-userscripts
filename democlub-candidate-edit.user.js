@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name        Democracy Club candidate edit
 // @namespace   sjorford@gmail.com
-// @version     2024.06.29.0
+// @version     2024.06.29.1
 // @include     https://candidates.democracyclub.org.uk/person/*/update
 // @include     https://candidates.democracyclub.org.uk/person/*/update/
 // @include     https://candidates.democracyclub.org.uk/person/*/update?highlight_field=*
@@ -33,11 +33,12 @@ function onready() {
 		.sjo-label {float: left; width: 125px; margin-top: 4px; margin-bottom: 0px; font-weight: bold;}
 		.sjo-label[for="id_biography"] {float: none;}
 		
-		.sjo-input {height: 2rem; margin: 0 0 0.25em 0; padding: 0.25rem 0.5rem;}
-		.sjo-input[type="url"],
-		.sjo-input[type="text"],
-		.sjo-input[type="email"],
-		.sjo-input[type="number"],
+		input.sjo-input, .sjo-input-static {margin: 0 0 0.25em 0; padding: 0.25rem 0.5rem;}
+		input.sjo-input {height: 2rem;}
+		input.sjo-input[type="url"],
+		input.sjo-input[type="text"],
+		input.sjo-input[type="email"],
+		input.sjo-input[type="number"],
 		.sjo-input-static {width: 390px; display: inline-block;}
 		
 		#id_gender, #id_birth_date, #id_death_date {width: 100px;}
