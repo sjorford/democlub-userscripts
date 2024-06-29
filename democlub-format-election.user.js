@@ -178,59 +178,59 @@ function onready() {
 				.addClass('sjo-results-votes-missing');
 			
 			if (postHeadings.length > 5) {
-			
-			// Summary table
-			var summaryTable = $('<table><tr><th colspan="2">Party</th><th>Candidates</th><th>Elected</th></table>').insertBefore(postHeadings.first())
-				.wrap('<div style="max-height: 20em; overflow: scroll;"></div>');
-			
-			// Group by party
-			postHeadings.first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
-			var wrapper = $('<div class="sjo-view"></div>').insertAfter('.sjo-view').hide();
-			var tableHeader = $('.sjo-election-results thead').first();
-			
-			var parties = $('td.sjo-results-party').toArray().map(e => e.innerText.trim());
-			parties = [...new Set(parties)].sort();
-			$.each(parties, (i,party) => {
-				if (party == 'Labour and Co-operative Party') return;
-				$('<h3></h3>').text(party).appendTo(wrapper);
 				
-				var table = $('<table class="sjo-election-results"></table>').appendTo(wrapper).on('click', 'th', sortResultsTable);
-				tableHeader.clone().appendTo(table)
-					.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
+				// Summary table
+				var summaryTable = $('<table><tr><th colspan="2">Party</th><th>Candidates</th><th>Elected</th></table>').insertBefore(postHeadings.first())
+					.wrap('<div style="max-height: 20em; overflow: scroll;"></div>');
 				
-				var partyRows = $('td.sjo-results-party').filter((i,e) => e.innerText.trim().replace(/^Labour and Co-operative Party$/, 'Labour Party') == party).closest('tr');
-				partyRows.each((i,e) => {
-					var row = $(e);
-					var wardLink = row.closest('table').prevAll('h3').first().find('a'); //.text().replace(/🔐/, '').trim();
-					var newRow = row.clone().appendTo(table);
-					if (newRow.find('.sjo-results-party').text().trim() == 'Labour and Co-operative Party') {
-						newRow.find('.sjo-results-name').append(coopLogo);
-					}
-					newRow.find('.sjo-results-party').empty().append(wardLink.clone()).removeClass('sjo-results-party').addClass('sjo-results-ward');
+				// Group by party
+				postHeadings.first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
+				var wrapper = $('<div class="sjo-view"></div>').insertAfter('.sjo-view').hide();
+				var tableHeader = $('.sjo-election-results thead').first();
+				
+				var parties = $('td.sjo-results-party').toArray().map(e => e.innerText.trim());
+				parties = [...new Set(parties)].sort();
+				$.each(parties, (i,party) => {
+					if (party == 'Labour and Co-operative Party') return;
+					$('<h3></h3>').text(party).appendTo(wrapper);
+					
+					var table = $('<table class="sjo-election-results"></table>').appendTo(wrapper).on('click', 'th', sortResultsTable);
+					tableHeader.clone().appendTo(table)
+						.find('.sjo-results-party').text('Ward').removeClass('sjo-results-party').addClass('sjo-results-ward');
+					
+					var partyRows = $('td.sjo-results-party').filter((i,e) => e.innerText.trim().replace(/^Labour and Co-operative Party$/, 'Labour Party') == party).closest('tr');
+					partyRows.each((i,e) => {
+						var row = $(e);
+						var wardLink = row.closest('table').prevAll('h3').first().find('a'); //.text().replace(/🔐/, '').trim();
+						var newRow = row.clone().appendTo(table);
+						if (newRow.find('.sjo-results-party').text().trim() == 'Labour and Co-operative Party') {
+							newRow.find('.sjo-results-name').append(coopLogo);
+						}
+						newRow.find('.sjo-results-party').empty().append(wardLink.clone()).removeClass('sjo-results-party').addClass('sjo-results-ward');
+					});
+					
+					// Add party to summary table
+					var numElected = partyRows.find('.sjo-results-elected').filter((i,e) => e.innerText.trim() != '').length;
+					var summaryRow = $('<tr></tr>').appendTo(summaryTable);
+					$(`<td class="sjo-party-bar sjo-party-${Utils.slugify(party)}"></td>`).appendTo(summaryRow);
+					$('<td></td>').text(party).appendTo(summaryRow);
+					$('<td class="sjo-summary-cand"></td>').text(partyRows.length).appendTo(summaryRow);
+					$('<td class="sjo-summary-cand"></td>').text(numElected).appendTo(summaryRow);
+					
 				});
 				
-				// Add party to summary table
-				var numElected = partyRows.find('.sjo-results-elected').filter((i,e) => e.innerText.trim() != '').length;
-				var summaryRow = $('<tr></tr>').appendTo(summaryTable);
-				$(`<td class="sjo-party-bar sjo-party-${Utils.slugify(party)}"></td>`).appendTo(summaryRow);
-				$('<td></td>').text(party).appendTo(summaryRow);
-				$('<td class="sjo-summary-cand"></td>').text(partyRows.length).appendTo(summaryRow);
-				$('<td class="sjo-summary-cand"></td>').text(numElected).appendTo(summaryRow);
+				// TODO: add history entry so back button works
+				var views = $('.sjo-view');
+				var actions = $('<div></div>').insertBefore(views.first());
+				$('<a href="#" class="sjo-action">By post</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
+				$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews(event)).appendTo(actions);
 				
-			});
-			
-			// TODO: add history entry so back button works
-			var views = $('.sjo-view');
-			var actions = $('<div></div>').insertBefore(views.first());
-			$('<a href="#" class="sjo-action">By post</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
-			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews(event)).appendTo(actions);
-			
-			function toggleViews() {
-				$('.sjo-action').toggleClass('sjo-action-selected');
-				$('.sjo-view').toggle();
-				return false;
-			}
-			
+				function toggleViews() {
+					$('.sjo-action').toggleClass('sjo-action-selected');
+					$('.sjo-view').toggle();
+					return false;
+				}
+				
 			}
 			
 		}
