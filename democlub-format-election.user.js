@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.05.27.0
+// @version     2024.06.29.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -101,6 +101,8 @@ function onready() {
 		
 		.sjo-summary-cand {text-align: right;}
 		
+		table tr th, table tr td {padding: .35rem .35rem;}
+		
 	</style>`).appendTo('head');
 	
 	$('div.panel').filter((index, element) => element.innerText.fullTrim() == 'These candidates haven\'t been confirmed by the official "nomination papers" from the council yet. This means they might not all end up on the ballot paper. We will manually verify each candidate when the nomination papers are published.').hide();
@@ -175,8 +177,11 @@ function onready() {
 				.find('.sjo-results-votes').filter((i,e) => e.innerText.trim() == '')
 				.addClass('sjo-results-votes-missing');
 			
+			if (postHeadings.length > 5) {
+			
 			// Summary table
-			var summaryTable = $('<table><tr><th colspan="2">Party</th><th>Candidates</th><th>Elected</th></table>').insertBefore(postHeadings.first());
+			var summaryTable = $('<table><tr><th colspan="2">Party</th><th>Candidates</th><th>Elected</th></table>').insertBefore(postHeadings.first())
+				.wrap('<div style="max-height: 20em; overflow: scroll;"></div>');
 			
 			// Group by party
 			postHeadings.first().nextAll().addBack().wrapAll('<div class="sjo-view"></div>');
@@ -204,7 +209,6 @@ function onready() {
 					newRow.find('.sjo-results-party').empty().append(wardLink.clone()).removeClass('sjo-results-party').addClass('sjo-results-ward');
 				});
 				
-				
 				// Add party to summary table
 				var numElected = partyRows.find('.sjo-results-elected').filter((i,e) => e.innerText.trim() != '').length;
 				var summaryRow = $('<tr></tr>').appendTo(summaryTable);
@@ -216,7 +220,8 @@ function onready() {
 			});
 			
 			// TODO: add history entry so back button works
-			var actions = $('<div></div>').insertBefore('.sjo-view:first-of-type');
+			var views = $('.sjo-view');
+			var actions = $('<div></div>').insertBefore(views.first());
 			$('<a href="#" class="sjo-action">By post</a>').click(event => toggleViews(event)).appendTo(actions).addClass('sjo-action-selected');
 			$('<a href="#" class="sjo-action">By party</a>').click(event => toggleViews(event)).appendTo(actions);
 			
@@ -224,6 +229,8 @@ function onready() {
 				$('.sjo-action').toggleClass('sjo-action-selected');
 				$('.sjo-view').toggle();
 				return false;
+			}
+			
 			}
 			
 		}
