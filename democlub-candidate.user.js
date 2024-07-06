@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2024.04.28.0
+// @version     2024.07.06.1
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -70,6 +70,11 @@ function onready() {
 		}
 		
 		body {height: fit-content; }
+		
+		/* temp fix */
+		.constituency-value-standing-link ~ .party {
+			display: inline-block; border-left: 0; padding: 0;
+		}
 		
 	</style>`).appendTo('head');
 	
