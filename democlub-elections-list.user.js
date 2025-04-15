@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2022.07.01.0
+// @version     2025.04.15.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -55,10 +55,10 @@ $(`<style class="sjo-styles">
 		column-count: 3;
 	}
 	
-	.sjo-summary-table {
-		
-		
-	}
+    .ballot_table td              {width: auto !important;}
+    .ballot_table td:nth-child(1) {width: 33% !important;}
+    .ballot_table td:nth-child(2) {width:  3% !important;}
+    .ballot_table td:nth-child(3) {width: 40% !important;}
 	
 </style>`).appendTo('head');
 
@@ -84,6 +84,13 @@ $(function() {
 	$('.ballot_table').each((i,e) => {
 		
 		var table = $(e);
+		
+		// Insert column for by-elections
+		var ballotCol = table.find('thead th').toArray().map(th => th.innerText.trim()).indexOf('Ballot');
+		table.find(`tr > *:nth-of-type(${ballotCol + 1})`).before('<td></td>');
+		ballotCol++;
+		
+		// Format header row
 		table.find('th:contains("Candidates known")').text('Known');
 		var theadHTML = table.find('thead')[0].outerHTML;
 		
@@ -102,7 +109,8 @@ $(function() {
 		var electionSlug, electionType, electionName, electionGroup;
 		table.find('tbody tr').each((i,e) => {
 			
-			var links = $('a[href^="/elections/"]', e).not('.button');
+			var tr = $(e);
+			var links = tr.find('a[href^="/elections/"]').not('.button');
 			if (links.length >= 2) {
 				
 				electionSlug = links[0].href.match(/([^\/]+)\/$/)[1];
@@ -113,6 +121,11 @@ $(function() {
 				if (!electionTypes[electionType]) electionTypes[electionType] = 'Unknown';
 				if (!rowsAllSets[electionType]) rowsAllSets[electionType] = {};
 				if (!rowsAllSets[electionType][electionGroup]) rowsAllSets[electionType][electionGroup] = {name: electionName, rows: []};
+				
+				var ballotSlug = links[1].href.match(/([^\/]+)\/$/)[1];
+				if (ballotSlug.match(/\.by\./)) {
+					tr.find('td').eq(ballotCol - 1).append('☆');
+				}
 				
 			}
 			
@@ -160,8 +173,8 @@ $(function() {
 				fullElectionsHTML += theadHTML;
 
 				var rowsHTML = election.rows
-				.sort((a,b) => a.postName > b.postName ? 1 : a.postName < b.postName ? -1 : 0)
-				.map(row => row.html).join('\n');
+						.sort((a,b) => a.postName > b.postName ? 1 : a.postName < b.postName ? -1 : 0)
+						.map(row => row.html).join('\n');
 				fullElectionsHTML += rowsHTML;
 
 				fullElectionsHTML += `</table>`;
@@ -235,10 +248,14 @@ $(function() {
 		});
 	
 	// Format filters
+	// FIXME: bug in innerText???
 	$('li.ds-filter-label:contains("Election Type") ~ li a').not(':contains("All")')
 		.each((i,e) => e.innerText = e.href.match(/election_type=([^&]+)/)[1]);
 	$('li.ds-filter-label:contains("Filter by region") ~ li a').not(':contains("All")')
-		.each((i,e) => e.innerText = e.innerText.trim().match(/(?:^(\w)\w+ (\w)\w+$|(\w\w))/).slice(1).join('').toUpperCase());
-	
+		.each((i,e) => {
+			//console.log(e, e.innerText, $(e).text());
+			var a = $(e);
+			a.text(a.text().trim().match(/(?:^(\w)\w+ (\w)\w+$|(\w\w))/).slice(1).join('').toUpperCase());
+		});
 	
 });
