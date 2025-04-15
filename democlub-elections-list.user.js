@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2025.04.15.0
+// @version     2025.04.15.1
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -57,7 +57,7 @@ $(`<style class="sjo-styles">
 	
     .ballot_table td              {width: auto !important;}
     .ballot_table td:nth-child(1) {width: 33% !important;}
-    .ballot_table td:nth-child(2) {width:  3% !important;}
+    .ballot_table td:nth-child(2) {width:  2% !important;}
     .ballot_table td:nth-child(3) {width: 40% !important;}
 	
 </style>`).appendTo('head');
@@ -81,18 +81,14 @@ $(function() {
 		'local':    'Local elections',
 	};
 	
+	// Loop through tables
 	$('.ballot_table').each((i,e) => {
 		
 		var table = $(e);
 		
-		// Insert column for by-elections
-		var ballotCol = table.find('thead th').toArray().map(th => th.innerText.trim()).indexOf('Ballot');
-		table.find(`tr > *:nth-of-type(${ballotCol + 1})`).before('<td></td>');
-		ballotCol++;
-		
-		// Format header row
-		table.find('th:contains("Candidates known")').text('Known');
-		var theadHTML = table.find('thead')[0].outerHTML;
+		// Get header row
+		//table.find('th:contains("Candidates known")').text('Known');
+		var theadHTML = table.find('thead')[0].outerHTML.replace(/Candidates known/, 'Known').replace(/<th>Ballot/, '<th></th>$&');
 		
 		// Format heading
 		var heading = table.prev('h3').addClass('sjo-posts-heading');
@@ -104,34 +100,38 @@ $(function() {
 		heading.click(() => wrapper.toggle());
 		// if (date.month() == 4 && date.date() <= 7) heading.click();
 		
-		// Get collection of all rows
+		// Get collection of all rows as raw HTML
 		var rowsAllSets = {};
+		
+		// Loop through tables
 		var electionSlug, electionType, electionName, electionGroup;
 		table.find('tbody tr').each((i,e) => {
 			
+			// Find table rows with an election link
 			var tr = $(e);
-			var links = tr.find('a[href^="/elections/"]').not('.button');
-			if (links.length >= 2) {
+			var electionLink = tr.find('td').first().find('a');
+			if (electionLink.length > 0) {
 				
-				electionSlug = links[0].href.match(/([^\/]+)\/$/)[1];
+				electionSlug = electionLink[0].href.match(/([^\/]+)\/$/)[1];
 				electionType = electionSlug.match(/(\w+(?:\.\w)?)\./)[1];
-				electionName = Utils.shortOrgName(links[0].innerText, electionSlug);
+				electionName = Utils.shortOrgName(electionLink.text(), electionSlug);
 				electionGroup = (electionType == 'mayor' || electionType == 'pcc') ? electionType : electionSlug;
 				
 				if (!electionTypes[electionType]) electionTypes[electionType] = 'Unknown';
 				if (!rowsAllSets[electionType]) rowsAllSets[electionType] = {};
 				if (!rowsAllSets[electionType][electionGroup]) rowsAllSets[electionType][electionGroup] = {name: electionName, rows: []};
 				
-				var ballotSlug = links[1].href.match(/([^\/]+)\/$/)[1];
-				if (ballotSlug.match(/\.by\./)) {
-					tr.find('td').eq(ballotCol - 1).append('☆');
-				}
-				
 			}
 			
-			var postName = links[links.length - 1].innerText.trim();
-			var html = e.outerHTML.trim().replace(/<td>[\s\S]*?<\/td>/, `<td><strong><a href="/elections/${electionSlug}/">${electionName}</a></strong></td>`);
+			var postName = tr.find('td').eq(1).text().trim();
+			var byFlag = tr.find('td').eq(1).find('a').attr('href').match(/\.by\./) ? '☆' : '';
 			
+			// Save raw HTML for speed of redrawing page
+			var html = e.outerHTML.trim();
+			html = html.replace(/<td>[\s\S]*?<\/td>/, `<td><strong><a href="/elections/${electionSlug}/">${electionName}</a></strong></td><td>${byFlag}</td>`);
+			html = html.replace(/<td>0<\/td>\s*<td>\s*True\s*<\/td>\s*<\/tr>/, '<td><\/td><td>❌<\/td><\/tr>');
+			
+			// Save this set of rows
 			rowsAllSets[electionType][electionGroup].rows.push({
 				postName: postName,
 				html: html
@@ -181,7 +181,7 @@ $(function() {
 
 				if (summaryHTML) {
 					var totalKnown = election.rows
-							.map(e => parseInt(e.html.match(/<td>(\d+)</)[1], 10))
+							.map(e => parseInt((e.html.match(/<td>(\d+)<\/td>/) || [,'0'])[1], 10))
 							.reduce((total, value) => total + value);
 					summaryHTML += `<tr><td><a href="#slughere">${election.name}</a></td><td>${totalKnown}</td></tr>`;
 					//summaryHTML += `<p><a href="#slughere">${election.name}</a></p>`;
@@ -230,7 +230,7 @@ $(function() {
 			var filterText = filter.val().trim().toLowerCase();
 			var rows = $('.sjo-posts-wrapper tbody tr').filter((i,e) => {
 				var row = $(e);
-				var rowText = row.find('td').slice(0, 2).text() + ' ' + row.find('a').eq(1).attr('href').replace(/.*\/elections\//, '');
+				var rowText = row.find('td').first().text() + ' ' + row.find('td').eq(2).text() + ' ' + row.find('a').eq(1).attr('href').replace(/.*\/elections\//, '');
 				rowText = rowText.replace(/\s+/g, ' ').trim().toLowerCase();
 				return rowText.indexOf(filterText) >= 0;
 			});
