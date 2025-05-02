@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2025.04.15.1
+// @version     2025.05.02.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -257,5 +257,7 @@ $(function() {
 			var a = $(e);
 			a.text(a.text().trim().match(/(?:^(\w)\w+ (\w)\w+$|(\w\w))/).slice(1).join('').toUpperCase());
 		});
+	
+	$('span').filter((i,e) => e.innerHTML.trim() == 'Results may be added by ResultsBot').text('RB');
 	
 });
