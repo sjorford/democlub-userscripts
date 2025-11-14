@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/elections/
 // @include     https://candidates.democracyclub.org.uk/elections/?*
-// @version     2025.05.02.0
+// @version     2025.11.14.0
 // @grant       none
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/unicode.js
@@ -73,6 +73,7 @@ $(function() {
 		'naw.r':    'Welsh Assembly (regions)',
 		'senedd.c': 'Senedd Cymru (constituencies)',
 		'senedd.r': 'Senedd Cymru (regions)',
+		'senedd':   'Senedd Cymru',
 		'nia':      'Northern Ireland Assembly',
 		'pcc':      'Police and Crime Commissioner',
 		'gla.c':    'Greater London Assembly (constituencies)',
