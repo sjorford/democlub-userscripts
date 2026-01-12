@@ -5,7 +5,7 @@
 // @exclude     https://candidates.democracyclub.org.uk/person/create/*
 // @exclude     https://candidates.democracyclub.org.uk/person/*/other-names
 // @exclude     https://candidates.democracyclub.org.uk/person/*/duplicate?*
-// @version     2026.01.10.0
+// @version     2026.01.12.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -241,6 +241,7 @@ function onready() {
 	// Hide blah
 	$('.panel').each((i,e) => {
 		if (e.innerText.trim().match(/This is .+’s entry in Democracy Club’s candidate database. These are the last details we have for .+. They may not be current. Please edit the details if you have new information./)) $(e).hide();
+		if (e.innerText.trim().match(/This is .+’s entry in Democracy Club’s candidate database. It can be edited to include .+’s social media links, election statement, photograph, and other details./)) $(e).hide();
 	});
 	
 }
