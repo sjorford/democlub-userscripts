@@ -2,7 +2,7 @@
 // @name           Democracy Club search results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2022.04.10.0
+// @version        2026.01.12.0
 // @match          https://candidates.democracyclub.org.uk/search?*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -14,7 +14,8 @@ $(`<style class="sjo-styles">
 	.search_results li + li {height: 64px; margin-top: 1em;}
 	.search_results li img {max-height: 64px; object-fit: contain;}
 	.search_results li .button.secondary.small {margin-bottom: 0;}
-	.sjo-search-exact {background-color: #fff3b1;}
+	.sjo-search-exact {background-color: #fff09b;}
+	.sjo-search-close {background-color: #fff8d0;}
 	.sjo-search-id {float: right; padding: 0.25rem; font-size: 75%;}
 	
 	.sjo-party-bar {width: 10px !important; min-width: 10px; padding: 0; float: left; height: 64px; background-color: lightgrey; border-right: 1px solid white;}
@@ -40,15 +41,16 @@ function onready() {
 	
 	// Get search string from input box
 	var searchName = $('form.search input[name="q"]').val().trim();
-	var regexString = '(^|\\s)' + searchName.replace(/[\.\*\?\[\]\(\)\|\^\$\\\/]/g, '\\$&').replace(/\s+/, '(\\s+|\\s+.*\\s+)') + '$';
-	var regex = new RegExp(regexString, 'i');
+	var regexString = searchName.replace(/[\.\*\?\[\]\(\)\|\^\$\\\/]/g, '\\$&').replace(/\s+/, '(\\s+|\\s+.*\\s+)');
 	
 	$('.candidates-list__person').each((index, element) => {
 		
 		// Highlight exact matches
 		var item = $(element);
-		if (item.find('.candidate-name').text().trim().match(regex)) {
+		if (item.find('.candidate-name').text().trim().match(new RegExp('^' + regexString + '$', 'i'))) {
 			item.addClass('sjo-search-exact');
+		} else if (item.find('.candidate-name').text().trim().match(new RegExp(regexString, 'i'))) {
+			item.addClass('sjo-search-close');
 		}
 		
 		// Display ID numbers
