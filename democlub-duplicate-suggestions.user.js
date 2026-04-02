@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name           Democracy Club duplicate suggestions
 // @namespace      sjorford@gmail.com
-// @version        2023.04.22.1
+// @version        2026.04.02.0
 // @author         Stuart Orford
 // @match          https://candidates.democracyclub.org.uk/duplicates/
 // @match          https://candidates.democracyclub.org.uk/duplicates/?page=*
@@ -16,6 +16,7 @@ $(function() {
 		table.table table thead {display: none;}
 		table.table td {vertical-align: top;}
 		table.table tr:last-of-type td {vertical-align: middle;}
+		.sjo-current {background-color: gold;}
 	</style>`).appendTo('head');
 	
 	$('th:contains("Field")').closest('table.table').each((i,e) => {
@@ -29,6 +30,8 @@ $(function() {
 		
 		var noAkaCells = $('td', table).filter((i,e) => e.innerText.trim() == "No other names known").text('');
 		noAkaCells.closest('tr').each((i,e) => e.innerText.trim() == 'Other Names' ? $(e).hide() : null);
+		
+		$('a[href*="/elections/"][href*="2026"]').closest('tr').addClass('sjo-current');
 		
 	});
 	
