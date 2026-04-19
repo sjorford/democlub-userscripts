@@ -3,7 +3,7 @@
 // @namespace   sjorford@gmail.com
 // @include     https://candidates.democracyclub.org.uk/*
 // @exclude     https://candidates.democracyclub.org.uk/media/*
-// @version     2024.05.23.0
+// @version     2026.04.16.0
 // @grant       none
 // ==/UserScript==
 
@@ -95,11 +95,12 @@ function onready() {
 	});
 	
 	// Link to new CSV downloads page
-	$('a[href="/api/docs/"]').attr('href', '/data/');
+	$('.nav-links__item a[href="/api/docs/"]').attr('href', '/data/');
 	
 	// Collapse filters by default
 	// https://github.com/DemocracyClub/yournextrepresentative/issues/1119
-	$('.advance_filters').removeAttr('open');
+	//$('.advance_filters').removeAttr('open');
+	$('summary:contains("Advanced filters")').closest('details[open]').removeAttr('open');
 	
 	// Default image upload reason
 	$('#id_why_allowed_2, #id_why_allowed_url_2').click();
@@ -120,6 +121,11 @@ function onready() {
 	// Add link to new user changes
 	$('.header__masthead .nav-links__item').last()
 		.before('<li class="nav-links__item"><a href="https://candidates.democracyclub.org.uk/recent-changes?flagged_type=needs_review_due_to_first_edits">New user changes</a></li>');
+	
+	// Close API panels
+	if (window.location.pathname == '/data/') {
+		$('details').removeAttr('open');
+	}
 	
 }
 
