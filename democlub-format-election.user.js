@@ -4,7 +4,7 @@
 // @include     https://candidates.democracyclub.org.uk/elections/*
 // @exclude     https://candidates.democracyclub.org.uk/elections/
 // @exclude     https://candidates.democracyclub.org.uk/elections/*/sopn/
-// @version     2024.06.29.0
+// @version     2026.04.19.0
 // @grant       none
 // @require     https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js
 // @require     https://raw.githubusercontent.com/sjorford/js/master/sjo-jq.js
@@ -87,7 +87,7 @@ function onready() {
 		.sjo-results-name, .sjo-results-party {width: 50%;}
 		.sjo-results-actions {width: 12%;}
 		
-		.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
+		xxx.button.show-new-candidate-form, .candidates-list__person .button {display: none;}
 		
 		.sjo-action {margin-right: 2em;}
 		.sjo-action-selected {font-weight: bold;}
