@@ -2,7 +2,7 @@
 // @name           Democracy Club results
 // @namespace      sjorford@gmail.com
 // @author         Stuart Orford
-// @version        2024.05.05.1
+// @version        2026.05.11.0
 // @match          https://candidates.democracyclub.org.uk/uk_results/*
 // @grant          none
 // @require        https://raw.githubusercontent.com/sjorford/democlub-userscripts/master/lib/utils.js
@@ -36,7 +36,7 @@ $(function() {
 			var id = cells.closest('tr').find('input[id^="id_memberships_"]').attr('id').match(/^id_memberships_(\d+)$/)[1];
 			
 			var forenamesCell = cells.first().empty();
-			var surnameCell = $('<td></td>').insertAfter(forenamesCell);
+			var surnameCell = $('<td class="sjo-surname"></td>').insertAfter(forenamesCell);
 			var partyCell = $('<td></td>').insertAfter(surnameCell).text(candMatch[2]);
 			
 			$('<a></a>').text(nameSplit[0]).attr('href', '/person/' + id).attr('target', '_blank').appendTo(forenamesCell);
@@ -151,5 +151,25 @@ $(function() {
 	
 	// Add title
 	document.title = $('.header__hero h2').text();
+	
+	// Allow pasting of multiple values (experimental)
+	$('<input id="sjo-paste" size="30" placeholder="Paste here">').insertBefore('#ballot_paper_results_form').on('paste', event => {
+		
+		var paste = event.originalEvent.clipboardData.getData("text");
+		console.log(paste);
+		
+		pasteArray = paste.replace(/`/, "'").replace(/\s*[;\r\n\.]+\s*/g, "¬").split("¬");
+		console.log(pasteArray);
+		
+		$.each(pasteArray, (i,e) => {
+			if (pasteArray[i] == '') return;
+			var [, surname, votes] = pasteArray[i].match(/(^\S+).*?(\d+(?:,\d{3})?)/);
+			console.log(votes, surname, pasteArray[i]);
+			var surnameCell = $(`.sjo-surname:contains(${surname})`);
+			console.log(surnameCell);
+			surnameCell.first().closest('tr').find('.sjo-results-number').val(votes.replace(/,/g, ''));
+		});
+		
+	});
 	
 });
